@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur de Facture Électrique</title>
+    <title>Simulateur de Facture d'Électricité</title>
     <!-- Chargement de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Configuration de la police Inter -->
@@ -51,9 +51,11 @@
         /* Classes pour les boutons d'option tarifaire */
         .option-button {
             transition: all 0.2s;
-            @apply border-2 border-gray-300 text-gray-700 hover:border-[#6A63FF]/50;
+            /* MODIFICATION: Ajout du fond estompé de Papernest (10% d'opacité) au survol */
+            @apply border-2 border-gray-300 text-gray-700 hover:border-[#6A63FF] hover:bg-[#6A63FF]/10;
         }
         .option-button.active {
+            /* L'état actif reste en couleur pleine */
             @apply border-[#6A63FF] bg-[#6A63FF] text-white shadow-lg shadow-[#6A63FF]/30;
         }
     </style>
@@ -390,4 +392,3 @@
     </script>
 </body>
 </html>
-
