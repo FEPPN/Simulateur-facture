@@ -3,33 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simuler ma facture d'électricité EDF</title>
-    <!-- Chargement de Tailwind CSS -->
+    <title>Simuler ma facture EDF - Tarif Bleu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configuration de la police Inter et styles personnalisés -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
         body {
-            font-family: 'Inter', Avenir;
+            font-family: 'Inter', sans-serif;
             background-color: #f4f7fa;
         }
 
-        /* Curseur personnalisé (track) */
+        /* Curseur personnalisé */
         input[type="range"]::-webkit-slider-runnable-track {
             height: 8px;
             cursor: pointer;
             background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
             border-radius: 4px;
         }
-        input[type="range"]::-moz-range-track {
-            height: 8px;
-            cursor: pointer;
-            background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
-            border-radius: 4px;
-        }
-
-        /* Curseur personnalisé (thumb) */
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             border: 3px solid #6A63FF;
@@ -41,43 +30,8 @@
             margin-top: -6px;
             box-shadow: 0 0 5px rgba(0,0,0,0.1);
         }
-        input[type="range"]::-moz-range-thumb {
-            border: 3px solid #6A63FF;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        }
 
-        /* Boutons d'option et d'offres */
-        .option-button {
-            transition: all 0.2s;
-            border: 2px solid #d1d5db;
-            color: #374151;
-            background-color: white;
-            cursor: pointer;
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .option-button:hover {
-            background-color: rgba(106, 99, 255, 0.2);
-            border-color: #6A63FF;
-            color: #6A63FF;
-        }
-
-        .option-button.active {
-            background-color: #6A63FF;
-            border-color: #6A63FF;
-            color: white;
-            box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
-        }
-
-        /* Transition pour le menu déroulant */
+        /* Menu déroulant */
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
@@ -95,74 +49,52 @@
 <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
     <div class="grid grid-cols-1 lg:grid-cols-3">
 
-        <!-- Colonne de Contrôle -->
+        <!-- Colonne gauche -->
         <div class="lg:col-span-2 p-6 md:p-10 space-y-8">
-            <h1 class="text-3xl font-extrabold text-gray-800">Simulateur de Facture d'Électricité</h1>
-            <p class="text-gray-500">Ajustez vos paramètres pour comparer les offres. Les tarifs "Bleu, Jaune, Vert" sont ici simulés par des offres de marché (Tarif Réglementé, Offre Compétitive, Offre Premium).</p>
+            <h1 class="text-3xl font-extrabold text-gray-800">Simulateur de Facture EDF - Tarif Bleu</h1>
+            <p class="text-gray-500">Calculez une estimation de votre facture d’électricité EDF selon votre consommation et la puissance de votre compteur.</p>
 
             <!-- Consommation -->
             <div class="space-y-4">
-                <label for="consumption" class="block text-lg font-semibold text-gray-700">Votre consommation annuelle <span class="text-red-500">*</span></label>
+                <label for="consumption" class="block text-lg font-semibold text-gray-700">Consommation annuelle <span class="text-red-500">*</span></label>
                 <div class="flex items-center space-x-4">
                     <input type="range" id="consumption" min="1000" max="30000" value="10000" step="100" class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 0%;">
-                    <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="consumptionValue">10000 kWh</div>
+                    <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="consumptionValue">10 000 kWh</div>
                 </div>
                 <div class="flex justify-between text-sm text-gray-500">
-                    <span>1000 kWh</span>
-                    <span>30000 kWh</span>
-                </div>
-            </div>
-
-            <!-- Option tarifaire -->
-            <div class="space-y-4">
-                <label class="block text-lg font-semibold text-gray-700">Votre option tarifaire <span class="text-red-500">*</span></label>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <button class="option-button active" data-option="Base">Base</button>
-                    <button class="option-button" data-option="HPHC">Heures Pleines/Creuses</button>
+                    <span>1 000 kWh</span><span>30 000 kWh</span>
                 </div>
             </div>
 
             <!-- Puissance -->
             <div class="space-y-4">
-                <label for="power" class="block text-lg font-semibold text-gray-700">Votre puissance de compteur <span class="text-red-500">*</span></label>
+                <label for="power" class="block text-lg font-semibold text-gray-700">Puissance du compteur <span class="text-red-500">*</span></label>
                 <div class="flex items-center space-x-4">
                     <input type="range" id="power" min="3" max="36" value="6" step="3" class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 0%;">
                     <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="powerValue">6 kVA</div>
                 </div>
                 <div class="flex justify-between text-sm text-gray-500">
-                    <span>3 kVA</span>
-                    <span>36 kVA</span>
+                    <span>3 kVA</span><span>36 kVA</span>
                 </div>
-            </div>
-
-            <!-- Type d'offre -->
-            <div class="space-y-4 pt-4">
-                <label class="block text-lg font-semibold text-gray-700">Type d'Offre de Marché Simulé <span class="text-red-500">*</span></label>
-                <div class="grid grid-cols-3 gap-3">
-                    <button class="option-button active" data-offre="Bleu">Tarif Réglementé</button>
-                    <button class="option-button" data-offre="Jaune">Offre Compétitive</button>
-                    <button class="option-button" data-offre="Vert">Offre Premium</button>
-                </div>
-                <p class="text-xs text-gray-400 italic">Les tarifs Jaune et Vert sont simulés à titre indicatif.</p>
             </div>
         </div>
 
-        <!-- Colonne de Résultat -->
+        <!-- Colonne droite -->
         <div class="lg:col-span-1 bg-[#6A63FF] p-6 md:p-10 flex flex-col justify-between text-white rounded-t-xl lg:rounded-l-none lg:rounded-r-xl">
 
             <!-- Logo EDF -->
             <div class="flex justify-center mb-6">
-                <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="Logo EDF" class="w-28">
+                <img src="METTRE LE LIEN" alt="Logo EDF" class="w-28">
             </div>
 
-            <!-- Résultat -->
+            <!-- Résultats -->
             <div class="text-center">
-                <p class="text-xl font-semibold mb-2" id="resultTitle">Estimation Tarif Réglementé</p>
+                <p class="text-xl font-semibold mb-2">Estimation du Tarif Bleu</p>
                 <p class="text-6xl font-extrabold" id="monthlyBill">0,00 €/mois</p>
                 <p class="text-lg mt-2 opacity-80" id="annualBill">soit 0,00 €/an TTC</p>
             </div>
 
-            <!-- Menu déroulant détails -->
+            <!-- Menu déroulant -->
             <div class="mt-8">
                 <button id="toggleDetails" class="w-full flex justify-between items-center bg-white text-[#6A63FF] px-4 py-3 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition">
                     Afficher les détails
@@ -173,24 +105,22 @@
                     <div class="flex items-start space-x-3">
                         <span class="text-green-300 text-xl font-bold mt-1">✓</span>
                         <div>
-                            <p class="font-semibold">Prix du kWh Stable</p>
-                            <p class="text-sm opacity-80">Typique d'une offre Réglementée.</p>
+                            <p class="font-semibold">Prix du kWh réglementé</p>
+                            <p class="text-sm opacity-80">Basé sur le tarif Bleu EDF.</p>
                         </div>
                     </div>
-
                     <div class="flex items-start space-x-3">
                         <span class="text-green-300 text-xl font-bold mt-1">✓</span>
                         <div>
-                            <p class="font-semibold">Abonnement Ajusté</p>
-                            <p class="text-sm opacity-80">Ajusté à votre puissance (6 kVA).</p>
+                            <p class="font-semibold">Abonnement mensuel</p>
+                            <p class="text-sm opacity-80">Ajusté selon la puissance de votre compteur.</p>
                         </div>
                     </div>
-
                     <div class="flex items-start space-x-3">
                         <span class="text-yellow-300 text-xl font-bold mt-1">★</span>
                         <div>
-                            <p class="font-semibold">Économies Potentielles</p>
-                            <p class="text-sm opacity-80" id="savingsEstimate">Jusqu'à 0 € économisés par an.</p>
+                            <p class="font-semibold">Estimation indicative</p>
+                            <p class="text-sm opacity-80">Les tarifs sont approximatifs à des fins de simulation.</p>
                         </div>
                     </div>
                 </div>
@@ -201,33 +131,19 @@
 </div>
 
 <script>
-    const SIMULATION_PRICES = {
-        Base: {
-            Bleu: { abonnement: 13, kwh: 0.1952 },
-            Jaune: { abonnement: 15, kwh: 0.23 },
-            Vert: { abonnement: 20, kwh: 0.21 }
-        },
-        HPHC: {
-            Bleu: { abonnement: 15, kwh_hp: 0.2081, kwh_hc: 0.1635 },
-            Jaune: { abonnement: 18, kwh_hp: 0.25, kwh_hc: 0.16 },
-            Vert: { abonnement: 25, kwh_hp: 0.22, kwh_hc: 0.14 }
-        }
+    // Tarifs EDF Tarif Bleu (Base)
+    const TARIF_BLEU = {
+        abonnement: 13, // €/mois
+        kwh: 0.1952 // €/kWh
     };
-    const ABONNEMENT_ADJUSTMENT_PER_KVA = 0.5;
+    const ABONNEMENT_PAR_KVA = 0.5;
 
     const consumptionInput = document.getElementById('consumption');
-    const consumptionValueDisplay = document.getElementById('consumptionValue');
+    const consumptionValue = document.getElementById('consumptionValue');
     const powerInput = document.getElementById('power');
-    const powerValueDisplay = document.getElementById('powerValue');
-    const tariffButtons = document.querySelectorAll('.option-button[data-option]');
-    const offerButtons = document.querySelectorAll('.option-button[data-offre]');
-    const monthlyBillDisplay = document.getElementById('monthlyBill');
-    const annualBillDisplay = document.getElementById('annualBill');
-    const resultTitleDisplay = document.getElementById('resultTitle');
-    const savingsEstimateDisplay = document.getElementById('savingsEstimate');
-
-    let currentTariffOption = 'Base';
-    let currentOfferType = 'Bleu';
+    const powerValue = document.getElementById('powerValue');
+    const monthlyBill = document.getElementById('monthlyBill');
+    const annualBill = document.getElementById('annualBill');
 
     function updateRangeDisplay(input, display, unit) {
         const value = parseInt(input.value);
@@ -239,80 +155,40 @@
     }
 
     function calculateBill() {
-        const annualConsumption = parseInt(consumptionInput.value);
-        const powerKVA = parseInt(powerInput.value);
-
-        const tariffData = SIMULATION_PRICES[currentTariffOption][currentOfferType];
-        const kvaDiff = Math.max(0, powerKVA - 6);
-        const powerAdj = kvaDiff * ABONNEMENT_ADJUSTMENT_PER_KVA;
-        const baseAbonnement = tariffData.abonnement + powerAdj;
-        const annualAbonnement = baseAbonnement * 12;
-
-        let annualCost = 0;
-        if (currentTariffOption === 'Base') {
-            annualCost = annualConsumption * tariffData.kwh;
-        } else {
-            const hp = annualConsumption * 0.6;
-            const hc = annualConsumption * 0.4;
-            annualCost = (hp * tariffData.kwh_hp) + (hc * tariffData.kwh_hc);
-        }
-
-        const total = annualAbonnement + annualCost;
-        monthlyBillDisplay.textContent = `${(total / 12).toFixed(2).replace('.', ',')} €/mois`;
-        annualBillDisplay.textContent = `soit ${total.toFixed(2).replace('.', ',')} €/an TTC`;
-        updateResultBox(total);
-    }
-
-    function updateResultBox(currentCost) {
-        const trv = SIMULATION_PRICES[currentTariffOption].Bleu;
-        const annualConsumption = parseInt(consumptionInput.value);
-        let baseCost = annualConsumption * (trv.kwh || trv.kwh_hp);
-        const trvCost = (trv.abonnement * 12) + baseCost;
-        const diff = Math.max(0, trvCost - currentCost);
-        savingsEstimateDisplay.textContent = diff > 0
-            ? `Jusqu'à ${diff.toFixed(0).toLocaleString('fr-FR')} € économisés par an.`
-            : "Tarif de référence (TRV).";
+        const conso = parseInt(consumptionInput.value);
+        const kva = parseInt(powerInput.value);
+        const abonnement = (TARIF_BLEU.abonnement + (Math.max(0, kva - 6) * ABONNEMENT_PAR_KVA)) * 12;
+        const consoCost = conso * TARIF_BLEU.kwh;
+        const total = abonnement + consoCost;
+        monthlyBill.textContent = `${(total / 12).toFixed(2).replace('.', ',')} €/mois`;
+        annualBill.textContent = `soit ${total.toFixed(2).replace('.', ',')} €/an TTC`;
     }
 
     consumptionInput.addEventListener('input', () => {
-        updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
+        updateRangeDisplay(consumptionInput, consumptionValue, 'kWh');
         calculateBill();
     });
     powerInput.addEventListener('input', () => {
-        updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+        updateRangeDisplay(powerInput, powerValue, 'kVA');
         calculateBill();
     });
 
-    tariffButtons.forEach(b => b.addEventListener('click', e => {
-        tariffButtons.forEach(btn => btn.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-        currentTariffOption = e.currentTarget.dataset.option;
-        calculateBill();
-    }));
-
-    offerButtons.forEach(b => b.addEventListener('click', e => {
-        offerButtons.forEach(btn => btn.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-        currentOfferType = e.currentTarget.dataset.offre;
-        calculateBill();
-    }));
-
+    // Menu déroulant
     const toggleBtn = document.getElementById('toggleDetails');
-    const detailsContent = document.getElementById('detailsContent');
+    const details = document.getElementById('detailsContent');
     const chevron = document.getElementById('chevron');
 
     toggleBtn.addEventListener('click', () => {
-        detailsContent.classList.toggle('open');
-        chevron.style.transform = detailsContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-        toggleBtn.textContent = detailsContent.classList.contains('open')
+        details.classList.toggle('open');
+        chevron.style.transform = details.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        toggleBtn.childNodes[0].textContent = details.classList.contains('open')
             ? "Masquer les détails"
             : "Afficher les détails";
-        toggleBtn.appendChild(chevron);
     });
 
     window.onload = () => {
-        updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
-        updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+        updateRangeDisplay(consumptionInput, consumptionValue, 'kWh');
+        updateRangeDisplay(powerInput, powerValue, 'kVA');
         calculateBill();
     };
 </script>
