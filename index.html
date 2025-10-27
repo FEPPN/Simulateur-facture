@@ -6,14 +6,16 @@
     <title>Simulateur de Facture d'Électricité</title>
     <!-- Chargement de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configuration de la police Inter -->
+    <!-- Configuration de la police Inter et styles personnalisés -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f4f7fa;
         }
-        /* Style du curseur personnalisé (track) */
+
+        /* Curseur personnalisé (track) */
         input[type="range"]::-webkit-slider-runnable-track {
             height: 8px;
             cursor: pointer;
@@ -26,7 +28,8 @@
             background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
             border-radius: 4px;
         }
-        /* Style du curseur personnalisé (thumb) */
+
+        /* Curseur personnalisé (thumb) */
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             border: 3px solid #6A63FF;
@@ -35,8 +38,8 @@
             border-radius: 50%;
             background: white;
             cursor: pointer;
-            margin-top: -6px; /* Ajuster la position verticale */
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin-top: -6px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
         }
         input[type="range"]::-moz-range-thumb {
             border: 3px solid #6A63FF;
@@ -45,350 +48,284 @@
             border-radius: 50%;
             background: white;
             cursor: pointer;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
         }
 
-        /* Classes pour les boutons d'option tarifaire */
+        /* Boutons d'option et d'offres */
         .option-button {
             transition: all 0.2s;
-            /* MODIFICATION: Ajout du fond estompé de Papernest (10% d'opacité) au survol */
-            @apply border-2 border-gray-300 text-gray-700 hover:border-[#6A63FF] hover:bg-[#6A63FF]/10;
+            border: 2px solid #d1d5db; /* gris clair */
+            color: #374151; /* texte gris foncé */
+            background-color: white;
+            cursor: pointer;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-weight: 500;
+            text-align: center;
         }
+
+        .option-button:hover {
+            background-color: rgba(106, 99, 255, 0.2); /* violet clair transparent */
+            border-color: #6A63FF;
+            color: #6A63FF;
+        }
+
         .option-button.active {
-            /* L'état actif reste en couleur pleine */
-            @apply border-[#6A63FF] bg-[#6A63FF] text-white shadow-lg shadow-[#6A63FF]/30;
+            background-color: #6A63FF; /* violet plein */
+            border-color: #6A63FF;
+            color: white;
+            box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
         }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-3">
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-3">
 
-            <!-- Colonne de Contrôle (Formulaire) -->
-            <div class="lg:col-span-2 p-6 md:p-10 space-y-8">
-                <h1 class="text-3xl font-extrabold text-gray-800">Simulateur de Facture d'Électricité</h1>
-                <p class="text-gray-500">Ajustez vos paramètres pour comparer les offres. Les tarifs "Bleu, Jaune, Vert" sont ici simulés par des offres de marché (Tarif Réglementé, Offre Compétitive, Offre Premium).</p>
+        <!-- Colonne de Contrôle (Formulaire) -->
+        <div class="lg:col-span-2 p-6 md:p-10 space-y-8">
+            <h1 class="text-3xl font-extrabold text-gray-800">Simulateur de Facture d'Électricité</h1>
+            <p class="text-gray-500">Ajustez vos paramètres pour comparer les offres. Les tarifs "Bleu, Jaune, Vert" sont ici simulés par des offres de marché (Tarif Réglementé, Offre Compétitive, Offre Premium).</p>
 
-                <!-- 1. Consommation Annuelle -->
-                <div class="space-y-4">
-                    <label for="consumption" class="block text-lg font-semibold text-gray-700">Votre consommation annuelle <span class="text-red-500">*</span></label>
-                    <div class="flex items-center space-x-4">
-                        <input type="range" id="consumption" min="1000" max="30000" value="10000" step="100" class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 0%;">
-                        <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="consumptionValue">10000 kWh</div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-500">
-                        <span>1000 kWh</span>
-                        <span>30000 kWh</span>
-                    </div>
+            <!-- 1. Consommation Annuelle -->
+            <div class="space-y-4">
+                <label for="consumption" class="block text-lg font-semibold text-gray-700">Votre consommation annuelle <span class="text-red-500">*</span></label>
+                <div class="flex items-center space-x-4">
+                    <input type="range" id="consumption" min="1000" max="30000" value="10000" step="100" class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 0%;">
+                    <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="consumptionValue">10000 kWh</div>
                 </div>
-
-                <!-- 2. Option Tarifaire (Base / Heures Creuses) -->
-                <div class="space-y-4">
-                    <label class="block text-lg font-semibold text-gray-700">Votre option tarifaire <span class="text-red-500">*</span></label>
-                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-                        <button id="tarifBase" class="option-button active flex-1 py-3 px-4 rounded-xl font-medium" data-option="Base">Base</button>
-                        <button id="tarifHPHC" class="option-button flex-1 py-3 px-4 rounded-xl font-medium" data-option="HPHC">Heures Pleines/Creuses</button>
-                    </div>
+                <div class="flex justify-between text-sm text-gray-500">
+                    <span>1000 kWh</span>
+                    <span>30000 kWh</span>
                 </div>
-
-                <!-- 3. Puissance de Compteur (kVA) -->
-                <div class="space-y-4">
-                    <label for="power" class="block text-lg font-semibold text-gray-700">Votre puissance de compteur <span class="text-red-500">*</span></label>
-                    <div class="flex items-center space-x-4">
-                        <!-- Puissances standards : 3, 6, 9, 12, 15, 18, 24, 30, 36 -->
-                        <input type="range" id="power" min="3" max="36" value="6" step="3" class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 0%;">
-                        <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="powerValue">6 kVA</div>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-500">
-                        <span>3 kVA</span>
-                        <span>36 kVA</span>
-                    </div>
-                </div>
-
-                <!-- 4. Type d'Offre (Simuler Bleu/Jaune/Vert) -->
-                <div class="space-y-4 pt-4">
-                    <label class="block text-lg font-semibold text-gray-700">Type d'Offre de Marché Simulé (Bleu/Jaune/Vert) <span class="text-red-500">*</span></label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <!-- Tarif Bleu (TRV) -->
-                        <button id="offreBleu" class="option-button active py-3 px-2 rounded-xl font-medium text-sm md:text-base" data-offre="Bleu">Tarif Réglementé (Bleu)</button>
-                        <!-- Tarif Jaune (Offre Compétitive) -->
-                        <button id="offreJaune" class="option-button py-3 px-2 rounded-xl font-medium text-sm md:text-base" data-offre="Jaune">Offre Compétitive (Jaune)</button>
-                        <!-- Tarif Vert (Offre Premium) -->
-                        <button id="offreVert" class="option-button py-3 px-2 rounded-xl font-medium text-sm md:text-base" data-offre="Vert">Offre Premium (Vert)</button>
-                    </div>
-                    <p class="text-xs text-gray-400 italic">Attention : Les tarifs Jaune et Vert n'existent plus pour les particuliers. Ceci est une simulation par équivalence de complexité/puissance.</p>
-                </div>
-
             </div>
 
-            <!-- Colonne de Résultat (Synthèse) -->
-            <div class="lg:col-span-1 bg-[#6A63FF] p-6 md:p-10 flex flex-col justify-center text-white space-y-6 rounded-t-xl lg:rounded-l-none lg:rounded-r-xl">
-                <div class="text-center">
-                    <p class="text-xl font-semibold mb-2" id="resultTitle">Estimation avec l'Offre de Base</p>
-                    <p class="text-6xl font-extrabold" id="monthlyBill">0,00 €/mois</p>
-                    <p class="text-lg mt-2 opacity-80" id="annualBill">soit 0,00 €/an TTC</p>
+            <!-- 2. Option Tarifaire (Base / Heures Creuses) -->
+            <div class="space-y-4">
+                <label class="block text-lg font-semibold text-gray-700">Votre option tarifaire <span class="text-red-500">*</span></label>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button class="option-button active" data-option="Base">Base</button>
+                    <button class="option-button" data-option="HPHC">Heures Pleines/Creuses</button>
+                </div>
+            </div>
+
+            <!-- 3. Puissance de Compteur (kVA) -->
+            <div class="space-y-4">
+                <label for="power" class="block text-lg font-semibold text-gray-700">Votre puissance de compteur <span class="text-red-500">*</span></label>
+                <div class="flex items-center space-x-4">
+                    <input type="range" id="power" min="3" max="36" value="6" step="3" class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 0%;">
+                    <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="powerValue">6 kVA</div>
+                </div>
+                <div class="flex justify-between text-sm text-gray-500">
+                    <span>3 kVA</span>
+                    <span>36 kVA</span>
+                </div>
+            </div>
+
+            <!-- 4. Type d'Offre (Simuler Bleu/Jaune/Vert) -->
+            <div class="space-y-4 pt-4">
+                <label class="block text-lg font-semibold text-gray-700">Type d'Offre de Marché Simulé (Bleu/Jaune/Vert) <span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="option-button active" data-offre="Bleu">Tarif Réglementé (Bleu)</button>
+                    <button class="option-button" data-offre="Jaune">Offre Compétitive (Jaune)</button>
+                    <button class="option-button" data-offre="Vert">Offre Premium (Vert)</button>
+                </div>
+                <p class="text-xs text-gray-400 italic">Attention : Les tarifs Jaune et Vert n'existent plus pour les particuliers. Ceci est une simulation par équivalence de complexité/puissance.</p>
+            </div>
+        </div>
+
+        <!-- Colonne de Résultat (Synthèse) -->
+        <div class="lg:col-span-1 bg-[#6A63FF] p-6 md:p-10 flex flex-col justify-center text-white space-y-6 rounded-t-xl lg:rounded-l-none lg:rounded-r-xl">
+            <div class="text-center">
+                <p class="text-xl font-semibold mb-2" id="resultTitle">Estimation avec l'Offre de Base</p>
+                <p class="text-6xl font-extrabold" id="monthlyBill">0,00 €/mois</p>
+                <p class="text-lg mt-2 opacity-80" id="annualBill">soit 0,00 €/an TTC</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-[#8f88ff]">
+                <h3 class="text-2xl font-bold">Détails de l'Offre</h3>
+
+                <div class="flex items-start space-x-3">
+                    <span class="text-green-300 text-xl font-bold mt-1">✓</span>
+                    <div>
+                        <p class="font-semibold" id="benefit1">Prix du kWh Stable</p>
+                        <p class="text-sm opacity-80">Typique d'une offre Réglementée.</p>
+                    </div>
                 </div>
 
-                <div class="space-y-3 pt-6 border-t border-[#8f88ff]">
-                    <h3 class="text-2xl font-bold">Détails de l'Offre</h3>
-
-                    <div class="flex items-start space-x-3">
-                        <span class="text-green-300 text-xl font-bold mt-1">✓</span>
-                        <div>
-                            <p class="font-semibold" id="benefit1">Prix du kWh Stable</p>
-                            <p class="text-sm opacity-80">Typique d'une offre Réglementée.</p>
-                        </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-green-300 text-xl font-bold mt-1">✓</span>
+                    <div>
+                        <p class="font-semibold" id="benefit2">Abonnement Ajusté</p>
+                        <p class="text-sm opacity-80">Ajusté à votre puissance (6 kVA).</p>
                     </div>
+                </div>
 
-                    <div class="flex items-start space-x-3">
-                        <span class="text-green-300 text-xl font-bold mt-1">✓</span>
-                        <div>
-                            <p class="font-semibold" id="benefit2">Abonnement Ajusté</p>
-                            <p class="text-sm opacity-80">Ajusté à votre puissance (6 kVA).</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start space-x-3" id="premiumDetail">
-                        <span class="text-yellow-300 text-xl font-bold mt-1">★</span>
-                        <div>
-                            <p class="font-semibold" id="premiumBenefit">Économies Potentielles</p>
-                            <p class="text-sm opacity-80" id="savingsEstimate">Jusqu'à 0 € économisés par an.</p>
-                        </div>
+                <div class="flex items-start space-x-3" id="premiumDetail">
+                    <span class="text-yellow-300 text-xl font-bold mt-1">★</span>
+                    <div>
+                        <p class="font-semibold" id="premiumBenefit">Économies Potentielles</p>
+                        <p class="text-sm opacity-80" id="savingsEstimate">Jusqu'à 0 € économisés par an.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // --- Configuration des Tarifs (Simplifiée pour la simulation) ---
-        // Les prix sont donnés TTC pour simuler la facture finale.
-        // Les vrais tarifs varient énormément et sont complexes.
-        const SIMULATION_PRICES = {
-            // BASE (TRV Bleu)
-            Base: {
-                Bleu: { abonnement: 13, kwh: 0.25 },  // kVA 6 : 13€/mois, 0.25€/kWh
-                Jaune: { abonnement: 15, kwh: 0.23 }, // Offre compétitive (abonnement un peu plus cher, kWh moins cher)
-                Vert: { abonnement: 20, kwh: 0.21 }  // Offre Premium (abonnement cher, kWh très compétitif)
-            },
-            // HPHC (TRV Bleu)
-            HPHC: {
-                Bleu: { abonnement: 15, kwh_hp: 0.28, kwh_hc: 0.18 }, // kVA 6 : 15€/mois, HP 0.28€, HC 0.18€
-                Jaune: { abonnement: 18, kwh_hp: 0.25, kwh_hc: 0.16 },
-                Vert: { abonnement: 25, kwh_hp: 0.22, kwh_hc: 0.14 }
-            }
-        };
+<script>
+    // --- Configuration des Tarifs (Simplifiée pour la simulation) ---
+    const SIMULATION_PRICES = {
+        Base: {
+            Bleu: { abonnement: 13, kwh: 0.25 },
+            Jaune: { abonnement: 15, kwh: 0.23 },
+            Vert: { abonnement: 20, kwh: 0.21 }
+        },
+        HPHC: {
+            Bleu: { abonnement: 15, kwh_hp: 0.28, kwh_hc: 0.18 },
+            Jaune: { abonnement: 18, kwh_hp: 0.25, kwh_hc: 0.16 },
+            Vert: { abonnement: 25, kwh_hp: 0.22, kwh_hc: 0.14 }
+        }
+    };
 
-        // Coefficients d'ajustement d'abonnement selon la puissance (p.ex. +1.5€ par tranche de 3kVA au-dessus de 6)
-        const ABONNEMENT_ADJUSTMENT_PER_KVA = 0.5; // € par kVA supplémentaire
+    const ABONNEMENT_ADJUSTMENT_PER_KVA = 0.5;
 
-        // Éléments du DOM
-        const consumptionInput = document.getElementById('consumption');
-        const consumptionValueDisplay = document.getElementById('consumptionValue');
-        const powerInput = document.getElementById('power');
-        const powerValueDisplay = document.getElementById('powerValue');
-        const tariffButtons = document.querySelectorAll('.option-button[data-option]');
-        const offerButtons = document.querySelectorAll('.option-button[data-offre]');
-        const monthlyBillDisplay = document.getElementById('monthlyBill');
-        const annualBillDisplay = document.getElementById('annualBill');
-        const resultTitleDisplay = document.getElementById('resultTitle');
-        const savingsEstimateDisplay = document.getElementById('savingsEstimate');
+    const consumptionInput = document.getElementById('consumption');
+    const consumptionValueDisplay = document.getElementById('consumptionValue');
+    const powerInput = document.getElementById('power');
+    const powerValueDisplay = document.getElementById('powerValue');
+    const tariffButtons = document.querySelectorAll('.option-button[data-option]');
+    const offerButtons = document.querySelectorAll('.option-button[data-offre]');
+    const monthlyBillDisplay = document.getElementById('monthlyBill');
+    const annualBillDisplay = document.getElementById('annualBill');
+    const resultTitleDisplay = document.getElementById('resultTitle');
+    const savingsEstimateDisplay = document.getElementById('savingsEstimate');
 
-        // Variables d'état
-        let currentTariffOption = 'Base'; // 'Base' ou 'HPHC'
-        let currentOfferType = 'Bleu';   // 'Bleu', 'Jaune' ou 'Vert'
+    let currentTariffOption = 'Base';
+    let currentOfferType = 'Bleu';
 
-        /**
-         * Met à jour l'affichage de la valeur du curseur et la couleur de progression.
-         * @param {HTMLInputElement} input - L'élément input de type range.
-         * @param {HTMLElement} display - L'élément d'affichage de la valeur.
-         * @param {string} unit - L'unité (kWh ou kVA).
-         */
-        function updateRangeDisplay(input, display, unit) {
-            const value = parseInt(input.value);
-            const min = parseInt(input.min);
-            const max = parseInt(input.max);
-            const percent = ((value - min) / (max - min)) * 100;
+    function updateRangeDisplay(input, display, unit) {
+        const value = parseInt(input.value);
+        const min = parseInt(input.min);
+        const max = parseInt(input.max);
+        const percent = ((value - min) / (max - min)) * 100;
 
-            // Mise à jour de la progression du curseur
-            input.style.setProperty('--range-progress', `${percent}%`);
-            // Mise à jour de l'affichage de la valeur
-            display.textContent = `${value.toLocaleString('fr-FR')} ${unit}`;
-            
-            // Si c'est le curseur de consommation, on ajoute un petit ajustement pour le placement
-            if (unit === 'kWh') {
-                // Le curseur de consommation est un peu plus complexe à afficher
-            }
+        input.style.setProperty('--range-progress', `${percent}%`);
+        display.textContent = `${value.toLocaleString('fr-FR')} ${unit}`;
+    }
+
+    function calculateBill() {
+        const annualConsumption = parseInt(consumptionInput.value);
+        const powerKVA = parseInt(powerInput.value);
+
+        const tariffData = SIMULATION_PRICES[currentTariffOption][currentOfferType];
+
+        const kvaDifference = Math.max(0, powerKVA - 6);
+        const powerAdjustment = kvaDifference * ABONNEMENT_ADJUSTMENT_PER_KVA;
+        const baseAbonnement = currentTariffOption === 'Base' ? SIMULATION_PRICES.Base[currentOfferType].abonnement : SIMULATION_PRICES.HPHC[currentOfferType].abonnement;
+        const monthlyAbonnement = baseAbonnement + powerAdjustment;
+        const annualAbonnement = monthlyAbonnement * 12;
+
+        let annualCost = 0;
+        if (currentTariffOption === 'Base') {
+            annualCost = annualConsumption * tariffData.kwh;
+        } else {
+            const consumptionHP = annualConsumption * 0.60;
+            const consumptionHC = annualConsumption * 0.40;
+            annualCost = (consumptionHP * tariffData.kwh_hp) + (consumptionHC * tariffData.kwh_hc);
         }
 
-        /**
-         * Calcule le coût mensuel et annuel de l'électricité.
-         */
-        function calculateBill() {
-            const annualConsumption = parseInt(consumptionInput.value);
-            const powerKVA = parseInt(powerInput.value);
+        const totalAnnualCost = annualAbonnement + annualCost;
+        const totalMonthlyCost = totalAnnualCost / 12;
 
-            // 1. Déterminer la structure tarifaire en fonction de l'option et de l'offre
-            const tariffData = SIMULATION_PRICES[currentTariffOption][currentOfferType];
-            
-            let annualCost = 0;
-            let monthlyAbonnement = 0;
+        monthlyBillDisplay.textContent = `${totalMonthlyCost.toFixed(2).replace('.', ',')} €/mois`;
+        annualBillDisplay.textContent = `soit ${totalAnnualCost.toFixed(2).replace('.', ',')} €/an TTC`;
 
-            // 2. Calcul du coût de l'abonnement
-            // On ajuste l'abonnement de base en fonction de la puissance réelle par rapport à 6 kVA
-            const kvaDifference = Math.max(0, powerKVA - 6);
-            const powerAdjustment = kvaDifference * ABONNEMENT_ADJUSTMENT_PER_KVA;
-            
-            // L'abonnement mensuel de base est tiré des données de simulation pour 6 kVA
-            const baseAbonnement = currentTariffOption === 'Base' ? 
-                                   SIMULATION_PRICES.Base[currentOfferType].abonnement : 
-                                   SIMULATION_PRICES.HPHC[currentOfferType].abonnement;
+        updateResultBox(totalAnnualCost);
+    }
 
-            monthlyAbonnement = baseAbonnement + powerAdjustment;
-            const annualAbonnement = monthlyAbonnement * 12;
+    function updateResultBox(currentCost) {
+        const annualConsumption = parseInt(consumptionInput.value);
+        const powerKVA = parseInt(powerInput.value);
 
-            // 3. Calcul du coût de la consommation (kWh)
-            if (currentTariffOption === 'Base') {
-                // Tarif Base : Prix unique du kWh
-                annualCost = annualConsumption * tariffData.kwh;
-            } else {
-                // Tarif HPHC : Répartition 60% HP / 40% HC (simplification standard)
-                const consumptionHP = annualConsumption * 0.60;
-                const consumptionHC = annualConsumption * 0.40;
-                annualCost = (consumptionHP * tariffData.kwh_hp) + (consumptionHC * tariffData.kwh_hc);
-            }
+        const baseAbonnementTRV = currentTariffOption === 'Base' ? SIMULATION_PRICES.Base.Bleu.abonnement : SIMULATION_PRICES.HPHC.Bleu.abonnement;
+        const kvaDifference = Math.max(0, powerKVA - 6);
+        const powerAdjustment = kvaDifference * ABONNEMENT_ADJUSTMENT_PER_KVA;
+        const monthlyAbonnementTRV = baseAbonnementTRV + powerAdjustment;
+        const annualAbonnementTRV = monthlyAbonnementTRV * 12;
 
-            // Coût total annuel (TTC)
-            const totalAnnualCost = annualAbonnement + annualCost;
-            const totalMonthlyCost = totalAnnualCost / 12;
-
-            // 4. Mise à jour de l'affichage
-            monthlyBillDisplay.textContent = `${totalMonthlyCost.toFixed(2).replace('.', ',')} €/mois`;
-            annualBillDisplay.textContent = `soit ${totalAnnualCost.toFixed(2).replace('.', ',')} €/an TTC`;
-            
-            // 5. Mise à jour de la zone de résultat
-            updateResultBox(totalAnnualCost);
+        let annualConsoTRV = 0;
+        if (currentTariffOption === 'Base') {
+            annualConsoTRV = annualConsumption * SIMULATION_PRICES.Base.Bleu.kwh;
+        } else {
+            const consumptionHP = annualConsumption * 0.60;
+            const consumptionHC = annualConsumption * 0.40;
+            annualConsoTRV = (consumptionHP * SIMULATION_PRICES.HPHC.Bleu.kwh_hp) + 
+                             (consumptionHC * SIMULATION_PRICES.HPHC.Bleu.kwh_hc);
         }
 
-        /**
-         * Met à jour la boîte de résultat en fonction du type d'offre sélectionné.
-         * @param {number} currentCost - Le coût annuel total calculé.
-         */
-        function updateResultBox(currentCost) {
-            let title = '';
-            let savings = 0;
-            let trvCost = 0;
+        const trvCost = annualAbonnementTRV + annualConsoTRV;
 
-            // Recalculer le coût avec le TRV (offre "Bleu") pour la comparaison
-            // Utilise la même consommation et puissance
-            const annualConsumption = parseInt(consumptionInput.value);
-            const powerKVA = parseInt(powerInput.value);
-
-            // Coût TRV Abonnement (6kVA)
-            const baseAbonnementTRV = currentTariffOption === 'Base' ? 
-                                   SIMULATION_PRICES.Base.Bleu.abonnement : 
-                                   SIMULATION_PRICES.HPHC.Bleu.abonnement;
-            const kvaDifference = Math.max(0, powerKVA - 6);
-            const powerAdjustment = kvaDifference * ABONNEMENT_ADJUSTMENT_PER_KVA;
-            const monthlyAbonnementTRV = baseAbonnementTRV + powerAdjustment;
-            const annualAbonnementTRV = monthlyAbonnementTRV * 12;
-
-            // Coût TRV Conso
-            let annualConsoTRV = 0;
-            if (currentTariffOption === 'Base') {
-                annualConsoTRV = annualConsumption * SIMULATION_PRICES.Base.Bleu.kwh;
-            } else {
-                const consumptionHP = annualConsumption * 0.60;
-                const consumptionHC = annualConsumption * 0.40;
-                annualConsoTRV = (consumptionHP * SIMULATION_PRICES.HPHC.Bleu.kwh_hp) + 
-                                 (consumptionHC * SIMULATION_PRICES.HPHC.Bleu.kwh_hc);
-            }
-            trvCost = annualAbonnementTRV + annualConsoTRV;
-            
-            // Mise à jour selon l'offre
-            if (currentOfferType === 'Bleu') {
-                title = "Estimation Tarif Réglementé (Bleu)";
-                savings = 0;
-            } else if (currentOfferType === 'Jaune') {
-                title = "Estimation Offre Compétitive (Jaune)";
-                savings = Math.max(0, trvCost - currentCost); // Économies par rapport au TRV
-            } else { // Vert
-                title = "Estimation Offre Premium (Vert)";
-                savings = Math.max(0, trvCost - currentCost);
-            }
-
-            resultTitleDisplay.textContent = title;
-            savingsEstimateDisplay.textContent = savings > 0 
-                ? `Jusqu'à ${savings.toFixed(0).toLocaleString('fr-FR')} € économisés par an*`
-                : "Tarif de référence (TRV utilisé pour le calcul).";
+        let title = '';
+        let savings = 0;
+        if (currentOfferType === 'Bleu') {
+            title = "Estimation Tarif Réglementé (Bleu)";
+        } else if (currentOfferType === 'Jaune') {
+            title = "Estimation Offre Compétitive (Jaune)";
+            savings = Math.max(0, trvCost - currentCost);
+        } else {
+            title = "Estimation Offre Premium (Vert)";
+            savings = Math.max(0, trvCost - currentCost);
         }
 
-        // --- Gestion des Événements ---
+        resultTitleDisplay.textContent = title;
+        savingsEstimateDisplay.textContent = savings > 0 
+            ? `Jusqu'à ${savings.toFixed(0).toLocaleString('fr-FR')} € économisés par an*`
+            : "Tarif de référence (TRV utilisé pour le calcul).";
+    }
 
-        // 1. Événements des Curseur (Inputs)
-        consumptionInput.addEventListener('input', () => {
-            updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
+    // Événements
+    consumptionInput.addEventListener('input', () => {
+        updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
+        calculateBill();
+    });
+
+    powerInput.addEventListener('input', () => {
+        let value = parseInt(powerInput.value);
+        const step = parseInt(powerInput.step);
+        value = Math.round(value / step) * step; 
+        powerInput.value = value;
+
+        updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+        calculateBill();
+    });
+
+    tariffButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            tariffButtons.forEach(btn => btn.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            currentTariffOption = e.currentTarget.getAttribute('data-option');
             calculateBill();
         });
+    });
 
-        powerInput.addEventListener('input', () => {
-            // S'assurer que la valeur est un pas multiple de 3 (3, 6, 9, 12...)
-            let value = parseInt(powerInput.value);
-            const step = parseInt(powerInput.step);
-            // La valeur doit toujours être un multiple du step.
-            value = Math.round(value / step) * step; 
-            powerInput.value = value;
-
-            updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+    offerButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            offerButtons.forEach(btn => btn.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            currentOfferType = e.currentTarget.getAttribute('data-offre');
             calculateBill();
         });
+    });
 
-        // 2. Événements des Boutons d'Option Tarifaire (Base/HPHC)
-        tariffButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                // Désactiver tous les boutons de tarif
-                tariffButtons.forEach(btn => btn.classList.remove('active'));
-                
-                // Activer le bouton cliqué
-                e.target.classList.add('active');
-                
-                // Mettre à jour l'état
-                currentTariffOption = e.target.getAttribute('data-option');
-                calculateBill();
-            });
-        });
+    function initialize() {
+        updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
+        updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+        calculateBill();
+    }
 
-        // 3. Événements des Boutons d'Offre (Bleu/Jaune/Vert)
-        offerButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                // Désactiver tous les boutons d'offre
-                offerButtons.forEach(btn => btn.classList.remove('active'));
-                
-                // Activer le bouton cliqué
-                e.target.classList.add('active');
-                
-                // Mettre à jour l'état
-                currentOfferType = e.target.getAttribute('data-offre');
-                calculateBill();
-            });
-        });
-
-        // --- Initialisation ---
-
-        /**
-         * Initialise l'état et lance le premier calcul.
-         */
-        function initialize() {
-            // Initialiser l'affichage des curseurs
-            updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
-            updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
-
-            // Calculer la facture initiale
-            calculateBill();
-        }
-
-        window.onload = initialize;
-    </script>
+    window.onload = initialize;
+</script>
 </body>
 </html>
