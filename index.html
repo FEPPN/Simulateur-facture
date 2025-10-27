@@ -31,6 +31,30 @@
             box-shadow: 0 0 5px rgba(0,0,0,0.1);
         }
 
+        /* Boutons option */
+        .option-button {
+            transition: all 0.2s;
+            border: 2px solid #d1d5db;
+            color: #374151;
+            background-color: white;
+            cursor: pointer;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .option-button:hover {
+            background-color: rgba(106, 99, 255, 0.2);
+            border-color: #6A63FF;
+            color: #6A63FF;
+        }
+        .option-button.active {
+            background-color: #6A63FF;
+            border-color: #6A63FF;
+            color: white;
+            box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
+        }
+
         /* Menu déroulant */
         .collapsible-content {
             max-height: 0;
@@ -66,6 +90,15 @@
                 </div>
             </div>
 
+            <!-- Option tarifaire -->
+            <div class="space-y-4">
+                <label class="block text-lg font-semibold text-gray-700">Option tarifaire <span class="text-red-500">*</span></label>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button class="option-button active" data-option="Base">Base</button>
+                    <button class="option-button" data-option="HPHC">Heures Pleines / Heures Creuses</button>
+                </div>
+            </div>
+
             <!-- Puissance -->
             <div class="space-y-4">
                 <label for="power" class="block text-lg font-semibold text-gray-700">Puissance du compteur <span class="text-red-500">*</span></label>
@@ -84,7 +117,7 @@
 
             <!-- Logo EDF -->
             <div class="flex justify-center mb-6">
-                <img src="METTRE LE LIEN" alt="Logo EDF" class="w-28">
+                <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="Logo EDF" class="w-28">
             </div>
 
             <!-- Résultats -->
@@ -131,10 +164,10 @@
 </div>
 
 <script>
-    // Tarifs EDF Tarif Bleu (Base)
+    // Tarifs EDF Tarif Bleu
     const TARIF_BLEU = {
-        abonnement: 13, // €/mois
-        kwh: 0.1952 // €/kWh
+        Base: { abonnement: 13, kwh: 0.1952 },
+        HPHC: { abonnement: 15, kwh_hp: 0.2081, kwh_hc: 0.1635 }
     };
     const ABONNEMENT_PAR_KVA = 0.5;
 
@@ -144,6 +177,9 @@
     const powerValue = document.getElementById('powerValue');
     const monthlyBill = document.getElementById('monthlyBill');
     const annualBill = document.getElementById('annualBill');
+    const optionButtons = document.querySelectorAll('.option-button[data-option]');
+
+    let currentOption = 'Base';
 
     function updateRangeDisplay(input, display, unit) {
         const value = parseInt(input.value);
@@ -157,10 +193,20 @@
     function calculateBill() {
         const conso = parseInt(consumptionInput.value);
         const kva = parseInt(powerInput.value);
-        const abonnement = (TARIF_BLEU.abonnement + (Math.max(0, kva - 6) * ABONNEMENT_PAR_KVA)) * 12;
-        const consoCost = conso * TARIF_BLEU.kwh;
-        const total = abonnement + consoCost;
-        monthlyBill.textContent = `${(total / 12).toFixed(2).replace('.', ',')} €/mois`;
+
+        let abonnement, total;
+
+        if(currentOption === 'Base') {
+            abonnement = (TARIF_BLEU.Base.abonnement + Math.max(0, kva - 6) * ABONNEMENT_PAR_KVA) * 12;
+            total = abonnement + conso * TARIF_BLEU.Base.kwh;
+        } else {
+            const hp = conso * 0.6;
+            const hc = conso * 0.4;
+            abonnement = (TARIF_BLEU.HPHC.abonnement + Math.max(0, kva - 6) * ABONNEMENT_PAR_KVA) * 12;
+            total = abonnement + (hp * TARIF_BLEU.HPHC.kwh_hp) + (hc * TARIF_BLEU.HPHC.kwh_hc);
+        }
+
+        monthlyBill.textContent = `${(total/12).toFixed(2).replace('.', ',')} €/mois`;
         annualBill.textContent = `soit ${total.toFixed(2).replace('.', ',')} €/an TTC`;
     }
 
@@ -173,6 +219,13 @@
         calculateBill();
     });
 
+    optionButtons.forEach(btn => btn.addEventListener('click', e => {
+        optionButtons.forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        currentOption = e.currentTarget.dataset.option;
+        calculateBill();
+    }));
+
     // Menu déroulant
     const toggleBtn = document.getElementById('toggleDetails');
     const details = document.getElementById('detailsContent');
@@ -181,9 +234,7 @@
     toggleBtn.addEventListener('click', () => {
         details.classList.toggle('open');
         chevron.style.transform = details.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-        toggleBtn.childNodes[0].textContent = details.classList.contains('open')
-            ? "Masquer les détails"
-            : "Afficher les détails";
+        toggleBtn.childNodes[0].textContent = details.classList.contains('open') ? "Masquer les détails" : "Afficher les détails";
     });
 
     window.onload = () => {
