@@ -79,8 +79,8 @@
 
     <!-- Colonne gauche -->
     <div class="lg:col-span-2 p-6 md:p-10 space-y-6">
-      <h1 class="text-3xl font-extrabold text-gray-800">Simulateur de Facture EDF</h1>
-      <p class="text-gray-500 text-sm">Ajustez vos paramètres pour comparer les offres (Tarif Bleu TRV).</p>
+      <h1 class="text-3xl font-extrabold text-gray-800">Simuler votre facture EDF</h1>
+      <p class="text-gray-500 text-sm">Ajustez vos paramètres pour comparer les offres d'électricité EDF (hors offres vertes).</p>
 
       <!-- Consommation -->
       <div class="space-y-3">
@@ -113,14 +113,16 @@
       <div class="space-y-3 relative">
         <label class="block text-lg font-semibold text-gray-700">Sélection de l'offre <span class="text-red-500">*</span></label>
         <button id="dropdownBtn" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-left flex justify-between items-center font-semibold shadow-md hover:bg-gray-100 transition">
-          Choisir une offre
+          Sélectionner une offre
           <span id="dropdownChevron" class="transition-transform duration-300">▼</span>
         </button>
         <ul id="dropdownMenu" class="left-0 right-0 bg-white border border-gray-300 rounded-xl mt-2 shadow-md overflow-hidden">
-          <li class="px-4 py-2 hover:bg-gray-100">Offre 1</li>
-          <li class="px-4 py-2 hover:bg-gray-100">Offre 2</li>
-          <li class="px-4 py-2 hover:bg-gray-100">Offre 3</li>
-          <li class="px-4 py-2 hover:bg-gray-100">Offre 4</li>
+          <li class="px-4 py-2 hover:bg-gray-100">Tarif Bleu (TRV)</li>
+          <li class="px-4 py-2 hover:bg-gray-100">Zen Week-End</li>
+          <li class="px-4 py-2 hover:bg-gray-100">Zen Week-End Plus</li>
+          <li class="px-4 py-2 hover:bg-gray-100">Zen Week-End Option Flex</li>
+          <li class="px-4 py-2 hover:bg-gray-100">Zen Online</li>
+          <li class="px-4 py-2 hover:bg-gray-100">Zen Fixe</li>
         </ul>
       </div>
     </div>
@@ -141,7 +143,7 @@
       <!-- Détails (menu déroulant fluide) -->
       <div class="w-full mt-8">
         <button id="toggleDetails" class="w-full flex justify-between items-center bg-white text-[#6A63FF] px-4 py-3 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition">
-          Afficher les détails
+          Afficher les détails de l'offre
           <span id="chevron" class="transition-transform duration-300">▼</span>
         </button>
         <div id="detailsContent" class="collapsible-content bg-[#5B54E1] rounded-lg mt-3 p-5 space-y-3">
