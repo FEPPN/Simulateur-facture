@@ -66,9 +66,24 @@
       transition: max-height 0.3s ease;
       position: absolute;
       z-index: 50;
+      background: white;
+      border-radius: 0.75rem;
     }
+
+    /* Menu ouvert : max 3 offres visibles, scrollable */
+    #dropdownMenu.open {
+      max-height: 150px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #c4c4c4 #f9f9f9;
+    }
+
+    /* Style des options */
     #dropdownMenu li {
       cursor: pointer;
+    }
+    #dropdownMenu li:hover {
+      background-color: #f3f4f6;
     }
   </style>
 </head>
@@ -140,7 +155,7 @@
         <p class="text-lg opacity-80" id="annualBill">soit 0,00 €/an TTC</p>
       </div>
 
-      <!-- Détails (menu déroulant fluide) -->
+      <!-- Détails -->
       <div class="w-full mt-8">
         <button id="toggleDetails" class="w-full flex justify-between items-center bg-white text-[#6A63FF] px-4 py-3 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition">
           Afficher les détails
@@ -235,20 +250,18 @@
   toggleBtn.addEventListener('click', () => {
     detailsContent.classList.toggle('open');
     chevron.style.transform = detailsContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-    document.querySelector('.max-w-4xl').style.height = 'auto'; // permet l’extension fluide
+    document.querySelector('.max-w-4xl').style.height = 'auto';
   });
 
   dropdownBtn.addEventListener('click', () => {
-    if (dropdownMenu.style.maxHeight && dropdownMenu.style.maxHeight !== '0px') {
-      dropdownMenu.style.maxHeight = '0px';
-      dropdownChevron.style.transform = 'rotate(0deg)';
-    } else {
-      dropdownMenu.style.maxHeight = dropdownMenu.scrollHeight + 'px';
-      dropdownChevron.style.transform = 'rotate(180deg)';
-    }
+    const isOpen = dropdownMenu.classList.toggle('open');
+    dropdownMenu.style.maxHeight = isOpen ? '150px' : '0px';
+    dropdownChevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
   });
+
   dropdownMenu.querySelectorAll('li').forEach(li => li.addEventListener('click', () => {
     dropdownBtn.childNodes[0].textContent = li.textContent;
+    dropdownMenu.classList.remove('open');
     dropdownMenu.style.maxHeight = '0px';
     dropdownChevron.style.transform = 'rotate(0deg)';
   }));
