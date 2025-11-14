@@ -1,61 +1,61 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simuler ma facture d'électricité EDF</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #f4f7fa; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simuler ma facture d'électricité EDF</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+body { font-family: 'Inter', sans-serif; background-color: #f4f7fa; }
 
-    input[type="range"]::-webkit-slider-runnable-track {
-      height: 8px; cursor: pointer;
-      background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
-      border-radius: 4px;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      border: 3px solid #6A63FF;
-      height: 20px; width: 20px; border-radius: 50%;
-      background: white; cursor: pointer; margin-top: -6px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px; cursor: pointer;
+  background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
+  border-radius: 4px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 3px solid #6A63FF;
+  height: 20px; width: 20px; border-radius: 50%;
+  background: white; cursor: pointer; margin-top: -6px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
 
-    .option-button {
-      transition: all 0.2s;
-      border: 2px solid #d1d5db;
-      color: #374151;
-      background-color: white;
-      cursor: pointer;
-      padding: 0.75rem 1rem;
-      border-radius: 1rem;
-      font-weight: 500;
-      text-align: center;
-    }
-    .option-button:hover {
-      background-color: rgba(106, 99, 255, 0.2);
-      border-color: #6A63FF;
-      color: #6A63FF;
-    }
-    .option-button.active {
-      background-color: #6A63FF;
-      border-color: #6A63FF;
-      color: white;
-      box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
-    }
+.option-button {
+  transition: all 0.2s;
+  border: 2px solid #d1d5db;
+  color: #374151;
+  background-color: white;
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+.option-button:hover {
+  background-color: rgba(106, 99, 255, 0.2);
+  border-color: #6A63FF;
+  color: #6A63FF;
+}
+.option-button.active {
+  background-color: #6A63FF;
+  border-color: #6A63FF;
+  color: white;
+  box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
+}
 
-    .collapsible-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, opacity 0.4s ease;
-      opacity: 0;
-    }
-    .collapsible-content.open {
-      max-height: 400px;
-      opacity: 1;
-    }
-  </style>
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+.collapsible-content.open {
+  max-height: 400px;
+  opacity: 1;
+}
+</style>
 </head>
 <body class="p-4 md:p-8">
 
@@ -149,115 +149,120 @@
 </div>
 
 <script>
-  const consumptionInput = document.getElementById('consumption');
-  const powerInput = document.getElementById('power');
-  const consumptionValueDisplay = document.getElementById('consumptionValue');
-  const powerValueDisplay = document.getElementById('powerValue');
-  const monthlyBillDisplay = document.getElementById('monthlyBill');
-  const annualBillDisplay = document.getElementById('annualBill');
-  const toggleBtn = document.getElementById('toggleDetails');
-  const detailsContent = document.getElementById('detailsContent');
-  const chevron = document.getElementById('chevron');
+const consumptionInput = document.getElementById('consumption');
+const powerInput = document.getElementById('power');
+const consumptionValueDisplay = document.getElementById('consumptionValue');
+const powerValueDisplay = document.getElementById('powerValue');
+const monthlyBillDisplay = document.getElementById('monthlyBill');
+const annualBillDisplay = document.getElementById('annualBill');
+const toggleBtn = document.getElementById('toggleDetails');
+const detailsContent = document.getElementById('detailsContent');
+const chevron = document.getElementById('chevron');
 
-  let SIMULATION_PRICES = {};
-  let selectedTarif = 'Bleu';
-  let selectedOption = 'Base';
+let SIMULATION_PRICES = {};
+let selectedTarif = 'Bleu';
+let selectedOption = 'Base';
+let dataLoaded = false;
 
-  // Tarif Bleu/Jaune/Vert
-  const tarifButtons = document.querySelectorAll('.option-button[data-tarif]');
-  tarifButtons.forEach(btn => {
-    btn.addEventListener('click', e => {
-      tarifButtons.forEach(b => b.classList.remove('active'));
-      e.currentTarget.classList.add('active');
-      selectedTarif = e.currentTarget.dataset.tarif;
-      fetchTarif(selectedTarif);
-    });
-  });
-
-  // Base / HPHC
-  const optionButtons = document.querySelectorAll('.option-button[data-option]');
-  optionButtons.forEach(btn => {
-    btn.addEventListener('click', e => {
-      optionButtons.forEach(b => b.classList.remove('active'));
-      e.currentTarget.classList.add('active');
-      selectedOption = e.currentTarget.dataset.option;
-      calculateBill();
-    });
-  });
-
-  function updateRangeDisplay(input, display, unit) {
-    const val = parseInt(input.value);
-    const min = parseInt(input.min);
-    const max = parseInt(input.max);
-    const percent = ((val - min) / (max - min)) * 100;
-    input.style.setProperty('--range-progress', `${percent}%`);
-    display.textContent = `${val.toLocaleString('fr-FR')} ${unit}`;
-  }
-
-  function calculateBill() {
-    const consumption = parseInt(consumptionInput.value);
-    const power = parseInt(powerInput.value);
-
-    if (!SIMULATION_PRICES[selectedTarif]) return;
-    const line = SIMULATION_PRICES[selectedTarif].find(r => r.puissance == power);
-    if (!line) return;
-
-    const monthlyAbonnement = line.abonnement / 12;
-    let monthlyConsumptionCost = 0;
-
-    if (selectedOption === 'Base') {
-      monthlyConsumptionCost = consumption * line.kwh / 12;
-    } else { // HPHC
-      const hp = line.kwh_hp;
-      const hc = line.kwh_hc;
-      monthlyConsumptionCost = ((consumption * 0.6 * hp) + (consumption * 0.4 * hc)) / 12;
-    }
-
-    const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
-    monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} €/mois`;
-    annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an TTC`;
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    detailsContent.classList.toggle('open');
-    chevron.style.transform = detailsContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-  });
-
-  consumptionInput.addEventListener('input', () => { 
-    updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); 
-    calculateBill(); 
-  });
-  powerInput.addEventListener('input', () => { 
-    updateRangeDisplay(powerInput, powerValueDisplay, 'kVA'); 
-    calculateBill(); 
-  });
-
-  async function fetchTarif(feuille) {
-    try {
-      const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQxDFt8cq3nhcT-Z22OYOIDAsSAabQ5-GmKDVGtyXlnwJmGYmoGCv7b0bbn9w-DIp3wfnQwumkzWwm_/gviz/tq?tqx=out:json&sheet=${feuille}`;
-      const res = await fetch(url);
-      let text = await res.text();
-      const json = JSON.parse(text.substring(47, text.length - 2));
-
-      SIMULATION_PRICES[feuille] = json.table.rows.map(row => ({
-        puissance: parseInt(row.c[0].v),
-        abonnement: parseFloat(row.c[1].v),
-        kwh: parseFloat(row.c[2].v),
-        kwh_hp: parseFloat(row.c[3]?.v || row.c[2].v),
-        kwh_hc: parseFloat(row.c[4]?.v || row.c[2].v)
-      }));
-
-      calculateBill();
-    } catch (err) {
-      console.error('Erreur fetch feuille', feuille, err);
-    }
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
-    updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+// Sélection Tarif
+const tarifButtons = document.querySelectorAll('.option-button[data-tarif]');
+tarifButtons.forEach(btn => {
+  btn.addEventListener('click', e => {
+    tarifButtons.forEach(b => b.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    selectedTarif = e.currentTarget.dataset.tarif;
+    dataLoaded = false;
     fetchTarif(selectedTarif);
   });
+});
+
+// Option Base/HPHC
+const optionButtons = document.querySelectorAll('.option-button[data-option]');
+optionButtons.forEach(btn => {
+  btn.addEventListener('click', e => {
+    optionButtons.forEach(b => b.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    selectedOption = e.currentTarget.dataset.option;
+    if(dataLoaded) calculateBill();
+  });
+});
+
+// Curseurs
+function updateRangeDisplay(input, display, unit) {
+  const val = parseInt(input.value);
+  const min = parseInt(input.min);
+  const max = parseInt(input.max);
+  const percent = ((val - min) / (max - min)) * 100;
+  input.style.setProperty('--range-progress', `${percent}%`);
+  display.textContent = `${val.toLocaleString('fr-FR')} ${unit}`;
+}
+
+function calculateBill() {
+  if(!dataLoaded) return;
+  const consumption = parseInt(consumptionInput.value);
+  const power = parseInt(powerInput.value);
+  const line = SIMULATION_PRICES[selectedTarif].find(r => r.puissance === power);
+  if(!line) return;
+
+  const monthlyAbonnement = line.abonnement / 12;
+  let monthlyConsumptionCost = 0;
+
+  if(selectedOption === 'Base') {
+    monthlyConsumptionCost = consumption * line.kwh / 12;
+  } else {
+    monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
+  }
+
+  const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
+  monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} €/mois`;
+  annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an TTC`;
+}
+
+// Toggle détails
+toggleBtn.addEventListener('click', () => {
+  detailsContent.classList.toggle('open');
+  chevron.style.transform = detailsContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+});
+
+// Curseurs écoute
+consumptionInput.addEventListener('input', () => { 
+  updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); 
+  calculateBill(); 
+});
+powerInput.addEventListener('input', () => { 
+  updateRangeDisplay(powerInput, powerValueDisplay, 'kVA'); 
+  calculateBill(); 
+});
+
+// Fetch GSheet
+async function fetchTarif(feuille) {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQxDFt8cq3nhcT-Z22OYOIDAsSAabQ5-GmKDVGtyXlnwJmGYmoGCv7b0bbn9w-DIp3wfnQwumkzWwm_/gviz/tq?tqx=out:json&sheet=${feuille}`;
+    const res = await fetch(url);
+    let text = await res.text();
+    const json = JSON.parse(text.substring(47, text.length - 2));
+
+    SIMULATION_PRICES[feuille] = json.table.rows.map(row => ({
+      puissance: parseInt(row.c[0].v),
+      abonnement: parseFloat(row.c[1].v),
+      kwh: parseFloat(row.c[2].v),
+      kwh_hp: parseFloat(row.c[3]?.v || row.c[2].v),
+      kwh_hc: parseFloat(row.c[4]?.v || row.c[2].v)
+    }));
+
+    dataLoaded = true;
+    calculateBill();
+  } catch(err) {
+    console.error('Erreur fetch feuille', feuille, err);
+  }
+}
+
+// Initialisation
+window.addEventListener('DOMContentLoaded', () => {
+  updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
+  updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+  fetchTarif(selectedTarif);
+});
 </script>
 </body>
 </html>
