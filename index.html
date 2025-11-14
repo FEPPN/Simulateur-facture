@@ -94,7 +94,7 @@
         </div>
       </div>
 
-      <!-- Sélection d'offre avec boutons -->
+      <!-- Sélection d'offre -->
       <div class="space-y-3 relative">
         <label class="block text-lg font-semibold text-gray-700">Sélection de l'offre <span class="text-red-500">*</span></label>
         <div class="flex gap-3">
@@ -149,7 +149,6 @@
 </div>
 
 <script>
-  const ABONNEMENT_ADJUSTMENT_PER_KVA = 0.5;
   const consumptionInput = document.getElementById('consumption');
   const powerInput = document.getElementById('power');
   const consumptionValueDisplay = document.getElementById('consumptionValue');
@@ -162,7 +161,9 @@
 
   let SIMULATION_PRICES = {};
   let selectedTarif = 'Bleu';
+  let selectedOption = 'Base';
 
+  // Tarif Bleu/Jaune/Vert
   const tarifButtons = document.querySelectorAll('.option-button[data-tarif]');
   tarifButtons.forEach(btn => {
     btn.addEventListener('click', e => {
@@ -170,6 +171,17 @@
       e.currentTarget.classList.add('active');
       selectedTarif = e.currentTarget.dataset.tarif;
       fetchTarif(selectedTarif);
+    });
+  });
+
+  // Base / HPHC
+  const optionButtons = document.querySelectorAll('.option-button[data-option]');
+  optionButtons.forEach(btn => {
+    btn.addEventListener('click', e => {
+      optionButtons.forEach(b => b.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      selectedOption = e.currentTarget.dataset.option;
+      calculateBill();
     });
   });
 
@@ -183,20 +195,27 @@
   }
 
   function calculateBill() {
-    const annualConsumption = parseInt(consumptionInput.value);
-    const powerKVA = parseInt(powerInput.value);
+    const consumption = parseInt(consumptionInput.value);
+    const power = parseInt(powerInput.value);
 
     if (!SIMULATION_PRICES[selectedTarif]) return;
-
-    const line = SIMULATION_PRICES[selectedTarif].find(r => r.puissance == powerKVA);
+    const line = SIMULATION_PRICES[selectedTarif].find(r => r.puissance == power);
     if (!line) return;
 
-    const annualAbonnement = line.abonnement; // déjà annuel
-    const annualCost = annualConsumption * line.kwh;
-    const total = annualAbonnement + annualCost;
+    const monthlyAbonnement = line.abonnement / 12;
+    let monthlyConsumptionCost = 0;
 
-    monthlyBillDisplay.textContent = `${(total / 12).toFixed(2).replace('.', ',')} €/mois`;
-    annualBillDisplay.textContent = `soit ${total.toFixed(2).replace('.', ',')} €/an TTC`;
+    if (selectedOption === 'Base') {
+      monthlyConsumptionCost = consumption * line.kwh / 12;
+    } else { // HPHC
+      const hp = line.kwh_hp;
+      const hc = line.kwh_hc;
+      monthlyConsumptionCost = ((consumption * 0.6 * hp) + (consumption * 0.4 * hc)) / 12;
+    }
+
+    const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
+    monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} €/mois`;
+    annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an TTC`;
   }
 
   toggleBtn.addEventListener('click', () => {
@@ -204,8 +223,14 @@
     chevron.style.transform = detailsContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
   });
 
-  consumptionInput.addEventListener('input', () => { updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); calculateBill(); });
-  powerInput.addEventListener('input', () => { updateRangeDisplay(powerInput, powerValueDisplay, 'kVA'); calculateBill(); });
+  consumptionInput.addEventListener('input', () => { 
+    updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); 
+    calculateBill(); 
+  });
+  powerInput.addEventListener('input', () => { 
+    updateRangeDisplay(powerInput, powerValueDisplay, 'kVA'); 
+    calculateBill(); 
+  });
 
   async function fetchTarif(feuille) {
     try {
@@ -217,7 +242,9 @@
       SIMULATION_PRICES[feuille] = json.table.rows.map(row => ({
         puissance: parseInt(row.c[0].v),
         abonnement: parseFloat(row.c[1].v),
-        kwh: parseFloat(row.c[2].v)
+        kwh: parseFloat(row.c[2].v),
+        kwh_hp: parseFloat(row.c[3]?.v || row.c[2].v),
+        kwh_hc: parseFloat(row.c[4]?.v || row.c[2].v)
       }));
 
       calculateBill();
