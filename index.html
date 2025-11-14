@@ -9,7 +9,6 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
     body { font-family: 'Inter', sans-serif; background-color: #f4f7fa; }
 
-    /* Curseurs */
     input[type="range"]::-webkit-slider-runnable-track {
       height: 8px; cursor: pointer;
       background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
@@ -23,7 +22,6 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
-    /* Boutons */
     .option-button {
       transition: all 0.2s;
       border: 2px solid #d1d5db;
@@ -47,7 +45,6 @@
       box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
     }
 
-    /* Détails (colonne droite) */
     .collapsible-content {
       max-height: 0;
       overflow: hidden;
@@ -57,33 +54,6 @@
     .collapsible-content.open {
       max-height: 400px;
       opacity: 1;
-    }
-
-    /* Dropdown offres (colonne gauche) */
-    #dropdownMenu {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-      position: absolute;
-      z-index: 50;
-      background: white;
-      border-radius: 0.75rem;
-    }
-
-    /* Menu ouvert : max 3 offres visibles, scrollable */
-    #dropdownMenu.open {
-      max-height: 150px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #c4c4c4 #f9f9f9;
-    }
-
-    /* Style des options */
-    #dropdownMenu li {
-      cursor: pointer;
-    }
-    #dropdownMenu li:hover {
-      background-color: #f3f4f6;
     }
   </style>
 </head>
@@ -95,7 +65,7 @@
     <!-- Colonne gauche -->
     <div class="lg:col-span-2 p-6 md:p-10 space-y-6">
       <h1 class="text-3xl font-extrabold text-gray-800">Simuler votre facture EDF</h1>
-      <p class="text-gray-500 text-sm">Ajustez vos paramètres pour comparer les offres d'électricité EDF (hors offres vertes).</p>
+      <p class="text-gray-500 text-sm">Ajustez vos paramètres pour comparer les offres d'électricité EDF.</p>
 
       <!-- Consommation -->
       <div class="space-y-3">
@@ -124,38 +94,26 @@
         </div>
       </div>
 
-      <!-- Sélection d'offre -->
+      <!-- Sélection d'offre avec boutons -->
       <div class="space-y-3 relative">
         <label class="block text-lg font-semibold text-gray-700">Sélection de l'offre <span class="text-red-500">*</span></label>
-        <button id="dropdownBtn" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-left flex justify-between items-center font-semibold shadow-md hover:bg-gray-100 transition">
-          Sélectionner une offre
-          <span id="dropdownChevron" class="transition-transform duration-300">▼</span>
-        </button>
-        <ul id="dropdownMenu" class="left-0 right-0 bg-white border border-gray-300 rounded-xl mt-2 shadow-md overflow-hidden">
-          <li class="px-4 py-2 hover:bg-gray-100">Tarif Bleu (TRV)</li>
-          <li class="px-4 py-2 hover:bg-gray-100">Zen Week-End</li>
-          <li class="px-4 py-2 hover:bg-gray-100">Zen Week-End Plus</li>
-          <li class="px-4 py-2 hover:bg-gray-100">Zen Week-End Option Flex</li>
-          <li class="px-4 py-2 hover:bg-gray-100">Zen Online</li>
-          <li class="px-4 py-2 hover:bg-gray-100">Zen Fixe</li>
-        </ul>
+        <div class="flex gap-3">
+          <button class="option-button active" data-tarif="Bleu">Tarif Bleu</button>
+          <button class="option-button" data-tarif="Jaune">Tarif Jaune</button>
+          <button class="option-button" data-tarif="Vert">Tarif Vert</button>
+        </div>
       </div>
     </div>
 
     <!-- Colonne droite -->
     <div class="lg:col-span-1 bg-[#6A63FF] p-6 md:p-10 flex flex-col items-center text-white rounded-t-xl lg:rounded-l-none lg:rounded-r-xl transition-all duration-500">
-
-      <!-- Logo EDF -->
       <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-28 mb-4">
-
-      <!-- Résultat -->
       <div class="text-center">
         <p class="text-xl font-semibold mb-1" id="resultTitle">Estimation Tarif Réglementé</p>
         <p class="text-6xl font-extrabold" id="monthlyBill">0,00 €/mois</p>
         <p class="text-lg opacity-80" id="annualBill">soit 0,00 €/an TTC</p>
       </div>
 
-      <!-- Détails -->
       <div class="w-full mt-8">
         <button id="toggleDetails" class="w-full flex justify-between items-center bg-white text-[#6A63FF] px-4 py-3 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition">
           Afficher les détails
@@ -173,14 +131,14 @@
             <span class="text-green-300 text-xl font-bold mt-1">✓</span>
             <div>
               <p class="font-semibold">Abonnement Ajusté</p>
-              <p class="text-sm opacity-80">Ajusté à votre puissance (6 kVA).</p>
+              <p class="text-sm opacity-80">Ajusté à votre puissance sélectionnée.</p>
             </div>
           </div>
           <div class="flex items-start space-x-3">
             <span class="text-yellow-300 text-xl font-bold mt-1">★</span>
             <div>
               <p class="font-semibold">Économies Potentielles</p>
-              <p class="text-sm opacity-80" id="savingsEstimate">Tarif de référence (TRV).</p>
+              <p class="text-sm opacity-80" id="savingsEstimate">Tarif de référence.</p>
             </div>
           </div>
         </div>
@@ -191,26 +149,29 @@
 </div>
 
 <script>
-  const SIMULATION_PRICES = {
-    Base: { Bleu: { abonnement: 13, kwh: 0.1952 } },
-    HPHC: { Bleu: { abonnement: 15, kwh_hp: 0.2081, kwh_hc: 0.1635 } }
-  };
   const ABONNEMENT_ADJUSTMENT_PER_KVA = 0.5;
-
   const consumptionInput = document.getElementById('consumption');
   const powerInput = document.getElementById('power');
   const consumptionValueDisplay = document.getElementById('consumptionValue');
   const powerValueDisplay = document.getElementById('powerValue');
-  const tariffButtons = document.querySelectorAll('.option-button[data-option]');
   const monthlyBillDisplay = document.getElementById('monthlyBill');
   const annualBillDisplay = document.getElementById('annualBill');
-
   const toggleBtn = document.getElementById('toggleDetails');
   const detailsContent = document.getElementById('detailsContent');
   const chevron = document.getElementById('chevron');
-  const dropdownBtn = document.getElementById('dropdownBtn');
-  const dropdownMenu = document.getElementById('dropdownMenu');
-  const dropdownChevron = document.getElementById('dropdownChevron');
+
+  let SIMULATION_PRICES = {};
+  let selectedTarif = 'Bleu';
+
+  const tarifButtons = document.querySelectorAll('.option-button[data-tarif]');
+  tarifButtons.forEach(btn => {
+    btn.addEventListener('click', e => {
+      tarifButtons.forEach(b => b.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      selectedTarif = e.currentTarget.dataset.tarif;
+      fetchTarif(selectedTarif);
+    });
+  });
 
   function updateRangeDisplay(input, display, unit) {
     const val = parseInt(input.value);
@@ -224,52 +185,51 @@
   function calculateBill() {
     const annualConsumption = parseInt(consumptionInput.value);
     const powerKVA = parseInt(powerInput.value);
-    const tariffOption = tariffButtons[0].classList.contains('active') ? 'Base' : 'HPHC';
-    const tariffData = SIMULATION_PRICES[tariffOption].Bleu;
 
-    const kvaDiff = Math.max(0, powerKVA - 6);
-    const powerAdj = kvaDiff * ABONNEMENT_ADJUSTMENT_PER_KVA;
-    const annualAbonnement = (tariffData.abonnement + powerAdj) * 12;
+    if (!SIMULATION_PRICES[selectedTarif]) return;
 
-    let annualCost = 0;
-    if (tariffOption === 'Base') {
-      annualCost = annualConsumption * tariffData.kwh;
-    } else {
-      annualCost = (annualConsumption * 0.6 * tariffData.kwh_hp) + (annualConsumption * 0.4 * tariffData.kwh_hc);
-    }
+    const line = SIMULATION_PRICES[selectedTarif].find(r => r.puissance == powerKVA);
+    if (!line) return;
 
+    const annualAbonnement = line.abonnement; // déjà annuel
+    const annualCost = annualConsumption * line.kwh;
     const total = annualAbonnement + annualCost;
+
     monthlyBillDisplay.textContent = `${(total / 12).toFixed(2).replace('.', ',')} €/mois`;
     annualBillDisplay.textContent = `soit ${total.toFixed(2).replace('.', ',')} €/an TTC`;
   }
 
-  consumptionInput.addEventListener('input', () => { updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); calculateBill(); });
-  powerInput.addEventListener('input', () => { updateRangeDisplay(powerInput, powerValueDisplay, 'kVA'); calculateBill(); });
-  tariffButtons.forEach(btn => btn.addEventListener('click', e => { tariffButtons.forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); calculateBill(); }));
-
   toggleBtn.addEventListener('click', () => {
     detailsContent.classList.toggle('open');
     chevron.style.transform = detailsContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-    document.querySelector('.max-w-4xl').style.height = 'auto';
   });
 
-  dropdownBtn.addEventListener('click', () => {
-    const isOpen = dropdownMenu.classList.toggle('open');
-    dropdownMenu.style.maxHeight = isOpen ? '150px' : '0px';
-    dropdownChevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-  });
+  consumptionInput.addEventListener('input', () => { updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); calculateBill(); });
+  powerInput.addEventListener('input', () => { updateRangeDisplay(powerInput, powerValueDisplay, 'kVA'); calculateBill(); });
 
-  dropdownMenu.querySelectorAll('li').forEach(li => li.addEventListener('click', () => {
-    dropdownBtn.childNodes[0].textContent = li.textContent;
-    dropdownMenu.classList.remove('open');
-    dropdownMenu.style.maxHeight = '0px';
-    dropdownChevron.style.transform = 'rotate(0deg)';
-  }));
+  async function fetchTarif(feuille) {
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQxDFt8cq3nhcT-Z22OYOIDAsSAabQ5-GmKDVGtyXlnwJmGYmoGCv7b0bbn9w-DIp3wfnQwumkzWwm_/gviz/tq?tqx=out:json&sheet=${feuille}`;
+      const res = await fetch(url);
+      let text = await res.text();
+      const json = JSON.parse(text.substring(47, text.length - 2));
+
+      SIMULATION_PRICES[feuille] = json.table.rows.map(row => ({
+        puissance: parseInt(row.c[0].v),
+        abonnement: parseFloat(row.c[1].v),
+        kwh: parseFloat(row.c[2].v)
+      }));
+
+      calculateBill();
+    } catch (err) {
+      console.error('Erreur fetch feuille', feuille, err);
+    }
+  }
 
   window.addEventListener('DOMContentLoaded', () => {
     updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
     updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
-    calculateBill();
+    fetchTarif(selectedTarif);
   });
 </script>
 </body>
