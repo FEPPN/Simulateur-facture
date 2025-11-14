@@ -234,24 +234,31 @@ powerInput.addEventListener('input', () => {
   calculateBill(); 
 });
 
-// Fetch GSheet
+// Fetch CSV pour Tarif Bleu
 async function fetchTarif(feuille) {
   try {
-    const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQxDFt8cq3nhcT-Z22OYOIDAsSAabQ5-GmKDVGtyXlnwJmGYmoGCv7b0bbn9w-DIp3wfnQwumkzWwm_/gviz/tq?tqx=out:json&sheet=${feuille}`;
-    const res = await fetch(url);
-    let text = await res.text();
-    const json = JSON.parse(text.substring(47, text.length - 2));
+    if(feuille === 'Bleu') {
+      const urlCSV = 'https://raw.githubusercontent.com/FEPPN/Simulateur-facture/refs/heads/main/simulateur%20facture%20-%20BLEU%20(1).csv';
+      const res = await fetch(urlCSV);
+      const csvText = await res.text();
 
-    SIMULATION_PRICES[feuille] = json.table.rows.map(row => ({
-      puissance: parseInt(row.c[0].v),
-      abonnement: parseFloat(row.c[1].v),
-      kwh: parseFloat(row.c[2].v),
-      kwh_hp: parseFloat(row.c[3]?.v || row.c[2].v),
-      kwh_hc: parseFloat(row.c[4]?.v || row.c[2].v)
-    }));
+      const rows = csvText.trim().split('\n').slice(1); // ignorer l'en-tête
+      SIMULATION_PRICES[feuille] = rows.map(row => {
+        const cols = row.split(';');
+        return {
+          puissance: parseInt(cols[0]),
+          abonnement: parseFloat(cols[1].replace(',', '.')),
+          kwh: parseFloat(cols[2].replace(',', '.')),
+          kwh_hp: parseFloat(cols[3]?.replace(',', '.') || cols[2].replace(',', '.')),
+          kwh_hc: parseFloat(cols[4]?.replace(',', '.') || cols[2].replace(',', '.'))
+        };
+      });
 
-    dataLoaded = true;
-    calculateBill();
+      dataLoaded = true;
+      calculateBill();
+    } else {
+      console.warn('Seul Tarif Bleu est supporté via CSV.');
+    }
   } catch(err) {
     console.error('Erreur fetch feuille', feuille, err);
   }
