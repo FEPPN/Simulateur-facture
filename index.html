@@ -8,119 +8,55 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
-body { 
-  font-family: 'Inter', sans-serif; 
-  background-color: #f4f7fa; 
-}
+body { font-family: 'Inter', sans-serif; background-color: #f4f7fa; }
 
 /* Slider */
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 8px; 
-  cursor: pointer;
+  height: 8px; cursor: pointer;
   background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
   border-radius: 4px;
 }
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: 3px solid #6A63FF;
-  height: 20px; 
-  width: 20px; 
-  border-radius: 50%;
-  background: white; 
-  cursor: pointer; 
-  margin-top: -6px;
+  -webkit-appearance: none; border: 3px solid #6A63FF;
+  height: 20px; width: 20px; border-radius: 50%;
+  background: white; cursor: pointer; margin-top: -6px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
 /* Boutons option */
 .option-button {
-  transition: all 0.2s;
-  border: 2px solid #d1d5db;
-  color: #374151;
-  background-color: white;
-  cursor: pointer;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
-  font-weight: 500;
-  text-align: center;
+  transition: all 0.2s; border: 2px solid #d1d5db;
+  color: #374151; background-color: white;
+  cursor: pointer; padding: 0.75rem 1rem; border-radius: 1rem;
+  font-weight: 500; text-align: center;
 }
-.option-button:hover {
-  background-color: rgba(106, 99, 255, 0.2);
-  border-color: #6A63FF;
-  color: #6A63FF;
-}
-.option-button.active {
-  background-color: #6A63FF;
-  border-color: #6A63FF;
-  color: white;
-  box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
-}
+.option-button:hover { background-color: rgba(106, 99, 255, 0.2); border-color: #6A63FF; color: #6A63FF; }
+.option-button.active { background-color: #6A63FF; border-color: #6A63FF; color: white; box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3); }
 
 /* Contenu collapsible */
-.collapsible-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-  opacity: 0;
-}
-.collapsible-content.open {
-  max-height: 400px;
-  opacity: 1;
-}
+.collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.4s ease; opacity: 0; }
+.collapsible-content.open { max-height: 400px; opacity: 1; }
 
-/* Colonne de droite sobre */
+/* Colonne droite */
 .col-right {
-  background-color: white;                             /* fond blanc */
-  border: 2px solid #6A63FF;                          /* bordure violette */
-  box-shadow: 0 8px 20px rgba(106, 99, 255, 0.15);    /* ombre douce */
-  color: #6A63FF;                                      /* texte violet */
-  border-radius: 1rem;                                 /* arrondi */
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2.5rem;
+  background-color: white; border: 2px solid #6A63FF; box-shadow: 0 8px 20px rgba(106, 99, 255, 0.15);
+  color: #6A63FF; border-radius: 1rem; transition: all 0.3s ease;
+  display: flex; flex-direction: column; align-items: center; padding: 2.5rem;
 }
-
-/* Bouton détails dans la colonne droite */
 .col-right #toggleDetails {
-  background-color: #6A63FF; 
-  color: white;
-  border-radius: 1rem;
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(106, 99, 255, 0.2);
-  transition: all 0.3s ease;
+  background-color: #6A63FF; color: white; border-radius: 1rem; padding: 0.75rem 1rem;
+  font-weight: 600; width: 100%; display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 4px 12px rgba(106, 99, 255, 0.2); transition: all 0.3s ease;
 }
-.col-right #toggleDetails:hover {
-  background-color: #5B54E1;
-}
-
-/* Détails collapsible */
+.col-right #toggleDetails:hover { background-color: #5B54E1; }
 .col-right #detailsContent {
-  background-color: #f4f4ff;          /* léger violet/blanc */
-  border: 1px solid #6A63FF;
-  border-radius: 0.75rem;
-  margin-top: 0.75rem;
-  padding: 1.25rem;
-  width: 100%;
-  color: #374151; /* texte sombre à l'intérieur */
+  background-color: #f4f4ff; border: 1px solid #6A63FF; border-radius: 0.75rem;
+  margin-top: 0.75rem; padding: 1.25rem; width: 100%; color: #374151;
 }
-
-/* Icônes dans les détails */
 .col-right #detailsContent .text-green-300 { color: #34D399; }
 .col-right #detailsContent .text-yellow-300 { color: #FBBF24; }
 
-/* Ajustement responsive si besoin */
-@media (max-width: 1024px) {
-  .col-right {
-    border-radius: 1rem 1rem 0 0;
-  }
-}
+@media (max-width: 1024px) { .col-right { border-radius: 1rem 1rem 0 0; } }
 </style>
 </head>
 <body class="p-4 md:p-8">
@@ -165,8 +101,6 @@ input[type="range"]::-webkit-slider-thumb {
         <label class="block text-lg font-semibold text-gray-700">Sélection de l'offre <span class="text-red-500">*</span></label>
         <div class="flex gap-3">
           <button class="option-button active" data-tarif="Bleu">Tarif Bleu</button>
-          <button class="option-button" data-tarif="Jaune">Tarif Jaune</button>
-          <button class="option-button" data-tarif="Vert">Tarif Vert</button>
         </div>
       </div>
     </div>
@@ -230,18 +164,6 @@ let selectedTarif = 'Bleu';
 let selectedOption = 'Base';
 let dataLoaded = false;
 
-// Sélection Tarif
-const tarifButtons = document.querySelectorAll('.option-button[data-tarif]');
-tarifButtons.forEach(btn => {
-  btn.addEventListener('click', e => {
-    tarifButtons.forEach(b => b.classList.remove('active'));
-    e.currentTarget.classList.add('active');
-    selectedTarif = e.currentTarget.dataset.tarif;
-    dataLoaded = false;
-    fetchTarif(selectedTarif);
-  });
-});
-
 // Option Base/HPHC
 const optionButtons = document.querySelectorAll('.option-button[data-option]');
 optionButtons.forEach(btn => {
@@ -276,7 +198,11 @@ function calculateBill() {
   if(selectedOption === 'Base') {
     monthlyConsumptionCost = consumption * line.kwh / 12;
   } else {
-    monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
+    if(line.kwh_hp && line.kwh_hc) {
+      monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
+    } else {
+      monthlyConsumptionCost = consumption * line.kwh / 12; // fallback si HPHC indisponible
+    }
   }
 
   const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
@@ -300,33 +226,31 @@ powerInput.addEventListener('input', () => {
   calculateBill(); 
 });
 
-// Fetch CSV pour Tarif Bleu
-async function fetchTarif(feuille) {
+// Fetch CSV Tarif Bleu
+async function fetchTarif() {
   try {
-    if(feuille === 'Bleu') {
-      const urlCSV = 'https://raw.githubusercontent.com/FEPPN/Simulateur-facture/refs/heads/main/simulateur%20facture%20-%20BLEU%20(1).csv';
-      const res = await fetch(urlCSV);
-      const csvText = await res.text();
+    const urlCSV = 'https://raw.githubusercontent.com/FEPPN/Simulateur-facture/refs/heads/main/simulateur%20facture%20-%20BLEU%20(1).csv';
+    const res = await fetch(urlCSV);
+    const csvText = await res.text();
 
-      const rows = csvText.trim().split('\n').slice(1); // ignorer l'en-tête
-      SIMULATION_PRICES[feuille] = rows.map(row => {
-        const cols = row.split(';');
-        return {
-          puissance: parseInt(cols[0]),
-          abonnement: parseFloat(cols[1].replace(',', '.')),
-          kwh: parseFloat(cols[2].replace(',', '.')),
-          kwh_hp: parseFloat(cols[3]?.replace(',', '.') || cols[2].replace(',', '.')),
-          kwh_hc: parseFloat(cols[4]?.replace(',', '.') || cols[2].replace(',', '.'))
-        };
-      });
+    const rows = csvText.trim().split('\n').slice(1);
+    SIMULATION_PRICES['Bleu'] = rows.map(row => {
+      const cols = row.split(';');
+      const hp = cols[3].trim().toLowerCase() === 'indisponible' ? null : parseFloat(cols[3].replace(',', '.'));
+      const hc = cols[4].trim().toLowerCase() === 'indisponible' ? null : parseFloat(cols[4].replace(',', '.'));
+      return {
+        puissance: parseInt(cols[0]),
+        abonnement: parseFloat(cols[1].replace(',', '').replace('€', '')),
+        kwh: parseFloat(cols[2].replace(',', '.')),
+        kwh_hp: hp,
+        kwh_hc: hc
+      };
+    });
 
-      dataLoaded = true;
-      calculateBill();
-    } else {
-      console.warn('Seul Tarif Bleu est supporté via CSV.');
-    }
+    dataLoaded = true;
+    calculateBill();
   } catch(err) {
-    console.error('Erreur fetch feuille', feuille, err);
+    console.error('Erreur fetch CSV', err);
   }
 }
 
@@ -334,7 +258,7 @@ async function fetchTarif(feuille) {
 window.addEventListener('DOMContentLoaded', () => {
   updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
   updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
-  fetchTarif(selectedTarif);
+  fetchTarif();
 });
 </script>
 </body>
