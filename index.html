@@ -7,21 +7,32 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-body { font-family: 'Inter', sans-serif; background-color: #f4f7fa; }
 
+body { 
+  font-family: 'Inter', sans-serif; 
+  background-color: #f4f7fa; 
+}
+
+/* Slider */
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 8px; cursor: pointer;
+  height: 8px; 
+  cursor: pointer;
   background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
   border-radius: 4px;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   border: 3px solid #6A63FF;
-  height: 20px; width: 20px; border-radius: 50%;
-  background: white; cursor: pointer; margin-top: -6px;
+  height: 20px; 
+  width: 20px; 
+  border-radius: 50%;
+  background: white; 
+  cursor: pointer; 
+  margin-top: -6px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
+/* Boutons option */
 .option-button {
   transition: all 0.2s;
   border: 2px solid #d1d5db;
@@ -45,6 +56,7 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
 }
 
+/* Contenu collapsible */
 .collapsible-content {
   max-height: 0;
   overflow: hidden;
@@ -54,6 +66,60 @@ input[type="range"]::-webkit-slider-thumb {
 .collapsible-content.open {
   max-height: 400px;
   opacity: 1;
+}
+
+/* Colonne de droite sobre */
+.col-right {
+  background-color: white;                             /* fond blanc */
+  border: 2px solid #6A63FF;                          /* bordure violette */
+  box-shadow: 0 8px 20px rgba(106, 99, 255, 0.15);    /* ombre douce */
+  color: #6A63FF;                                      /* texte violet */
+  border-radius: 1rem;                                 /* arrondi */
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem;
+}
+
+/* Bouton détails dans la colonne droite */
+.col-right #toggleDetails {
+  background-color: #6A63FF; 
+  color: white;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(106, 99, 255, 0.2);
+  transition: all 0.3s ease;
+}
+.col-right #toggleDetails:hover {
+  background-color: #5B54E1;
+}
+
+/* Détails collapsible */
+.col-right #detailsContent {
+  background-color: #f4f4ff;          /* léger violet/blanc */
+  border: 1px solid #6A63FF;
+  border-radius: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 1.25rem;
+  width: 100%;
+  color: #374151; /* texte sombre à l'intérieur */
+}
+
+/* Icônes dans les détails */
+.col-right #detailsContent .text-green-300 { color: #34D399; }
+.col-right #detailsContent .text-yellow-300 { color: #FBBF24; }
+
+/* Ajustement responsive si besoin */
+@media (max-width: 1024px) {
+  .col-right {
+    border-radius: 1rem 1rem 0 0;
+  }
 }
 </style>
 </head>
@@ -106,7 +172,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <!-- Colonne droite -->
-    <div class="lg:col-span-1 bg-[#6A63FF] p-6 md:p-10 flex flex-col items-center text-white rounded-t-xl lg:rounded-l-none lg:rounded-r-xl transition-all duration-500">
+    <div class="lg:col-span-1 col-right transition-all duration-500">
       <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-28 mb-4">
       <div class="text-center">
         <p class="text-xl font-semibold mb-1" id="resultTitle">Estimation Tarif Réglementé</p>
@@ -115,11 +181,11 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
 
       <div class="w-full mt-8">
-        <button id="toggleDetails" class="w-full flex justify-between items-center bg-white text-[#6A63FF] px-4 py-3 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition">
+        <button id="toggleDetails" class="w-full flex justify-between items-center px-4 py-3 rounded-xl font-semibold shadow-md transition">
           Afficher les détails
           <span id="chevron" class="transition-transform duration-300">▼</span>
         </button>
-        <div id="detailsContent" class="collapsible-content bg-[#5B54E1] rounded-lg mt-3 p-5 space-y-3">
+        <div id="detailsContent" class="collapsible-content space-y-3">
           <div class="flex items-start space-x-3">
             <span class="text-green-300 text-xl font-bold mt-1">✓</span>
             <div>
