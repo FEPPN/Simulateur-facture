@@ -267,7 +267,7 @@ function calculateBill() {
 
   const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
   monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} €/mois`;
-  annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an TTC`;
+  annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an HT`;
   
   abonnementDetail.textContent = `${line.abonnement.toFixed(2)} €/an (${monthlyAbonnement.toFixed(2)} €/mois)`;
   
