@@ -54,17 +54,6 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
 }
 
-.collapsible-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-  opacity: 0;
-}
-.collapsible-content.open {
-  max-height: 400px;
-  opacity: 1;
-}
-
 .col-right {
   background-color: white;
   border: 2px solid #6A63FF;
@@ -78,39 +67,36 @@ input[type="range"]::-webkit-slider-thumb {
   padding: 2.5rem;
 }
 
-.col-right #toggleDetails {
-  background-color: #6A63FF; 
-  color: white;
-  border-radius: 1rem;
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(106, 99, 255, 0.2);
-  transition: all 0.3s ease;
-}
-.col-right #toggleDetails:hover {
-  background-color: #5B54E1;
+#detailsContent {
+  display: none;
 }
 
-.col-right #detailsContent {
-  background-color: #f4f4ff;
-  border: 1px solid #6A63FF;
-  border-radius: 0.75rem;
-  margin-top: 0.75rem;
-  padding: 1.25rem;
-  width: 100%;
-  color: #374151;
+#detailsContent.show {
+  display: block;
+  animation: fadeIn 0.2s ease;
 }
 
-.col-right #detailsContent .text-green-300 { color: #34D399; }
-.col-right #detailsContent .text-yellow-300 { color: #FBBF24; }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
 
 @media (max-width: 1024px) {
   .col-right {
     border-radius: 1rem 1rem 0 0;
+  }
+}
+
+@media (max-width: 640px) {
+  #detailsContent {
+    width: 90vw;
+    max-width: 320px;
   }
 }
 </style>
@@ -122,7 +108,7 @@ input[type="range"]::-webkit-slider-thumb {
 
     <div class="lg:col-span-2 p-6 md:p-10 space-y-6">
       <h1 class="text-3xl font-extrabold text-gray-800">Simuler votre facture EDF Pro</h1>
-      <p class="text-gray-500 text-sm">Adaptez les paramètres selon votre consommation, votre option tarifaire et la puissance de votre compteur pour obtenir une estimation de votre facture d’électricité.</p>
+      <p class="text-gray-500 text-sm">Adaptez les paramètres selon votre consommation, votre option tarifaire et la puissance de votre compteur pour obtenir une estimation de votre facture d'électricité.</p>
 
       <div class="space-y-3">
         <label class="block text-lg font-semibold text-gray-700">Consommation annuelle <span class="text-red-500">*</span></label>
@@ -157,19 +143,15 @@ input[type="range"]::-webkit-slider-thumb {
         <p class="text-lg opacity-80" id="annualBill">soit 0,00 €/an HT</p>
       </div>
 
-      <div class="w-full mt-8">
-        <button id="toggleDetails" class="w-full flex justify-between items-center px-4 py-3 rounded-xl font-semibold shadow-md transition">
-          Afficher les détails
-          <span id="chevron" class="transition-transform duration-300">▼</span>
+      <div class="w-full mt-8 relative">
+        <button id="toggleDetails" class="w-full flex justify-center items-center gap-2 px-4 py-3 rounded-xl font-semibold shadow-md transition bg-gray-100 text-gray-700 hover:bg-gray-200">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+          <span>Informations</span>
         </button>
-        <div id="detailsContent" class="collapsible-content space-y-3">
-          <div class="flex items-start space-x-3">
-            <span class="text-2xl mt-1">⚡</span>
-            <div>
-              <p class="font-semibold">Prix du kWh Fixe</p>
-              <p class="text-sm opacity-80" id="kwhDetail">Prix kWh : 0,1316€</p>
-            </div>
-          </div>
+        
+        <div id="detailsContent" class="hidden absolute top-full mt-2 left-1/2 transform -translate-x-1/2 w-80 bg-white border-2 border-gray-200 rounded-xl shadow-xl p-4 space-y-3 z-50">
           <div class="flex items-start space-x-3">
             <span class="text-2xl mt-1">📊</span>
             <div>
@@ -200,10 +182,7 @@ const monthlyBillDisplay = document.getElementById('monthlyBill');
 const annualBillDisplay = document.getElementById('annualBill');
 const toggleBtn = document.getElementById('toggleDetails');
 const detailsContent = document.getElementById('detailsContent');
-const chevron = document.getElementById('chevron');
-const kwhDetail = document.getElementById('kwhDetail');
 const abonnementDetail = document.getElementById('abonnementDetail');
-const repartitionDetail = document.getElementById('repartitionDetail');
 
 let SIMULATION_PRICES = [];
 let selectedOption = 'Base';
@@ -242,7 +221,7 @@ function calculateBill() {
   if(!dataLoaded) return;
   const consumption = parseInt(consumptionInput.value);
   const powerIndex = parseInt(powerInput.value);
-  const power = powerValues[powerIndex]; // Convertir l'index en valeur réelle
+  const power = powerValues[powerIndex];
   const line = SIMULATION_PRICES.find(r => r.puissance === power);
   
   if(!line) {
@@ -252,17 +231,14 @@ function calculateBill() {
 
   const monthlyAbonnement = line.abonnement / 12;
   let monthlyConsumptionCost = 0;
-  let kwhPrice = 0;
 
   if(selectedOption === 'Base') {
     monthlyConsumptionCost = consumption * line.kwh / 12;
-    kwhDetail.textContent = `Prix kWh : ${line.kwh.toFixed(4).replace('.', ',')}€`;
   } else {
     if (line.kwh_hp === null || line.kwh_hc === null) {
       return;
     }
     monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
-    kwhDetail.textContent = `HP : ${line.kwh_hp.toFixed(4).replace('.', ',')}€ | HC : ${line.kwh_hc.toFixed(4).replace('.', ',')}€`;
   }
 
   const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
@@ -270,15 +246,17 @@ function calculateBill() {
   annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an HT`;
   
   abonnementDetail.textContent = `${line.abonnement.toFixed(2)} €/an (${monthlyAbonnement.toFixed(2)} €/mois)`;
-  
-  const percentAbonnement = (monthlyAbonnement / totalMonthly * 100).toFixed(0);
-  const percentConso = (monthlyConsumptionCost / totalMonthly * 100).toFixed(0);
-  repartitionDetail.textContent = `Composition de votre facture : Abonnement ${percentAbonnement}% | Consommation ${percentConso}%`;
 }
 
 toggleBtn.addEventListener('click', () => {
-  detailsContent.classList.toggle('open');
-  chevron.style.transform = detailsContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+  detailsContent.classList.toggle('show');
+});
+
+// Fermer le popover si on clique en dehors
+document.addEventListener('click', (e) => {
+  if (!toggleBtn.contains(e.target) && !detailsContent.contains(e.target)) {
+    detailsContent.classList.remove('show');
+  }
 });
 
 consumptionInput.addEventListener('input', () => { 
@@ -292,7 +270,6 @@ powerInput.addEventListener('input', () => {
 });
 
 async function fetchTarif() {
-  // Utiliser directement vos données du tableau
   SIMULATION_PRICES = [
     { puissance: 3, abonnement: 126.00, kwh: 0.1316, kwh_hp: null, kwh_hc: null },
     { puissance: 6, abonnement: 158.88, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
