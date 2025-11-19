@@ -164,24 +164,24 @@ input[type="range"]::-webkit-slider-thumb {
         </button>
         <div id="detailsContent" class="collapsible-content space-y-3">
           <div class="flex items-start space-x-3">
-            <span class="text-green-300 text-xl font-bold mt-1">✓</span>
+            <span class="text-2xl mt-1">⚡</span>
             <div>
-              <p class="font-semibold">Prix du kWh Stable</p>
-              <p class="text-sm opacity-80" id="kwhDetail">Typique d'une offre Réglementée.</p>
+              <p class="font-semibold">Prix du kWh Fixe</p>
+              <p class="text-sm opacity-80" id="kwhDetail">Prix kWh : 0,1316€</p>
             </div>
           </div>
           <div class="flex items-start space-x-3">
-            <span class="text-green-300 text-xl font-bold mt-1">✓</span>
+            <span class="text-2xl mt-1">📊</span>
             <div>
-              <p class="font-semibold">Abonnement Ajusté</p>
+              <p class="font-semibold">Abonnement ajusté en fonction de la puissance (kVA)</p>
               <p class="text-sm opacity-80" id="abonnementDetail">Ajusté à votre puissance sélectionnée.</p>
             </div>
           </div>
           <div class="flex items-start space-x-3">
-            <span class="text-yellow-300 text-xl font-bold mt-1">★</span>
+            <span class="text-2xl mt-1">📝</span>
             <div>
-              <p class="font-semibold">Économies Potentielles</p>
-              <p class="text-sm opacity-80" id="repartitionDetail">Tarif de référence.</p>
+              <p class="font-semibold">Contrat sans engagement</p>
+              <p class="text-sm opacity-80" id="repartitionDetail">Composition de votre facture : Tarif de référence.</p>
             </div>
           </div>
         </div>
@@ -256,13 +256,13 @@ function calculateBill() {
 
   if(selectedOption === 'Base') {
     monthlyConsumptionCost = consumption * line.kwh / 12;
-    kwhDetail.textContent = `Prix fixe: ${(line.kwh * 100).toFixed(2)} c€/kWh`;
+    kwhDetail.textContent = `Prix kWh : ${line.kwh.toFixed(4).replace('.', ',')}€`;
   } else {
     if (line.kwh_hp === null || line.kwh_hc === null) {
       return;
     }
     monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
-    kwhDetail.textContent = `HP: ${(line.kwh_hp * 100).toFixed(2)} c€ | HC: ${(line.kwh_hc * 100).toFixed(2)} c€`;
+    kwhDetail.textContent = `HP : ${line.kwh_hp.toFixed(4).replace('.', ',')}€ | HC : ${line.kwh_hc.toFixed(4).replace('.', ',')}€`;
   }
 
   const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
@@ -273,7 +273,7 @@ function calculateBill() {
   
   const percentAbonnement = (monthlyAbonnement / totalMonthly * 100).toFixed(0);
   const percentConso = (monthlyConsumptionCost / totalMonthly * 100).toFixed(0);
-  repartitionDetail.textContent = `Abonnement: ${percentAbonnement}% | Consommation: ${percentConso}%`;
+  repartitionDetail.textContent = `Composition de votre facture : Abonnement ${percentAbonnement}% | Consommation ${percentConso}%`;
 }
 
 toggleBtn.addEventListener('click', () => {
