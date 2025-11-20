@@ -7,30 +7,33 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #F4F7FA;
+
+body { 
+  font-family: 'Inter', sans-serif; 
+  background-color: #f4f7fa; 
 }
+
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 8px;
+  height: 8px; 
   cursor: pointer;
-  background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #E5E7EB var(--range-progress, 0%));
+  background: linear-gradient(to right, #6A63FF var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
   border-radius: 4px;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   border: 3px solid #6A63FF;
-  height: 20px;
-  width: 20px;
+  height: 20px; 
+  width: 20px; 
   border-radius: 50%;
-  background: white;
-  cursor: pointer;
+  background: white; 
+  cursor: pointer; 
   margin-top: -6px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
+
 .option-button {
   transition: all 0.2s;
-  border: 2px solid #D1D5DB;
+  border: 2px solid #d1d5db;
   color: #374151;
   background-color: white;
   cursor: pointer;
@@ -50,6 +53,7 @@ input[type="range"]::-webkit-slider-thumb {
   color: white;
   box-shadow: 0 4px 12px rgba(106, 99, 255, 0.3);
 }
+
 .col-right {
   background-color: white;
   border: 2px solid #6A63FF;
@@ -62,42 +66,92 @@ input[type="range"]::-webkit-slider-thumb {
   align-items: center;
   padding: 2.5rem;
 }
-#detailsContent {
-  display: none;
+
+.col-right #toggleDetails {
+  background-color: #6A63FF; 
+  color: white;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(106, 99, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
 }
-#detailsContent.show {
-  display: block;
-  animation: fadeIn 0.2s ease;
+.col-right #toggleDetails:hover {
+  background-color: #5B54E1;
 }
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -10px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+
+.info-icon {
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
 }
+
+/* Nouveau style pour le popover */
+#detailsPopover {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  width: 320px;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  color: #374151;
+}
+
+#detailsPopover.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-12px);
+}
+
+.col-right #detailsPopover .text-green-300 { color: #34D399; }
+.col-right #detailsPopover .text-yellow-300 { color: #FBBF24; }
+
 @media (max-width: 1024px) {
   .col-right {
     border-radius: 1rem 1rem 0 0;
   }
-}
-@media (max-width: 640px) {
-  #detailsContent {
-    width: 90vw;
-    max-width: 320px;
+  
+  /* En mobile, afficher en bas du bouton */
+  #detailsPopover {
+    bottom: auto;
+    top: 100%;
+    transform: translateX(-50%) translateY(8px);
+  }
+  
+  #detailsPopover.show {
+    transform: translateX(-50%) translateY(12px);
   }
 }
 </style>
 </head>
 <body class="p-4 md:p-8">
+
 <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-visible transition-all duration-500">
   <div class="grid grid-cols-1 lg:grid-cols-3">
+
     <div class="lg:col-span-2 p-6 md:p-10 space-y-6">
       <h1 class="text-3xl font-extrabold text-gray-800">Simuler votre facture EDF Pro</h1>
       <p class="text-gray-500 text-sm">Adaptez les paramètres selon votre consommation, votre option tarifaire et la puissance de votre compteur pour obtenir une estimation de votre facture d'électricité.</p>
+
       <div class="space-y-3">
         <label class="block text-lg font-semibold text-gray-700">Consommation annuelle <span class="text-red-500">*</span></label>
         <div class="flex items-center space-x-3">
@@ -105,6 +159,7 @@ input[type="range"]::-webkit-slider-thumb {
           <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="consumptionValue">10000 kWh</div>
         </div>
       </div>
+
       <div class="space-y-3">
         <label class="block text-lg font-semibold text-gray-700">Option tarifaire <span class="text-red-500">*</span></label>
         <div class="flex gap-3">
@@ -112,6 +167,7 @@ input[type="range"]::-webkit-slider-thumb {
           <button class="option-button" data-option="HPHC">Heures Pleines/Creuses</button>
         </div>
       </div>
+
       <div class="space-y-3">
         <label class="block text-lg font-semibold text-gray-700">Puissance du compteur <span class="text-red-500">*</span></label>
         <div class="flex items-center space-x-3">
@@ -120,6 +176,7 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
     </div>
+
     <div class="lg:col-span-1 col-right transition-all duration-500">
       <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-28 mb-4">
       <div class="text-center">
@@ -127,23 +184,31 @@ input[type="range"]::-webkit-slider-thumb {
         <p class="text-6xl font-extrabold" id="monthlyBill">0,00 €/mois</p>
         <p class="text-lg opacity-80" id="annualBill">soit 0,00 €/an HT</p>
       </div>
-      <div class="w-full mt-8 relative">
-        <button id="toggleDetails" class="w-full flex justify-center items-center gap-2 px-4 py-3 rounded-xl font-semibold shadow-md transition bg-gray-100 text-gray-700 hover:bg-gray-200">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-          </svg>
-          <span>Informations</span>
+
+      <div class="w-full mt-8" style="position: relative;">
+        <button id="toggleDetails" class="w-full flex justify-center items-center px-4 py-3 rounded-xl font-semibold shadow-md transition">
+          <span class="info-icon">i</span>
+          Afficher les détails
         </button>
-        <div id="detailsContent" class="hidden absolute top-full mt-2 left-1/2 transform -translate-x-1/2 w-80 bg-white border-2 border-gray-200 rounded-xl shadow-xl p-4 space-y-3 z-50">
+        
+        <!-- Popover -->
+        <div id="detailsPopover" class="space-y-3">
           <div class="flex items-start space-x-3">
-            <span class="text-2xl mt-1">:bar_chart:</span>
+            <span class="text-2xl mt-1">⚡</span>
+            <div>
+              <p class="font-semibold">Prix du kWh Fixe</p>
+              <p class="text-sm opacity-80" id="kwhDetail">Prix kWh : 0,1316€</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-2xl mt-1">📊</span>
             <div>
               <p class="font-semibold">Abonnement ajusté en fonction de la puissance (kVA)</p>
               <p class="text-sm opacity-80" id="abonnementDetail">Ajusté à votre puissance sélectionnée.</p>
             </div>
           </div>
           <div class="flex items-start space-x-3">
-            <span class="text-2xl mt-1">:memo:</span>
+            <span class="text-2xl mt-1">📝</span>
             <div>
               <p class="font-semibold">Contrat sans engagement</p>
               <p class="text-sm opacity-80" id="repartitionDetail">Composition de votre facture : Tarif de référence.</p>
@@ -152,8 +217,10 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
     </div>
+
   </div>
 </div>
+
 <script>
 const consumptionInput = document.getElementById('consumption');
 const powerInput = document.getElementById('power');
@@ -162,13 +229,18 @@ const powerValueDisplay = document.getElementById('powerValue');
 const monthlyBillDisplay = document.getElementById('monthlyBill');
 const annualBillDisplay = document.getElementById('annualBill');
 const toggleBtn = document.getElementById('toggleDetails');
-const detailsContent = document.getElementById('detailsContent');
+const detailsPopover = document.getElementById('detailsPopover');
+const kwhDetail = document.getElementById('kwhDetail');
 const abonnementDetail = document.getElementById('abonnementDetail');
+const repartitionDetail = document.getElementById('repartitionDetail');
+
 let SIMULATION_PRICES = [];
 let selectedOption = 'Base';
 let dataLoaded = false;
+
 // Tableau de correspondance pour le curseur de puissance
 const powerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
+
 const optionButtons = document.querySelectorAll('.option-button[data-option]');
 optionButtons.forEach(btn => {
   btn.addEventListener('click', e => {
@@ -178,12 +250,14 @@ optionButtons.forEach(btn => {
     if(dataLoaded) calculateBill();
   });
 });
+
 function updateRangeDisplay(input, display, unit) {
   const val = parseInt(input.value);
   const min = parseInt(input.min);
   const max = parseInt(input.max);
   const percent = ((val - min) / (max - min)) * 100;
   input.style.setProperty('--range-progress', `${percent}%`);
+  
   // Pour le curseur de puissance, utiliser le tableau de valeurs
   if (input.id === 'power') {
     const actualValue = powerValues[val];
@@ -192,49 +266,70 @@ function updateRangeDisplay(input, display, unit) {
     display.textContent = `${val.toLocaleString('fr-FR')} ${unit}`;
   }
 }
+
 function calculateBill() {
   if(!dataLoaded) return;
   const consumption = parseInt(consumptionInput.value);
   const powerIndex = parseInt(powerInput.value);
-  const power = powerValues[powerIndex];
+  const power = powerValues[powerIndex]; // Convertir l'index en valeur réelle
   const line = SIMULATION_PRICES.find(r => r.puissance === power);
+  
   if(!line) {
     console.error('Aucune ligne trouvée pour', power, 'kVA');
     return;
   }
+
   const monthlyAbonnement = line.abonnement / 12;
   let monthlyConsumptionCost = 0;
+  let kwhPrice = 0;
+
   if(selectedOption === 'Base') {
     monthlyConsumptionCost = consumption * line.kwh / 12;
+    kwhDetail.textContent = `Prix kWh : ${line.kwh.toFixed(4).replace('.', ',')}€`;
   } else {
     if (line.kwh_hp === null || line.kwh_hc === null) {
       return;
     }
     monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
+    kwhDetail.textContent = `HP : ${line.kwh_hp.toFixed(4).replace('.', ',')}€ | HC : ${line.kwh_hc.toFixed(4).replace('.', ',')}€`;
   }
+
   const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
   monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} €/mois`;
   annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an HT`;
+  
   abonnementDetail.textContent = `${line.abonnement.toFixed(2)} €/an (${monthlyAbonnement.toFixed(2)} €/mois)`;
+  
+  const percentAbonnement = (monthlyAbonnement / totalMonthly * 100).toFixed(0);
+  const percentConso = (monthlyConsumptionCost / totalMonthly * 100).toFixed(0);
+  repartitionDetail.textContent = `Composition de votre facture : Abonnement ${percentAbonnement}% | Consommation ${percentConso}%`;
 }
-toggleBtn.addEventListener('click', () => {
-  detailsContent.classList.toggle('show');
+
+// Gestion du popover
+toggleBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  detailsPopover.classList.toggle('show');
 });
-// Fermer le popover si on clique en dehors
+
+// Fermer le popover en cliquant ailleurs
 document.addEventListener('click', (e) => {
-  if (!toggleBtn.contains(e.target) && !detailsContent.contains(e.target)) {
-    detailsContent.classList.remove('show');
+  if (!toggleBtn.contains(e.target) && !detailsPopover.contains(e.target)) {
+    detailsPopover.classList.remove('show');
   }
 });
-consumptionInput.addEventListener('input', () => {
-  updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
-  calculateBill();
+
+consumptionInput.addEventListener('input', () => { 
+  updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); 
+  calculateBill(); 
 });
-powerInput.addEventListener('input', () => {
+
+powerInput.addEventListener('input', () => { 
   updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
-  calculateBill();
+  calculateBill(); 
 });
+
 async function fetchTarif() {
+  // Utiliser directement vos données du tableau
   SIMULATION_PRICES = [
     { puissance: 3, abonnement: 126.00, kwh: 0.1316, kwh_hp: null, kwh_hc: null },
     { puissance: 6, abonnement: 158.88, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
@@ -246,9 +341,11 @@ async function fetchTarif() {
     { puissance: 30, abonnement: 414.48, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
     { puissance: 36, abonnement: 479.16, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 }
   ];
+
   dataLoaded = true;
   calculateBill();
 }
+
 window.addEventListener('DOMContentLoaded', () => {
   updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
   updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
@@ -257,6 +354,3 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
-
