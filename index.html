@@ -200,6 +200,7 @@ input[type="range"]::-webkit-slider-thumb {
             <span class="text-2xl mt-1">📝</span>
             <div>
               <p class="font-semibold">Contrat sans engagement</p>
+              <p class="text-sm opacity-80">Tarif de référence réglementé.</p>
             </div>
           </div>
         </div>
@@ -220,7 +221,6 @@ const toggleBtn = document.getElementById('toggleDetails');
 const detailsPopover = document.getElementById('detailsPopover');
 const kwhDetail = document.getElementById('kwhDetail');
 const abonnementDetail = document.getElementById('abonnementDetail');
-const repartitionDetail = document.getElementById('repartitionDetail');
 
 let SIMULATION_PRICES = [];
 let selectedOption = 'Base';
@@ -287,10 +287,6 @@ function calculateBill() {
   annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an HT`;
   
   abonnementDetail.textContent = `${line.abonnement.toFixed(2)} €/an (${monthlyAbonnement.toFixed(2)} €/mois)`;
-  
-  const percentAbonnement = (monthlyAbonnement / totalMonthly * 100).toFixed(0);
-  const percentConso = (monthlyConsumptionCost / totalMonthly * 100).toFixed(0);
-  repartitionDetail.textContent = `Composition de votre facture : Abonnement ${percentAbonnement}% | Consommation ${percentConso}%`;
 }
 
 // Gestion du popover
