@@ -101,9 +101,9 @@ input[type="range"]::-webkit-slider-thumb {
 /* Nouveau style pour le popover */
 #detailsPopover {
   position: absolute;
-  bottom: 100%;
+  top: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(-8px);
+  transform: translateX(-50%) translateY(8px);
   width: 320px;
   background-color: white;
   border-radius: 1rem;
@@ -119,7 +119,7 @@ input[type="range"]::-webkit-slider-thumb {
 #detailsPopover.show {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(-12px);
+  transform: translateX(-50%) translateY(12px);
 }
 
 .col-right #detailsPopover .text-green-300 { color: #34D399; }
@@ -128,17 +128,6 @@ input[type="range"]::-webkit-slider-thumb {
 @media (max-width: 1024px) {
   .col-right {
     border-radius: 1rem 1rem 0 0;
-  }
-  
-  /* En mobile, afficher en bas du bouton */
-  #detailsPopover {
-    bottom: auto;
-    top: 100%;
-    transform: translateX(-50%) translateY(8px);
-  }
-  
-  #detailsPopover.show {
-    transform: translateX(-50%) translateY(12px);
   }
 }
 </style>
