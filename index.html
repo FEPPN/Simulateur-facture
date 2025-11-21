@@ -279,14 +279,14 @@ function calculateBill() {
       return;
     }
     monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
-    kwhDetail.textContent = `HP : ${line.kwh_hp.toFixed(4).replace('.', ',')}€ | HC : ${line.kwh_hc.toFixed(4).replace('.', ',')}€`;
+    kwhDetail.textContent = `Heures Pleines : ${line.kwh_hp.toFixed(4).replace('.', ',')}€ | Heures Creuses : ${line.kwh_hc.toFixed(4).replace('.', ',')}€`;
   }
 
   const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
   monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} €/mois`;
   annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an HT`;
   
-  abonnementDetail.textContent = `${line.abonnement.toFixed(2)} €/an (${monthlyAbonnement.toFixed(2)} €/mois)`;
+  abonnementDetail.textContent = `${line.abonnement.toFixed(2).replace('.', ',')} €/an (${monthlyAbonnement.toFixed(2).replace('.', ',')} €/mois)`;
 }
 
 // Gestion du popover
