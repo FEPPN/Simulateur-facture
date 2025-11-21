@@ -159,6 +159,10 @@ input[type="range"]::-webkit-slider-thumb {
 
       <div class="space-y-3">
         <label class="block text-lg font-semibold text-gray-700">Puissance du compteur <span class="text-red-500">*</span></label>
+        <div id="warningMessage" class="hidden items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg mb-2">
+          <span class="text-red-500 text-xl">⚠️</span>
+          <p class="text-sm text-red-600 font-medium">L'option Heures Pleines/Creuses n'est pas disponible pour 3 kVA</p>
+        </div>
         <div class="flex items-center space-x-3">
           <input type="range" id="power" min="0" max="8" value="1" step="1" class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 12.5%;">
           <div class="w-24 p-2 bg-gray-100 border border-gray-300 rounded-lg text-center font-bold text-gray-800" id="powerValue">6 kVA</div>
@@ -221,6 +225,7 @@ const toggleBtn = document.getElementById('toggleDetails');
 const detailsPopover = document.getElementById('detailsPopover');
 const kwhDetail = document.getElementById('kwhDetail');
 const abonnementDetail = document.getElementById('abonnementDetail');
+const warningMessage = document.getElementById('warningMessage');
 
 let SIMULATION_PRICES = [];
 let selectedOption = 'Base';
@@ -235,6 +240,7 @@ optionButtons.forEach(btn => {
     optionButtons.forEach(b => b.classList.remove('active'));
     e.currentTarget.classList.add('active');
     selectedOption = e.currentTarget.dataset.option;
+    checkWarning();
     if(dataLoaded) calculateBill();
   });
 });
@@ -252,6 +258,19 @@ function updateRangeDisplay(input, display, unit) {
     display.textContent = `${actualValue} ${unit}`;
   } else {
     display.textContent = `${val.toLocaleString('fr-FR')} ${unit}`;
+  }
+}
+
+function checkWarning() {
+  const powerIndex = parseInt(powerInput.value);
+  const power = powerValues[powerIndex];
+  
+  if (selectedOption === 'HPHC' && power === 3) {
+    warningMessage.classList.remove('hidden');
+    warningMessage.classList.add('flex');
+  } else {
+    warningMessage.classList.remove('flex');
+    warningMessage.classList.add('hidden');
   }
 }
 
@@ -309,6 +328,7 @@ consumptionInput.addEventListener('input', () => {
 
 powerInput.addEventListener('input', () => { 
   updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+  checkWarning();
   calculateBill(); 
 });
 
