@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Simuler ma facture d'électricité EDF</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script>
+  // Supprimer l'avertissement de Tailwind CDN en production
+  window.process = { env: { NODE_ENV: 'production' } };
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
