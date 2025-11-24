@@ -68,11 +68,11 @@ input[type="range"]::-webkit-slider-thumb {
 
 .card-right {
   background: white;
-  border-radius: 1.5rem; /* coins arrondis identiques à la colonne gauche */
+  border-radius: 1.5rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
-  overflow: visible; /* permet au popover de s'afficher */
+  overflow: visible;
 }
 
 .header-right {
@@ -88,7 +88,7 @@ input[type="range"]::-webkit-slider-thumb {
   flex: 1;
   display: flex;
   flex-direction: column;
-  position: relative; /* nécessaire pour positionner le popover */
+  position: relative;
 }
 
 .input-section {
@@ -216,14 +216,14 @@ input[type="range"]::-webkit-slider-thumb {
         <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-28 mb-6 mx-auto">
         
         <!-- Montant principal -->
-        <div class="bg-gradient-to-br from-emerald-400/30 to-teal-500/30 rounded-2xl p-5 text-center mb-6 shadow-md border border-emerald-200">
+        <div class="bg-gradient-to-br from-emerald-400/30 to-teal-500/30 rounded-2xl p-5 text-center mb-4 shadow-md border border-emerald-200">
           <p class="text-lg font-semibold mb-2 text-gray-700" id="resultTitle">Estimation Tarif Réglementé</p>
           <div class="result-amount mb-2 text-emerald-700" id="monthlyBill">0,00 €/mois</div>
           <p class="text-base text-gray-600" id="annualBill">soit 0,00 €/an HT</p>
         </div>
 
-        <!-- Bouton détails -->
-        <div class="w-full mt-auto" style="position: relative; overflow: visible;">
+        <!-- Bouton détails placé sous l'encadré -->
+        <div class="w-full mb-6" style="position: relative; overflow: visible;">
           <button id="toggleDetails" aria-expanded="false" class="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-md hover:shadow-lg">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
@@ -256,6 +256,7 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
           </div>
         </div>
+
       </div>
     </div>
 
