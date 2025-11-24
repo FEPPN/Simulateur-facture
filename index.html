@@ -67,13 +67,28 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .card-right {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  color: white;
-  border-radius: 1.5rem;
-  padding: 2rem;
+  background: white;
+  border-radius: 1.5rem; /* coins arrondis identiques à la colonne gauche */
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
+  overflow: visible; /* permet au popover de s'afficher */
+}
+
+.header-right {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  padding: 2rem;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+}
+
+.content-right {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative; /* nécessaire pour positionner le popover */
 }
 
 .input-section {
@@ -107,29 +122,22 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .result-amount {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 800;
   line-height: 1;
-}
-
-.btn-details {
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 2px solid white;
-  color: white;
-  font-weight: 600;
-  padding: 1rem 1.5rem;
-  border-radius: 0.75rem;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.btn-details:hover {
-  background-color: rgba(255, 255, 255, 0.3);
 }
 
 @media (max-width: 1024px) {
   .result-amount {
     font-size: 2.5rem;
+  }
+  
+  .header-right {
+    padding: 1.5rem;
+  }
+  
+  .content-right {
+    padding: 1.5rem;
   }
 }
 </style>
@@ -192,53 +200,59 @@ input[type="range"]::-webkit-slider-thumb {
 
     <!-- Colonne droite -->
     <div class="card-right">
-      <div class="flex items-center gap-3 mb-6">
-        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
-        </svg>
-        <h2 class="text-2xl font-bold">Facture mensuelle estimée : Tarif Bleu Pro</h2>
-      </div>
-
-      <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-28 mb-6 mx-auto">
-      
-      <!-- Montant principal -->
-      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center mb-4 flex-grow flex flex-col justify-center">
-        <p class="text-xl font-semibold mb-3 opacity-90" id="resultTitle">Estimation Tarif Réglementé</p>
-        <div class="result-amount mb-3" id="monthlyBill">0,00 €/mois</div>
-        <p class="text-lg opacity-80" id="annualBill">soit 0,00 €/an HT</p>
-      </div>
-
-      <!-- Bouton détails -->
-      <div class="w-full" style="position: relative;">
-        <button id="toggleDetails" class="btn-details w-full flex justify-center items-center gap-2">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+      <!-- Header vert -->
+      <div class="header-right">
+        <div class="flex items-center gap-3">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
           </svg>
-          Afficher les détails
-        </button>
+          <h2 class="text-2xl font-bold">Facture mensuelle estimée : Tarif Bleu Pro</h2>
+        </div>
+      </div>
+
+      <!-- Contenu blanc -->
+      <div class="content-right">
+        <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-28 mb-6 mx-auto">
         
-        <!-- Popover -->
-        <div id="detailsPopover" class="space-y-3">
-          <div class="flex items-start space-x-3">
-            <span class="text-2xl mt-1">⚡</span>
-            <div>
-              <p class="font-semibold">Prix du kWh Fixe</p>
-              <p class="text-sm opacity-80" id="kwhDetail">Prix kWh : 0,1316€</p>
+        <!-- Montant principal -->
+        <div class="bg-gradient-to-br from-emerald-400/30 to-teal-500/30 rounded-2xl p-5 text-center mb-6 shadow-md border border-emerald-200">
+          <p class="text-lg font-semibold mb-2 text-gray-700" id="resultTitle">Estimation Tarif Réglementé</p>
+          <div class="result-amount mb-2 text-emerald-700" id="monthlyBill">0,00 €/mois</div>
+          <p class="text-base text-gray-600" id="annualBill">soit 0,00 €/an HT</p>
+        </div>
+
+        <!-- Bouton détails -->
+        <div class="w-full mt-auto" style="position: relative; overflow: visible;">
+          <button id="toggleDetails" aria-expanded="false" class="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-md hover:shadow-lg">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            </svg>
+            Afficher les détails
+          </button>
+          
+          <!-- Popover -->
+          <div id="detailsPopover" class="space-y-3" role="dialog" aria-hidden="true">
+            <div class="flex items-start space-x-3">
+              <span class="text-2xl mt-1">⚡</span>
+              <div>
+                <p class="font-semibold">Prix du kWh Fixe</p>
+                <p class="text-sm opacity-80" id="kwhDetail">Prix kWh : 0,1316€</p>
+              </div>
             </div>
-          </div>
-          <div class="flex items-start space-x-3">
-            <span class="text-2xl mt-1">📊</span>
-            <div>
-              <p class="font-semibold">Abonnement ajusté en fonction de la puissance (kVA)</p>
-              <p class="text-sm opacity-80" id="abonnementDetail">Ajusté à votre puissance sélectionnée.</p>
+            <div class="flex items-start space-x-3">
+              <span class="text-2xl mt-1">📊</span>
+              <div>
+                <p class="font-semibold">Abonnement ajusté en fonction de la puissance (kVA)</p>
+                <p class="text-sm opacity-80" id="abonnementDetail">Ajusté à votre puissance sélectionnée.</p>
+              </div>
             </div>
-          </div>
-          <div class="flex items-start space-x-3">
-            <span class="text-2xl mt-1">📝</span>
-            <div>
-              <p class="font-semibold">Contrat sans engagement</p>
-              <p class="text-sm opacity-80">Tarif de référence réglementé.</p>
+            <div class="flex items-start space-x-3">
+              <span class="text-2xl mt-1">📝</span>
+              <div>
+                <p class="font-semibold">Contrat sans engagement</p>
+                <p class="text-sm opacity-80">Tarif de référence réglementé.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -313,10 +327,7 @@ function calculateBill() {
   const power = powerValues[powerIndex];
   const line = SIMULATION_PRICES.find(r => r.puissance === power);
   
-  if(!line) {
-    console.error('Aucune ligne trouvée pour', power, 'kVA');
-    return;
-  }
+  if(!line) return;
 
   const monthlyAbonnement = line.abonnement / 12;
   let monthlyConsumptionCost = 0;
@@ -325,9 +336,7 @@ function calculateBill() {
     monthlyConsumptionCost = consumption * line.kwh / 12;
     kwhDetail.textContent = `Prix kWh : ${line.kwh.toFixed(4).replace('.', ',')}€`;
   } else {
-    if (line.kwh_hp === null || line.kwh_hc === null) {
-      return;
-    }
+    if (line.kwh_hp === null || line.kwh_hc === null) return;
     monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
     kwhDetail.textContent = `Heures Pleines : ${line.kwh_hp.toFixed(4).replace('.', ',')}€ | Heures Creuses : ${line.kwh_hc.toFixed(4).replace('.', ',')}€`;
   }
@@ -341,12 +350,16 @@ function calculateBill() {
 
 toggleBtn.addEventListener('click', (e) => {
   e.stopPropagation();
-  detailsPopover.classList.toggle('show');
+  const isShown = detailsPopover.classList.toggle('show');
+  toggleBtn.setAttribute('aria-expanded', String(isShown));
+  detailsPopover.setAttribute('aria-hidden', String(!isShown));
 });
 
 document.addEventListener('click', (e) => {
   if (!toggleBtn.contains(e.target) && !detailsPopover.contains(e.target)) {
     detailsPopover.classList.remove('show');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    detailsPopover.setAttribute('aria-hidden', 'true');
   }
 });
 
