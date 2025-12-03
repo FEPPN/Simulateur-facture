@@ -9,40 +9,58 @@
   window.process = { env: { NODE_ENV: 'production' } };
 </script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+/* 1. Police Avenir (avec fallback) - Application universelle */
+body, input, button, select, textarea { 
+  font-family: 'Avenir', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+}
 
-body { 
-  font-family: 'Inter', sans-serif; 
-  background-color: #ffffff;
+body {
+  background-color: #f3f4f6; /* Légèrement gris pour contraster avec les cartes blanches */
   min-height: 100vh;
 }
 
+/* 2. Réglage global des Radius à 5px */
+.radius-5 {
+  border-radius: 5px !important;
+}
+
+/* NOUVEAU : Suppression de toute surbrillance (outline/focus ring) au clic */
+button:focus, input:focus, select:focus, a:focus {
+  outline: none !important;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-width: 0px;
+  --tw-ring-color: transparent;
+  box-shadow: none !important; /* Retire les ombres de focus générées par Tailwind */
+}
+
+/* Style des sliders */
 input[type="range"]::-webkit-slider-runnable-track {
   height: 6px; 
   cursor: pointer;
-  background: linear-gradient(to right, #667eea var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
-  border-radius: 3px;
+  background: linear-gradient(to right, #2B2B2B var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
+  border-radius: 5px; /* Radius 5px */
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  border: 3px solid #667eea;
-  height: 20px; 
-  width: 20px; 
-  border-radius: 50%;
-  background: white; 
+  border: 1px solid #2B2B2B;
+  height: 16px; 
+  width: 16px; 
+  border-radius: 50%; /* On garde le rond pour le curseur lui-même, c'est standard */
+  background: #e5e7eb; 
   cursor: pointer; 
-  margin-top: -7px;
+  margin-top: -5px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
+/* Boutons d'options */
 .option-button {
   transition: all 0.2s;
-  border: 2px solid #d1d5db;
+  border: 1px solid #d1d5db; /* Bordure plus fine */
   color: #374151;
   background-color: white;
   cursor: pointer;
   padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
+  border-radius: 5px; /* Radius 5px */
   font-weight: 500;
   text-align: center;
 }
@@ -55,27 +73,43 @@ input[type="range"]::-webkit-slider-thumb {
   background-color: #667eea;
   border-color: #667eea;
   color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: none; 
 }
 
-.card-left {
+/* Cartes principales */
+.card-common {
   background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border-radius: 10px; /* Radius passé à 10px pour les grands encadrés */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   overflow: visible;
+  height: 100%; /* Pour aligner les hauteurs globales si besoin */
 }
 
+/* 3. Headers : Même hauteur pour les deux bandeaux */
+.header-common {
+  padding: 1.25rem; /* Padding réduit de 1.5rem à 1.25rem */
+  border-top-left-radius: 10px; 
+  border-top-right-radius: 10px; 
+  min-height: 100px; /* Hauteur minimale réduite de 140px à 100px */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centre le contenu verticalement */
+}
+
+/* Modification des dégradés selon vos codes couleurs */
 .header-left {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5145E5 0%, #9134E9 100%);
   color: white;
-  padding: 2rem;
-  border-top-left-radius: 1.5rem;
-  border-top-right-radius: 1.5rem;
 }
 
-.content-left {
+.header-right {
+  background: linear-gradient(135deg, #16B7A5 0%, #0C9488 100%);
+  color: white;
+}
+
+.content-area {
   padding: 2rem;
   flex: 1;
   display: flex;
@@ -83,121 +117,135 @@ input[type="range"]::-webkit-slider-thumb {
   gap: 1.5rem;
 }
 
-.card-right {
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  display: flex;
-  flex-direction: column;
-  overflow: visible;
-}
-
-.header-right {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  color: white;
-  padding: 2rem;
-  border-top-left-radius: 1.5rem;
-  border-top-right-radius: 1.5rem;
-}
-
-.content-right {
-  padding: 2rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
+/* 4. Suppression des encadrés (Partie Gauche) */
 .input-section {
-  background-color: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0.5rem 0; /* Juste un peu d'espace vertical */
+  box-shadow: none;
+  border: none;
 }
 
+/* Modification majeure : Le popover devient un bloc accordéon */
 #detailsPopover {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(8px);
-  width: 320px;
-  background-color: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  position: relative; 
+  width: 100%;
+  margin-top: 1rem;
+  
+  /* Couleurs demandées */
+  background-color: #F0F6FF; 
+  color: #1F40AF;           
+  border-left: 8px solid #C0DBFE; 
+  
+  border-radius: 5px;
+  box-shadow: none; 
+  
+  /* Gestion de l'animation d'ouverture (accordéon) */
+  max-height: 0;
   opacity: 0;
+  overflow: hidden;
+  padding: 0 1.5rem; /* Padding horizontal seulement au début */
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-  color: #374151;
+  
+  transition: all 0.4s ease-in-out;
 }
 
 #detailsPopover.show {
+  /* État ouvert */
+  max-height: 500px; /* Valeur arbitraire suffisante pour le contenu */
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(12px);
+  padding: 1.5rem; /* On remet le padding vertical */
+  margin-bottom: 1rem; /* Un peu d'espace en bas si besoin */
+}
+
+/* Style épuré pour les lignes de détails (inspiré de votre image) */
+.detail-row {
+  display: flex;
+  flex-direction: row; /* Modification : alignement horizontal */
+  align-items: baseline; /* Alignement sur la ligne de base du texte */
+  gap: 0.5rem; /* Espacement entre le libellé et la valeur */
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* Permet le retour à la ligne si l'écran est trop petit */
+}
+.detail-row:last-child {
+  margin-bottom: 0;
+}
+.detail-label {
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap; /* Empêche le libellé d'être coupé si possible */
+}
+.detail-value {
+  font-weight: 400;
+  font-size: 1rem;
 }
 
 .result-amount {
-  font-size: 3rem;
+  font-size: 30px; /* Modification : taille réduite à 30px */
   font-weight: 800;
   line-height: 1;
 }
 
 @media (max-width: 1024px) {
-  .result-amount {
-    font-size: 2.5rem;
-  }
-  
-  .header-right, .header-left {
-    padding: 1.5rem;
-  }
-  
-  .content-right, .content-left {
-    padding: 1.5rem;
-  }
+  /* .result-amount { font-size: 2.5rem; }  Supprimé car 30px est appliqué partout */
+  .header-common { padding: 1.5rem; min-height: auto; } 
+  .content-area { padding: 1.5rem; }
 }
 </style>
 </head>
 <body class="p-4 md:p-8">
 
 <div class="max-w-6xl mx-auto overflow-visible">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 
     <!-- Colonne gauche -->
-    <div class="card-left">
+    <div class="card-common">
       <!-- Header violet -->
-      <div class="header-left">
+      <div class="header-common header-left">
         <div class="flex items-center gap-3 mb-4">
-          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-8 h-8 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
           </svg>
-          <h2 class="text-2xl font-bold">Estimez votre facture mensuelle <br> au Tarif Bleu Pro</h2>
+          <!-- Modification : taille titre forcée à 20px -->
+          <h2 class="font-bold" style="font-size: 20px;">Vos informations</h2>
         </div>
-        <p class="text-white/90 text-sm">Adaptez les paramètres selon votre consommation, votre option tarifaire et la puissance de votre compteur pour obtenir une estimation de votre facture d'électricité.</p>
+        <p class="text-white/90 text-sm">Renseignez vos informations pour calculer votre facture estimée</p>
       </div>
       
       <!-- Contenu blanc -->
-      <div class="content-left">
+      <div class="content-area">
         <!-- Consommation annuelle -->
         <div class="input-section space-y-3">
-          <label class="block text-lg font-semibold text-gray-700">Consommation annuelle <span class="text-red-500">*</span></label>
+          <label class="block text-lg font-semibold text-gray-700">Consommation annuelle</label>
           <div class="space-y-2">
-            <input type="range" id="consumption" min="1000" max="30000" value="10000" step="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 33%;">
+            <input type="range" id="consumption" min="1000" max="25000" value="5000" step="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 16.66%;">
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">1000 kWh</span>
-              <div class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-lg font-bold text-gray-800" id="consumptionValue">10000 kWh</div>
-              <span class="text-sm text-gray-500">30000 kWh</span>
+              <span class="text-sm text-gray-500" id="consumptionValue">5000 kWh</span>
+              <span class="text-sm text-gray-500">25000 kWh</span>
             </div>
           </div>
         </div>
 
         <!-- Option tarifaire -->
         <div class="input-section space-y-3">
-          <label class="block text-lg font-semibold text-gray-700">Option tarifaire <span class="text-red-500">*</span></label>
-          <div id="warningMessage" class="hidden items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg mb-2">
+          <div class="flex items-center gap-2">
+            <label class="block text-lg font-semibold text-gray-700">Option tarifaire</label>
+            <div id="hphcInfoIcon" class="relative group flex items-center hidden">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help transition-colors">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+              </svg>
+              <!-- Tooltip -->
+              <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-800 text-white text-xs text-center radius-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none shadow-lg">
+                Le calcul simule une répartition de 2/3 de votre consommation en Heures Pleines et 1/3 en Heures Creuses.
+                <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+              </div>
+            </div>
+          </div>
+          <div id="warningMessage" class="hidden items-center gap-2 p-3 bg-red-50 border border-red-200 radius-5 mb-2">
             <span class="text-red-500 text-xl">⚠️</span>
-            <p class="text-sm text-red-600 font-medium">L'option Heures Pleines/Creuses n'est pas disponible pour 3 kVA</p>
+            <p class="text-sm text-red-600 font-medium">L'option HP/HC n'est pas disponible pour 3 kVA</p>
           </div>
           <div class="flex gap-3">
             <button class="option-button active flex-1" data-option="Base">Base</button>
@@ -207,12 +255,12 @@ input[type="range"]::-webkit-slider-thumb {
 
         <!-- Puissance du compteur -->
         <div class="input-section space-y-3">
-          <label class="block text-lg font-semibold text-gray-700">Puissance du compteur <span class="text-red-500">*</span></label>
+          <label class="block text-lg font-semibold text-gray-700">Puissance du compteur</label>
           <div class="space-y-2">
-            <input type="range" id="power" min="0" max="8" value="1" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 12.5%;">
+            <input type="range" id="power" min="0" max="6" value="1" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 16.66%;">
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">3 kVA</span>
-              <div class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-lg font-bold text-gray-800" id="powerValue">6 kVA</div>
+              <span class="text-sm text-gray-500" id="powerValue">6 kVA</span>
               <span class="text-sm text-gray-500">36 kVA</span>
             </div>
           </div>
@@ -221,63 +269,75 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <!-- Colonne droite -->
-    <div class="card-right">
+    <div class="card-common">
       <!-- Header vert -->
-      <div class="header-right">
-        <div class="flex items-center gap-3">
-          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
-          </svg>
-          <h2 class="text-2xl font-bold">Facture mensuelle estimée </h2>
+      <div class="header-common header-right">
+        <!-- Ajout de mb-4 comme sur le header gauche -->
+        <div class="flex items-center gap-3 mb-4">
+          <!-- Modification : Conteneur fixe w-8 h-8 (32px) pour matcher l'icône de gauche -->
+          <div class="w-8 h-8 flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl font-bold leading-none" style="transform: translateY(-2px);">€</span>
+          </div>
+          <!-- Modification : taille titre forcée à 20px -->
+          <h2 class="font-bold" style="font-size: 20px;">Résultat</h2>
         </div>
+        
+        <!-- AJOUT : Paragraphe invisible pour forcer la même hauteur que le bandeau de gauche -->
+        <p class="text-transparent text-sm select-none">Renseignez vos informations pour calculer votre facture estimée</p>
       </div>
 
       <!-- Contenu blanc -->
-      <div class="content-right">
+      <div class="content-area">
         <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-28 mb-6 mx-auto">
         
         <!-- Montant principal -->
-        <div class="bg-gradient-to-br from-emerald-400/30 to-teal-500/30 rounded-2xl p-5 text-center mb-4 shadow-md border border-emerald-200">
-          <p class="text-lg font-semibold mb-2 text-gray-700" id="resultTitle">Estimation Tarif Réglementé</p>
-          <div class="result-amount mb-2 text-emerald-700" id="monthlyBill">0,00 €/mois</div>
-          <p class="text-base text-gray-600" id="annualBill">soit 0,00 €/an HT</p>
+        <!-- Modification : Suppression du titre, ajout de flex/justify-center/items-center pour le centrage parfait, et min-height -->
+        <div class="radius-5 p-6 text-center shadow-sm border flex flex-col justify-center items-center" style="background-color: #F0FDFA; border-color: #99F6E4; min-height: 140px;">
+          <div class="result-amount mb-2" style="color: #11766E;" id="monthlyBill">0,00 €/mois</div>
+          <p class="text-base" style="color: #11766E;" id="annualBill">soit 0,00 €/an HT</p>
         </div>
 
-        <!-- Bouton détails placé sous l'encadré -->
-        <div class="w-full mb-6" style="position: relative; overflow: visible;">
-          <button id="toggleDetails" aria-expanded="false" class="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-md hover:shadow-lg">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-            </svg>
-            Afficher les détails
-          </button>
+        <!-- NOUVEAU : Wrapper pour grouper les 2 CTAs et forcer l'écart exact de 15px -->
+        <!-- Cela isole ces boutons du "gap" de 24px du parent .content-area -->
+        <div class="w-full flex flex-col gap-[15px]">
           
-          <!-- Popover -->
-          <div id="detailsPopover" class="space-y-3" role="dialog" aria-hidden="true">
-            <div class="flex items-start space-x-3">
-              <span class="text-2xl mt-1">⚡</span>
-              <div>
-                <p class="font-semibold">Prix du kWh Fixe</p>
-                <p class="text-sm opacity-80" id="kwhDetail">Prix kWh : 0,1316€</p>
+          <!-- CTA : Réduire ma facture -->
+          <!-- Suppression de la marge mb-[15px] car gérée par le gap du wrapper -->
+          <a href="https://www.papernest.com/demarches-energie/estimer-votre-consommation/" target="_blank" class="w-full flex justify-center items-center gap-2 bg-[#14B8A6] text-white font-semibold py-3 px-6 radius-5 hover:bg-[#0C9488] transition-all duration-300 shadow-md hover:shadow-lg text-center no-underline">
+            Réduire ma facture
+          </a>
+
+          <!-- Bouton détails -->
+          <div class="w-full mb-6" style="position: relative; overflow: visible;">
+            <button id="toggleDetails" aria-expanded="false" class="w-full flex justify-center items-center gap-2 bg-white border border-[#1F40AF] text-[#1F40AF] font-semibold py-3 px-6 radius-5 hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg z-10 relative">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+              </svg>
+              Afficher les détails
+            </button>
+            
+            <!-- Bloc Détails Accordéon -->
+            <div id="detailsPopover" role="region" aria-hidden="true">
+              
+              <div class="detail-row">
+                <span class="detail-label">Prix du kWh Fixe :</span>
+                <span class="detail-value" id="kwhDetail">0,1316 €</span>
               </div>
-            </div>
-            <div class="flex items-start space-x-3">
-              <span class="text-2xl mt-1">📊</span>
-              <div>
-                <p class="font-semibold">Abonnement ajusté en fonction de la puissance (kVA)</p>
-                <p class="text-sm opacity-80" id="abonnementDetail">Ajusté à votre puissance sélectionnée.</p>
+
+              <div class="detail-row">
+                <span class="detail-label">Abonnement (selon puissance) :</span>
+                <span class="detail-value" id="abonnementDetail">Ajusté à votre puissance sélectionnée.</span>
               </div>
-            </div>
-            <div class="flex items-start space-x-3">
-              <span class="text-2xl mt-1">📝</span>
-              <div>
-                <p class="font-semibold">Contrat sans engagement</p>
-                <p class="text-sm opacity-80">Tarif de référence réglementé.</p>
+
+              <div class="detail-row">
+                <span class="detail-label">Type de contrat :</span>
+                <span class="detail-value">Sans engagement, Tarif réglementé.</span>
               </div>
+
             </div>
           </div>
-        </div>
+        
+        </div> <!-- Fin du wrapper CTA -->
 
       </div>
     </div>
@@ -297,12 +357,13 @@ const detailsPopover = document.getElementById('detailsPopover');
 const kwhDetail = document.getElementById('kwhDetail');
 const abonnementDetail = document.getElementById('abonnementDetail');
 const warningMessage = document.getElementById('warningMessage');
+const hphcInfoIcon = document.getElementById('hphcInfoIcon');
 
 let SIMULATION_PRICES = [];
 let selectedOption = 'Base';
 let dataLoaded = false;
 
-const powerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
+const powerValues = [3, 6, 9, 12, 24, 30, 36];
 
 const optionButtons = document.querySelectorAll('.option-button[data-option]');
 optionButtons.forEach(btn => {
@@ -310,6 +371,13 @@ optionButtons.forEach(btn => {
     optionButtons.forEach(b => b.classList.remove('active'));
     e.currentTarget.classList.add('active');
     selectedOption = e.currentTarget.dataset.option;
+    
+    if (selectedOption === 'HPHC') {
+      hphcInfoIcon.classList.remove('hidden');
+    } else {
+      hphcInfoIcon.classList.add('hidden');
+    }
+
     checkWarning();
     if(dataLoaded) calculateBill();
   });
@@ -357,17 +425,21 @@ function calculateBill() {
 
   if(selectedOption === 'Base') {
     monthlyConsumptionCost = consumption * line.kwh / 12;
-    kwhDetail.textContent = `Prix kWh : ${line.kwh.toFixed(4).replace('.', ',')}€`;
+    // Ajout d'un espace avant le symbole € pour la lisibilité
+    kwhDetail.textContent = `${line.kwh.toFixed(4).replace('.', ',')} €`;
   } else {
     if (line.kwh_hp === null || line.kwh_hc === null) return;
     monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
-    kwhDetail.textContent = `Heures Pleines : ${line.kwh_hp.toFixed(4).replace('.', ',')}€ | Heures Creuses : ${line.kwh_hc.toFixed(4).replace('.', ',')}€`;
+    // Ajout d'un espace avant le symbole € pour la lisibilité
+    kwhDetail.textContent = `HP : ${line.kwh_hp.toFixed(4).replace('.', ',')} € | HC : ${line.kwh_hc.toFixed(4).replace('.', ',')} €`;
   }
 
   const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
+  // Ajout d'un espace avant le symbole € pour la lisibilité
   monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} €/mois`;
   annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an HT`;
   
+  // Ajout d'un espace avant le symbole € pour la lisibilité
   abonnementDetail.textContent = `${line.abonnement.toFixed(2).replace('.', ',')} €/an (${monthlyAbonnement.toFixed(2).replace('.', ',')} €/mois)`;
 }
 
@@ -376,13 +448,17 @@ toggleBtn.addEventListener('click', (e) => {
   const isShown = detailsPopover.classList.toggle('show');
   toggleBtn.setAttribute('aria-expanded', String(isShown));
   detailsPopover.setAttribute('aria-hidden', String(!isShown));
-});
-
-document.addEventListener('click', (e) => {
-  if (!toggleBtn.contains(e.target) && !detailsPopover.contains(e.target)) {
-    detailsPopover.classList.remove('show');
-    toggleBtn.setAttribute('aria-expanded', 'false');
-    detailsPopover.setAttribute('aria-hidden', 'true');
+  
+  if(isShown) {
+      toggleBtn.innerHTML = `
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+        Masquer les détails
+      `;
+  } else {
+      toggleBtn.innerHTML = `
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+        Afficher les détails
+      `;
   }
 });
 
