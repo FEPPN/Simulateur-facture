@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Simuler ma facture d'électricité EDF</title>
+<title>Simuler ma facture d'électricité EDF - Offre Tempo</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   window.process = { env: { NODE_ENV: 'production' } };
@@ -15,22 +15,21 @@ body, input, button, select, textarea {
 }
 
 body {
-  background-color: #f3f4f6; /* Légèrement gris pour contraster avec les cartes blanches */
+  background-color: #ffffff; /* Fond passé en blanc (au lieu de gris #f3f4f6) */
   min-height: 100vh;
 }
 
-/* 2. Réglage global des Radius à 5px */
 .radius-5 {
   border-radius: 5px !important;
 }
 
-/* NOUVEAU : Suppression de toute surbrillance (outline/focus ring) au clic */
+/* Suppression de toute surbrillance (outline/focus ring) au clic */
 button:focus, input:focus, select:focus, a:focus {
   outline: none !important;
   --tw-ring-offset-width: 0px;
   --tw-ring-width: 0px;
   --tw-ring-color: transparent;
-  box-shadow: none !important; /* Retire les ombres de focus générées par Tailwind */
+  box-shadow: none !important;
 }
 
 /* Style des sliders */
@@ -38,14 +37,14 @@ input[type="range"]::-webkit-slider-runnable-track {
   height: 6px; 
   cursor: pointer;
   background: linear-gradient(to right, #2B2B2B var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
-  border-radius: 5px; /* Radius 5px */
+  border-radius: 5px;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   border: 1px solid #2B2B2B;
   height: 16px; 
   width: 16px; 
-  border-radius: 50%; /* On garde le rond pour le curseur lui-même, c'est standard */
+  border-radius: 50%;
   background: #e5e7eb; 
   cursor: pointer; 
   margin-top: -5px;
@@ -55,12 +54,12 @@ input[type="range"]::-webkit-slider-thumb {
 /* Boutons d'options */
 .option-button {
   transition: all 0.2s;
-  border: 1px solid #d1d5db; /* Bordure plus fine */
+  border: 1px solid #d1d5db;
   color: #374151;
   background-color: white;
   cursor: pointer;
   padding: 0.75rem 1rem;
-  border-radius: 5px; /* Radius 5px */
+  border-radius: 5px;
   font-weight: 500;
   text-align: center;
 }
@@ -76,29 +75,36 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: none; 
 }
 
+.option-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+}
+
 /* Cartes principales */
 .card-common {
   background: white;
-  border-radius: 10px; /* Radius passé à 10px pour les grands encadrés */
+  border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   overflow: visible;
-  height: 100%; /* Pour aligner les hauteurs globales si besoin */
+  height: 100%;
 }
 
-/* 3. Headers : Même hauteur pour les deux bandeaux */
+/* Headers */
 .header-common {
-  padding: 1.25rem; /* Padding réduit de 1.5rem à 1.25rem */
+  padding: 1.25rem;
   border-top-left-radius: 10px; 
   border-top-right-radius: 10px; 
-  min-height: 100px; /* Hauteur minimale réduite de 140px à 100px */
+  min-height: 100px;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centre le contenu verticalement */
+  justify-content: center;
 }
 
-/* Modification des dégradés selon vos codes couleurs */
 .header-left {
   background: linear-gradient(135deg, #5145E5 0%, #9134E9 100%);
   color: white;
@@ -117,56 +123,47 @@ input[type="range"]::-webkit-slider-thumb {
   gap: 1.5rem;
 }
 
-/* 4. Suppression des encadrés (Partie Gauche) */
 .input-section {
   background-color: transparent;
   border-radius: 0;
-  padding: 0.5rem 0; /* Juste un peu d'espace vertical */
+  padding: 0.5rem 0;
   box-shadow: none;
   border: none;
 }
 
-/* Modification majeure : Le popover devient un bloc accordéon */
+/* Accordéon détails */
 #detailsPopover {
   position: relative; 
   width: 100%;
   margin-top: 1rem;
-  
-  /* Couleurs demandées */
   background-color: #F0F6FF; 
-  color: #1F40AF;           
+  color: #1F40AF;            
   border-left: 8px solid #C0DBFE; 
-  
   border-radius: 5px;
   box-shadow: none; 
-  
-  /* Gestion de l'animation d'ouverture (accordéon) */
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  padding: 0 1.5rem; /* Padding horizontal seulement au début */
+  padding: 0 1.5rem;
   visibility: hidden;
-  
   transition: all 0.4s ease-in-out;
 }
 
 #detailsPopover.show {
-  /* État ouvert */
-  max-height: 500px; /* Valeur arbitraire suffisante pour le contenu */
+  max-height: 500px;
   opacity: 1;
   visibility: visible;
-  padding: 1.5rem; /* On remet le padding vertical */
-  margin-bottom: 1rem; /* Un peu d'espace en bas si besoin */
+  padding: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-/* Style épuré pour les lignes de détails (inspiré de votre image) */
 .detail-row {
   display: flex;
-  flex-direction: row; /* Modification : alignement horizontal */
-  align-items: baseline; /* Alignement sur la ligne de base du texte */
-  gap: 0.5rem; /* Espacement entre le libellé et la valeur */
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.5rem;
   margin-bottom: 1rem;
-  flex-wrap: wrap; /* Permet le retour à la ligne si l'écran est trop petit */
+  flex-wrap: wrap;
 }
 .detail-row:last-child {
   margin-bottom: 0;
@@ -174,7 +171,7 @@ input[type="range"]::-webkit-slider-thumb {
 .detail-label {
   font-weight: 700;
   font-size: 1rem;
-  white-space: nowrap; /* Empêche le libellé d'être coupé si possible */
+  white-space: nowrap;
 }
 .detail-value {
   font-weight: 400;
@@ -182,13 +179,21 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .result-amount {
-  font-size: 30px; /* Modification : taille réduite à 30px */
+  font-size: 30px;
   font-weight: 800;
   line-height: 1;
 }
 
+/* Animation pour le badge d'économie */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-pop {
+  animation: fadeInScale 0.3s ease-out forwards;
+}
+
 @media (max-width: 1024px) {
-  /* .result-amount { font-size: 2.5rem; }  Supprimé car 30px est appliqué partout */
   .header-common { padding: 1.5rem; min-height: auto; } 
   .content-area { padding: 1.5rem; }
 }
@@ -197,25 +202,28 @@ input[type="range"]::-webkit-slider-thumb {
 <body class="p-4 md:p-8">
 
 <div class="max-w-6xl mx-auto overflow-visible">
+  
+  <!-- Titre réduit (text-2xl) -->
+  <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8 mt-2">
+    Simulation de prix de l'Offre Tempo
+  </h1>
+
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 
     <!-- Colonne gauche -->
     <div class="card-common">
-      <!-- Header violet -->
       <div class="header-common header-left">
         <div class="flex items-center gap-3 mb-4">
           <svg class="w-8 h-8 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
           </svg>
-          <!-- Modification : taille titre forcée à 20px -->
           <h2 class="font-bold" style="font-size: 20px;">Vos informations</h2>
         </div>
         <p class="text-white/90 text-sm">Renseignez vos informations pour calculer votre facture estimée</p>
       </div>
       
-      <!-- Contenu blanc -->
       <div class="content-area">
-        <!-- Consommation annuelle -->
+        <!-- Consommation -->
         <div class="input-section space-y-3">
           <label class="block text-lg font-semibold text-gray-700">Consommation annuelle</label>
           <div class="space-y-2">
@@ -243,17 +251,14 @@ input[type="range"]::-webkit-slider-thumb {
               </div>
             </div>
           </div>
-          <div id="warningMessage" class="hidden items-center gap-2 p-3 bg-red-50 border border-red-200 radius-5 mb-2">
-            <span class="text-red-500 text-xl">⚠️</span>
-            <p class="text-sm text-red-600 font-medium">L'option HP/HC n'est pas disponible pour 3 kVA</p>
-          </div>
+          
           <div class="flex gap-3">
             <button class="option-button active flex-1" data-option="Base">Base</button>
             <button class="option-button flex-1" data-option="HPHC">Heures Pleines/Creuses</button>
           </div>
         </div>
 
-        <!-- Puissance du compteur -->
+        <!-- Puissance -->
         <div class="input-section space-y-3">
           <label class="block text-lg font-semibold text-gray-700">Puissance du compteur</label>
           <div class="space-y-2">
@@ -270,230 +275,294 @@ input[type="range"]::-webkit-slider-thumb {
 
     <!-- Colonne droite -->
     <div class="card-common">
-      <!-- Header vert -->
       <div class="header-common header-right">
-        <!-- Ajout de mb-4 comme sur le header gauche -->
         <div class="flex items-center gap-3 mb-4">
-          <!-- Modification : Conteneur fixe w-8 h-8 (32px) pour matcher l'icône de gauche -->
           <div class="w-8 h-8 flex items-center justify-center flex-shrink-0">
             <span class="text-3xl font-bold leading-none" style="transform: translateY(-2px);">€</span>
           </div>
-          <!-- Modification : taille titre forcée à 20px -->
           <h2 class="font-bold" style="font-size: 20px;">Résultat</h2>
         </div>
-        
-        <!-- AJOUT : Paragraphe invisible pour forcer la même hauteur que le bandeau de gauche -->
-        <p class="text-transparent text-sm select-none">Renseignez vos informations pour calculer votre facture estimée</p>
+        <p class="text-white/90 text-sm">Votre estimation Offre Tempo !</p>
       </div>
 
-      <!-- Contenu blanc -->
       <div class="content-area">
-        <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-28 mb-6 mx-auto">
+        <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-20 mb-6 mx-auto">
         
-        <!-- Montant principal -->
-        <!-- Modification : Suppression du titre, ajout de flex/justify-center/items-center pour le centrage parfait, et min-height -->
-        <div class="radius-5 p-6 text-center shadow-sm border flex flex-col justify-center items-center" style="background-color: #F0FDFA; border-color: #99F6E4; min-height: 140px;">
-          <div class="result-amount mb-2" style="color: #11766E;" id="monthlyBill">0,00 €/mois</div>
-          <p class="text-base" style="color: #11766E;" id="annualBill">soit 0,00 €/an HT</p>
+        <!-- Bloc Montant -->
+        <div class="radius-5 p-6 text-center shadow-sm border flex flex-col justify-center items-center relative" style="background-color: #F0FDFA; border-color: #99F6E4; min-height: 140px;">
+          
+          <!-- Contenu normal -->
+          <div id="resultContent" class="w-full">
+            <div class="result-amount mb-2" style="color: #11766E;" id="monthlyBill">0,00 € par mois</div>
+            <p class="text-base mb-2" style="color: #11766E;" id="annualBill">soit 0,00 € par an TTC</p>
+            
+            <div id="savingsDisplay" class="hidden items-center gap-1.5 bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-sm font-bold mt-1 animate-pop border border-green-200 mx-auto w-fit">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span id="savingsAmount">0 €</span> d'économies par an
+            </div>
+          </div>
+
+          <!-- Message Indisponible -->
+          <div id="unavailableMessage" class="hidden absolute inset-0 flex flex-col justify-center items-center bg-gray-100/90 rounded-md p-4">
+            <svg class="w-8 h-8 text-gray-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p class="text-gray-700 font-bold text-sm" id="unavailableTitle">Offre indisponible</p>
+            <p class="text-gray-600 text-xs mt-1 text-center" id="unavailableSubtitle">Cette formule n'existe pas pour la puissance sélectionnée.</p>
+          </div>
+
         </div>
 
-        <!-- NOUVEAU : Wrapper pour grouper les 2 CTAs et forcer l'écart exact de 15px -->
-        <!-- Cela isole ces boutons du "gap" de 24px du parent .content-area -->
+        <!-- Wrapper CTA -->
         <div class="w-full flex flex-col gap-[15px]">
-          
-          <!-- CTA : Réduire ma facture -->
-          <!-- Suppression de la marge mb-[15px] car gérée par le gap du wrapper -->
           <a href="https://www.papernest.com/demarches-energie/estimer-votre-consommation/" target="_blank" class="w-full flex justify-center items-center gap-2 bg-[#14B8A6] text-white font-semibold py-3 px-6 radius-5 hover:bg-[#0C9488] transition-all duration-300 shadow-md hover:shadow-lg text-center no-underline">
             Réduire ma facture
           </a>
 
-          <!-- Bouton détails -->
           <div class="w-full mb-6" style="position: relative; overflow: visible;">
             <button id="toggleDetails" aria-expanded="false" class="w-full flex justify-center items-center gap-2 bg-white border border-[#1F40AF] text-[#1F40AF] font-semibold py-3 px-6 radius-5 hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg z-10 relative">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-              </svg>
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
               Afficher les détails
             </button>
             
-            <!-- Bloc Détails Accordéon -->
             <div id="detailsPopover" role="region" aria-hidden="true">
-              
               <div class="detail-row">
-                <span class="detail-label">Prix du kWh Fixe :</span>
+                <span class="detail-label">Prix du kWh :</span>
                 <span class="detail-value" id="kwhDetail">0,1316 €</span>
               </div>
-
               <div class="detail-row">
-                <span class="detail-label">Abonnement (selon puissance) :</span>
-                <span class="detail-value" id="abonnementDetail">Ajusté à votre puissance sélectionnée.</span>
+                <span class="detail-label">Abonnement :</span>
+                <span class="detail-value" id="abonnementDetail">Ajusté à votre puissance.</span>
               </div>
-
               <div class="detail-row">
-                <span class="detail-label">Type de contrat :</span>
-                <span class="detail-value">Sans engagement, Tarif réglementé.</span>
+                <span class="detail-label">Comparatif :</span>
+                <span class="detail-value">Calculé vs TRV (Tarif Bleu réglementé).</span>
               </div>
-
             </div>
           </div>
-        
-        </div> <!-- Fin du wrapper CTA -->
+        </div>
 
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-const consumptionInput = document.getElementById('consumption');
-const powerInput = document.getElementById('power');
-const consumptionValueDisplay = document.getElementById('consumptionValue');
-const powerValueDisplay = document.getElementById('powerValue');
-const monthlyBillDisplay = document.getElementById('monthlyBill');
-const annualBillDisplay = document.getElementById('annualBill');
-const toggleBtn = document.getElementById('toggleDetails');
-const detailsPopover = document.getElementById('detailsPopover');
-const kwhDetail = document.getElementById('kwhDetail');
-const abonnementDetail = document.getElementById('abonnementDetail');
-const warningMessage = document.getElementById('warningMessage');
-const hphcInfoIcon = document.getElementById('hphcInfoIcon');
+// Constantes de données globales
+const TEMPO_DATA = [
+  { puissance: 3, abonnement: 140.74, kwh: "indisponible", kwh_hp: "indisponible", kwh_hc: "indisponible" },
+  { puissance: 6, abonnement: 174.47, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
+  { puissance: 9, abonnement: 237.77, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
+  { puissance: 12, abonnement: 285.06, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
+  { puissance: 15, abonnement: 329.92, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
+  { puissance: 18, abonnement: 376.06, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
+  { puissance: 24, abonnement: 473.66, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
+  { puissance: 30, abonnement: 564.22, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
+  { puissance: 36, abonnement: 654.78, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 }
+];
 
-let SIMULATION_PRICES = [];
-let selectedOption = 'Base';
-let dataLoaded = false;
+const TRV_DATA = [
+  { puissance: 3, abonnement: 140.74, kwh: 0.1952, kwh_hp: "indisponible", kwh_hc: "indisponible" },
+  { puissance: 6, abonnement: 374.47, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
+  { puissance: 9, abonnement: 237.77, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
+  { puissance: 12, abonnement: 285.06, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
+  { puissance: 15, abonnement: 329.92, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
+  { puissance: 18, abonnement: 376.06, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
+  { puissance: 24, abonnement: 473.66, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
+  { puissance: 30, abonnement: 564.22, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
+  { puissance: 36, abonnement: 654.78, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 }
+];
 
-const powerValues = [3, 6, 9, 12, 24, 30, 36];
+const powerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
 
-const optionButtons = document.querySelectorAll('.option-button[data-option]');
-optionButtons.forEach(btn => {
-  btn.addEventListener('click', e => {
-    optionButtons.forEach(b => b.classList.remove('active'));
-    e.currentTarget.classList.add('active');
-    selectedOption = e.currentTarget.dataset.option;
+// Initialisation sécurisée une fois le DOM chargé
+document.addEventListener('DOMContentLoaded', () => {
+  const consumptionInput = document.getElementById('consumption');
+  const powerInput = document.getElementById('power');
+  const consumptionValueDisplay = document.getElementById('consumptionValue');
+  const powerValueDisplay = document.getElementById('powerValue');
+  const monthlyBillDisplay = document.getElementById('monthlyBill');
+  const annualBillDisplay = document.getElementById('annualBill');
+  const toggleBtn = document.getElementById('toggleDetails');
+  const detailsPopover = document.getElementById('detailsPopover');
+  const kwhDetail = document.getElementById('kwhDetail');
+  const abonnementDetail = document.getElementById('abonnementDetail');
+  const hphcInfoIcon = document.getElementById('hphcInfoIcon');
+  const savingsDisplay = document.getElementById('savingsDisplay');
+  const resultContent = document.getElementById('resultContent');
+  const unavailableMessage = document.getElementById('unavailableMessage');
+  const unavailableTitle = document.getElementById('unavailableTitle');
+  const unavailableSubtitle = document.getElementById('unavailableSubtitle');
+  const optionButtons = document.querySelectorAll('.option-button[data-option]');
+
+  let selectedOption = 'Base';
+
+  // Configuration initiale
+  powerInput.max = 8; // Index 8 = 36kVA
+  
+  function updateRangeDisplay(input, display, unit) {
+    const val = parseInt(input.value);
+    const min = parseInt(input.min);
+    const max = parseInt(input.max);
+    const percent = ((val - min) / (max - min)) * 100;
+    input.style.setProperty('--range-progress', `${percent}%`);
     
-    if (selectedOption === 'HPHC') {
-      hphcInfoIcon.classList.remove('hidden');
+    if (input.id === 'power') {
+      const actualValue = powerValues[val];
+      display.textContent = `${actualValue} ${unit}`;
     } else {
-      hphcInfoIcon.classList.add('hidden');
+      display.textContent = `${val.toLocaleString('fr-FR')} ${unit}`;
+    }
+  }
+
+  function calculateBill() {
+    const consumption = parseInt(consumptionInput.value);
+    const powerIndex = parseInt(powerInput.value);
+    const power = powerValues[powerIndex];
+
+    // 1. Récupération des données
+    const tempoLine = TEMPO_DATA.find(r => r.puissance === power);
+    const trvLine = TRV_DATA.find(r => r.puissance === power);
+
+    // 2. Vérification DISPONIBILITÉ TEMPO (Offre)
+    let isTempoAvailable = true;
+    
+    // Règle spécifique : 3kVA toujours indisponible pour Tempo (que ce soit Base ou HPHC)
+    if (!tempoLine || power === 3) {
+        isTempoAvailable = false;
+    }
+    
+    // Pour les autres puissances (6kVA+), Base et HPHC sont disponibles (simulés ou réels)
+    // sauf si la donnée est manquante explicitement
+    if (isTempoAvailable) {
+        if (selectedOption === 'Base' && tempoLine.kwh === "indisponible") isTempoAvailable = false;
+        else if (selectedOption === 'HPHC' && (tempoLine.kwh_hp === "indisponible" || tempoLine.kwh_hc === "indisponible")) isTempoAvailable = false;
     }
 
-    checkWarning();
-    if(dataLoaded) calculateBill();
+    // 3. Gestion affichage Indisponible
+    if (!isTempoAvailable) {
+      resultContent.classList.add('invisible');
+      unavailableMessage.classList.remove('hidden');
+      unavailableMessage.classList.add('flex');
+      unavailableTitle.textContent = "Offre Tempo Indisponible";
+      unavailableSubtitle.textContent = "L'offre Tempo commence à partir de 6 kVA.";
+      kwhDetail.textContent = "-";
+      abonnementDetail.textContent = "-";
+      return;
+    } else {
+      resultContent.classList.remove('invisible');
+      unavailableMessage.classList.add('hidden');
+      unavailableMessage.classList.remove('flex');
+    }
+
+    // 4. Calcul Facture TEMPO
+    let tempoAnnualCost = 0;
+    let tempoAbonnement = tempoLine.abonnement;
+    
+    if (selectedOption === 'Base') {
+      // Utilisation du prix "Base" simulé pour Tempo
+      tempoAnnualCost = tempoAbonnement + (consumption * tempoLine.kwh);
+      kwhDetail.textContent = `${tempoLine.kwh.toFixed(4).replace('.', ',')} € (Moy. simulée)`;
+    } else {
+      // Répartition 2/3 HP, 1/3 HC
+      tempoAnnualCost = tempoAbonnement + (consumption * 0.66 * tempoLine.kwh_hp) + (consumption * 0.34 * tempoLine.kwh_hc);
+      kwhDetail.textContent = `HP : ${tempoLine.kwh_hp.toFixed(4).replace('.', ',')} € | HC : ${tempoLine.kwh_hc.toFixed(4).replace('.', ',')} €`;
+    }
+
+    // 5. Calcul Facture TRV (Référence)
+    let trvAnnualCost = 0;
+    let trvDataExists = true;
+
+    if (!trvLine) {
+      trvDataExists = false;
+    } else if (selectedOption === 'Base') {
+      if (trvLine.kwh === "indisponible") trvDataExists = false;
+      else trvAnnualCost = trvLine.abonnement + (consumption * trvLine.kwh);
+    } else {
+      // Pour HPHC
+      if (trvLine.kwh_hp === "indisponible" || trvLine.kwh_hc === "indisponible") {
+        trvDataExists = false; 
+      } else {
+        trvAnnualCost = trvLine.abonnement + (consumption * 0.66 * trvLine.kwh_hp) + (consumption * 0.34 * trvLine.kwh_hc);
+      }
+    }
+
+    // 6. Affichage Résultats
+    const totalMonthly = tempoAnnualCost / 12;
+    monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} € par mois`;
+    annualBillDisplay.textContent = `soit ${tempoAnnualCost.toFixed(2).replace('.', ',')} € par an TTC`;
+    abonnementDetail.textContent = `${tempoAbonnement.toFixed(2).replace('.', ',')} € par an`;
+
+    // 7. Affichage Économies
+    if (trvDataExists) {
+      const savings = trvAnnualCost - tempoAnnualCost;
+      savingsDisplay.classList.remove('hidden');
+      savingsDisplay.classList.add('flex');
+
+      if (savings > 0) {
+        savingsDisplay.className = "flex items-center gap-1.5 bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-sm font-bold mt-1 animate-pop border border-green-200 mx-auto w-fit";
+        savingsDisplay.innerHTML = `
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>${savings.toFixed(0)} €</span> d'économies par an (vs TRV)
+        `;
+      } else {
+        savingsDisplay.className = "flex items-center gap-1.5 bg-orange-100 text-orange-700 px-3 py-1.5 rounded-full text-sm font-bold mt-1 animate-pop border border-orange-200 mx-auto w-fit";
+        savingsDisplay.innerHTML = `
+          <span>+ ${Math.abs(savings).toFixed(0)} €</span> vs TRV
+        `;
+      }
+    } else {
+      // Cas où le TRV n'est pas dispo pour comparer (ex: 3kVA HPHC)
+      savingsDisplay.classList.add('hidden');
+      savingsDisplay.classList.remove('flex');
+    }
+  }
+
+  // Écouteurs d'événements
+  optionButtons.forEach(btn => {
+    btn.addEventListener('click', e => {
+      if(e.currentTarget.classList.contains('disabled')) return;
+      
+      optionButtons.forEach(b => b.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      selectedOption = e.currentTarget.dataset.option;
+      
+      if (selectedOption === 'HPHC') {
+        hphcInfoIcon.classList.remove('hidden');
+      } else {
+        hphcInfoIcon.classList.add('hidden');
+      }
+
+      calculateBill();
+    });
   });
-});
 
-function updateRangeDisplay(input, display, unit) {
-  const val = parseInt(input.value);
-  const min = parseInt(input.min);
-  const max = parseInt(input.max);
-  const percent = ((val - min) / (max - min)) * 100;
-  input.style.setProperty('--range-progress', `${percent}%`);
-  
-  if (input.id === 'power') {
-    const actualValue = powerValues[val];
-    display.textContent = `${actualValue} ${unit}`;
-  } else {
-    display.textContent = `${val.toLocaleString('fr-FR')} ${unit}`;
-  }
-}
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isShown = detailsPopover.classList.toggle('show');
+    toggleBtn.setAttribute('aria-expanded', String(isShown));
+    
+    if(isShown) {
+        toggleBtn.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"/></svg> Masquer les détails`;
+    } else {
+        toggleBtn.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg> Afficher les détails`;
+    }
+  });
 
-function checkWarning() {
-  const powerIndex = parseInt(powerInput.value);
-  const power = powerValues[powerIndex];
-  
-  if (selectedOption === 'HPHC' && power === 3) {
-    warningMessage.classList.remove('hidden');
-    warningMessage.classList.add('flex');
-  } else {
-    warningMessage.classList.remove('flex');
-    warningMessage.classList.add('hidden');
-  }
-}
+  consumptionInput.addEventListener('input', () => { 
+    updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); 
+    calculateBill(); 
+  });
 
-function calculateBill() {
-  if(!dataLoaded) return;
-  const consumption = parseInt(consumptionInput.value);
-  const powerIndex = parseInt(powerInput.value);
-  const power = powerValues[powerIndex];
-  const line = SIMULATION_PRICES.find(r => r.puissance === power);
-  
-  if(!line) return;
+  powerInput.addEventListener('input', () => { 
+    updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
+    calculateBill(); 
+  });
 
-  const monthlyAbonnement = line.abonnement / 12;
-  let monthlyConsumptionCost = 0;
-
-  if(selectedOption === 'Base') {
-    monthlyConsumptionCost = consumption * line.kwh / 12;
-    // Ajout d'un espace avant le symbole € pour la lisibilité
-    kwhDetail.textContent = `${line.kwh.toFixed(4).replace('.', ',')} €`;
-  } else {
-    if (line.kwh_hp === null || line.kwh_hc === null) return;
-    monthlyConsumptionCost = ((consumption*0.6*line.kwh_hp) + (consumption*0.4*line.kwh_hc))/12;
-    // Ajout d'un espace avant le symbole € pour la lisibilité
-    kwhDetail.textContent = `HP : ${line.kwh_hp.toFixed(4).replace('.', ',')} € | HC : ${line.kwh_hc.toFixed(4).replace('.', ',')} €`;
-  }
-
-  const totalMonthly = monthlyAbonnement + monthlyConsumptionCost;
-  // Ajout d'un espace avant le symbole € pour la lisibilité
-  monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} €/mois`;
-  annualBillDisplay.textContent = `soit ${(totalMonthly*12).toFixed(2).replace('.', ',')} €/an HT`;
-  
-  // Ajout d'un espace avant le symbole € pour la lisibilité
-  abonnementDetail.textContent = `${line.abonnement.toFixed(2).replace('.', ',')} €/an (${monthlyAbonnement.toFixed(2).replace('.', ',')} €/mois)`;
-}
-
-toggleBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const isShown = detailsPopover.classList.toggle('show');
-  toggleBtn.setAttribute('aria-expanded', String(isShown));
-  detailsPopover.setAttribute('aria-hidden', String(!isShown));
-  
-  if(isShown) {
-      toggleBtn.innerHTML = `
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
-        Masquer les détails
-      `;
-  } else {
-      toggleBtn.innerHTML = `
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-        Afficher les détails
-      `;
-  }
-});
-
-consumptionInput.addEventListener('input', () => { 
-  updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); 
-  calculateBill(); 
-});
-
-powerInput.addEventListener('input', () => { 
-  updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
-  checkWarning();
-  calculateBill(); 
-});
-
-async function fetchTarif() {
-  SIMULATION_PRICES = [
-    { puissance: 3, abonnement: 126.00, kwh: 0.1316, kwh_hp: null, kwh_hc: null },
-    { puissance: 6, abonnement: 158.88, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
-    { puissance: 9, abonnement: 190.56, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
-    { puissance: 12, abonnement: 222.24, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
-    { puissance: 15, abonnement: 253.44, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
-    { puissance: 18, abonnement: 283.56, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
-    { puissance: 24, abonnement: 349.32, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
-    { puissance: 30, abonnement: 414.48, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 },
-    { puissance: 36, abonnement: 479.16, kwh: 0.1316, kwh_hp: 0.1370, kwh_hc: 0.1109 }
-  ];
-
-  dataLoaded = true;
-  calculateBill();
-}
-
-window.addEventListener('DOMContentLoaded', () => {
+  // Appel initial
   updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
   updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
-  fetchTarif();
+  calculateBill();
 });
 </script>
 </body>
