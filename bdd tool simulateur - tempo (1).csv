@@ -1,0 +1,19 @@
+Fournisseur,Nom offre,Puissance,Abonnement,kWh Base,kWh Heures creuses,kWh Heures pleines
+EDF,Tarif Bleu - réglementé (particuliers),3,"140,74","0,1952",indisponible,indisponible
+EDF,Tarif Bleu - réglementé (particuliers),6,"374,47","0,1952","0,2081","0,1635"
+EDF,Tarif Bleu - réglementé (particuliers),9,"237,77","0,1952","0,2081","0,1635"
+EDF,Tarif Bleu - réglementé (particuliers),12,"285,06","0,1952","0,2081","0,1635"
+EDF,Tarif Bleu - réglementé (particuliers),15,"329,92","0,1952","0,2081","0,1635"
+EDF,Tarif Bleu - réglementé (particuliers),18,"376,06","0,1952","0,2081","0,1635"
+EDF,Tarif Bleu - réglementé (particuliers),24,"473,66","0,1952","0,2081","0,1635"
+EDF,Tarif Bleu - réglementé (particuliers),30,"564,22","0,1952","0,2081","0,1635"
+EDF,Tarif Bleu - réglementé (particuliers),36,"655,36","0,1952","0,2081","0,1635"
+EDF,TEMPO,3,indisponible,indisponible,indisponible,indisponible
+EDF,TEMPO,6,"186,01","0,1952","0,1494","0,1232"
+EDF,TEMPO,9,"233,88","0,1952","0,1494","0,1232"
+EDF,TEMPO,12,"280,6","0,1952","0,1494","0,1232"
+EDF,TEMPO,15,"324,16","0,1952","0,1494","0,1232"
+EDF,TEMPO,18,"369,43","0,1952","0,1494","0,1232"
+EDF,TEMPO,24,"539,76","0,1952","0,1494","0,1232"
+EDF,TEMPO,30,"555,72","0,1952","0,1494","0,1232"
+EDF,TEMPO,36,"653,2","0,1952","0,1494","0,1232"
