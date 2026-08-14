@@ -1,568 +1,357 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Simuler ma facture d'électricité EDF - Offre Tempo</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  window.process = { env: { NODE_ENV: 'production' } };
-</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur de raccordement électrique</title>
+<link rel="preconnect" href="https://fonts.cdnfonts.com">
+<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/avenir">
 <style>
-/* 1. Police Avenir (avec fallback) - Application universelle */
-body, input, button, select, textarea { 
-  font-family: 'Avenir', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-}
-
-body {
-  background-color: #ffffff; /* Fond passé en blanc (au lieu de gris #f3f4f6) */
-  min-height: 100vh;
-}
-
-.radius-5 {
-  border-radius: 5px !important;
-}
-
-/* Suppression de toute surbrillance (outline/focus ring) au clic */
-button:focus, input:focus, select:focus, a:focus {
-  outline: none !important;
-  --tw-ring-offset-width: 0px;
-  --tw-ring-width: 0px;
-  --tw-ring-color: transparent;
-  box-shadow: none !important;
-}
-
-/* Style des sliders */
-input[type="range"]::-webkit-slider-runnable-track {
-  height: 6px; 
-  cursor: pointer;
-  background: linear-gradient(to right, #2B2B2B var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%));
-  border-radius: 5px;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: 1px solid #2B2B2B;
-  height: 16px; 
-  width: 16px; 
-  border-radius: 50%;
-  background: #e5e7eb; 
-  cursor: pointer; 
-  margin-top: -5px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-/* Boutons d'options */
-.option-button {
-  transition: all 0.2s;
-  border: 1px solid #d1d5db;
-  color: #374151;
-  background-color: white;
-  cursor: pointer;
-  padding: 0.75rem 1rem;
-  border-radius: 5px;
-  font-weight: 500;
-  text-align: center;
-}
-.option-button:hover {
-  background-color: rgba(102, 126, 234, 0.1);
-  border-color: #667eea;
-  color: #667eea;
-}
-.option-button.active {
-  background-color: #667eea;
-  border-color: #667eea;
-  color: white;
-  box-shadow: none; 
-}
-
-.option-button.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: #f3f4f6;
-  border-color: #e5e7eb;
-  color: #9ca3af;
-}
-
-/* Cartes principales */
-.card-common {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  overflow: visible;
-  height: 100%;
-}
-
-/* Headers */
-.header-common {
-  padding: 1.25rem;
-  border-top-left-radius: 10px; 
-  border-top-right-radius: 10px; 
-  min-height: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.header-left {
-  background: linear-gradient(135deg, #5145E5 0%, #9134E9 100%);
-  color: white;
-}
-
-.header-right {
-  background: linear-gradient(135deg, #16B7A5 0%, #0C9488 100%);
-  color: white;
-}
-
-.content-area {
-  padding: 2rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.input-section {
-  background-color: transparent;
-  border-radius: 0;
-  padding: 0.5rem 0;
-  box-shadow: none;
-  border: none;
-}
-
-/* Accordéon détails */
-#detailsPopover {
-  position: relative; 
-  width: 100%;
-  margin-top: 1rem;
-  background-color: #F0F6FF; 
-  color: #1F40AF;            
-  border-left: 8px solid #C0DBFE; 
-  border-radius: 5px;
-  box-shadow: none; 
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  padding: 0 1.5rem;
-  visibility: hidden;
-  transition: all 0.4s ease-in-out;
-}
-
-#detailsPopover.show {
-  max-height: 500px;
-  opacity: 1;
-  visibility: visible;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.detail-row {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-.detail-row:last-child {
-  margin-bottom: 0;
-}
-.detail-label {
-  font-weight: 700;
-  font-size: 1rem;
-  white-space: nowrap;
-}
-.detail-value {
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.result-amount {
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-/* Animation pour le badge d'économie */
-@keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-.animate-pop {
-  animation: fadeInScale 0.3s ease-out forwards;
-}
-
-@media (max-width: 1024px) {
-  .header-common { padding: 1.5rem; min-height: auto; } 
-  .content-area { padding: 1.5rem; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: auto; min-height: 0; }
+body { font-family: 'Avenir', 'Segoe UI', Arial, sans-serif; background: #F1F0FF; padding: 16px; line-height: 1.6; color: #1A1A2E; }
+.container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 20px; padding: 32px 36px 36px; box-shadow: 0 12px 40px rgba(90,82,255,0.12); }
+.progress-track { width: 100%; height: 5px; background: #F1F0FF; border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+.progress-fill { height: 100%; width: 8%; background: #5A52FF; border-radius: 10px; transition: width 0.4s ease; }
+h1 { color: #5A52FF; margin-bottom: 24px; font-size: 24px; text-align: center; font-weight: 800; letter-spacing: -0.3px; }
+.question-block { display: none; animation: fadeIn 0.4s ease; }
+.question-block.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.question-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+.question-text { font-size: 19px; color: #1A1A2E; font-weight: 700; line-height: 1.35; }
+.help-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-top: 2px; background: #5A52FF; color: white; border-radius: 50%; font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0; transition: background 0.2s ease; }
+.help-icon:hover { background: #4842CC; }
+.help-icon:hover .tooltip, .help-icon.tooltip-open .tooltip { display: block; }
+.tooltip { display: none; position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); background: #5A52FF; color: white; padding: 12px 16px; border-radius: 10px; font-size: 13px; width: 240px; z-index: 1000; line-height: 1.5; font-weight: 400; box-shadow: 0 8px 20px rgba(90,82,255,0.3); }
+.tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 7px solid transparent; border-top-color: #5A52FF; }
+.note-box { background: #F6F5FF; padding: 14px 16px; border-radius: 12px; margin: 14px 0; font-size: 13.5px; border: 1px solid #E5E3FF; display: flex; gap: 8px; align-items: flex-start; }
+.definition { background: #FAFAFF; border-radius: 12px; padding: 14px 16px; color: #555; font-size: 13.5px; margin: 14px 0; }
+.definition strong { color: #1A1A2E; }
+.options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.option-btn { position: relative; background: #ffffff; border: 2px solid #E5E3FF; padding: 16px 18px 16px 46px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; font-size: 15px; font-weight: 600; text-align: left; color: #1A1A2E; min-height: 54px; font-family: inherit; width: 100%; }
+.option-btn::before { content: ''; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; border-radius: 50%; border: 2px solid #ACA8FF; background: #fff; transition: all 0.2s ease; }
+.option-btn:hover { border-color: #ACA8FF; background: #F9F9FF; }
+.option-btn:hover::before { border-color: #5A52FF; }
+.input-wrap { position: relative; margin-top: 14px; }
+input[type="number"] { width: 100%; padding: 16px 50px 16px 18px; border: 2px solid #E5E3FF; border-radius: 12px; font-size: 16px; font-family: inherit; color: #1A1A2E; -moz-appearance: textfield; }
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"]:focus { outline: none; border-color: #5A52FF; box-shadow: 0 0 0 4px rgba(90,82,255,0.12); }
+.input-suffix { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: #9B97FF; font-size: 14px; font-weight: 600; pointer-events: none; }
+.result-box { display: none; background: #ffffff; padding: 26px 24px; border-radius: 16px; margin-top: 8px; border: 2px solid #5A52FF; }
+.result-box.show { display: block; animation: fadeIn 0.4s ease; }
+.result-title { display: flex; align-items: center; gap: 8px; color: #5A52FF; font-size: 18px; font-weight: 800; margin-bottom: 18px; }
+.result-title .check { width: 24px; height: 24px; border-radius: 50%; background: #5A52FF; color: #fff; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.price { font-size: 30px; color: #5A52FF; font-weight: 800; margin: 6px 0 10px; letter-spacing: -0.5px; display: block; }
+.price-refaction { font-size: 24px; color: #4842CC; font-weight: 800; margin: 8px 0; display: block; }
+.price-ttc { font-size: 16px; color: #4842CC; font-weight: 700; margin: 6px 0 4px; display: block; }
+.result-box p { font-size: 14px; color: #1A1A2E; }
+.info-box { background: #F6F5FF; padding: 14px 16px; border-radius: 12px; margin-top: 14px; font-size: 13.5px; border-left: 4px solid #5A52FF; color: #1A1A2E; line-height: 1.55; }
+.reset-btn { background: #5A52FF; color: white; border: none; padding: 15px 28px; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 700; margin-top: 20px; width: 100%; transition: all 0.2s ease; font-family: inherit; }
+.reset-btn:hover { background: #4842CC; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(90,82,255,0.25); }
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  .container { padding: 20px 18px 24px; border-radius: 16px; }
+  h1 { font-size: 20px; margin-bottom: 18px; }
+  .question-text { font-size: 17px; }
+  .option-btn { padding: 14px 16px 14px 42px; font-size: 14px; }
+  .price { font-size: 25px; }
+  .price-refaction { font-size: 20px; }
 }
 </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
+<div class="container">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <h1>Estimez le coût de votre raccordement électrique</h1>
 
-<div class="max-w-6xl mx-auto overflow-visible">
-  
-  <!-- Titre réduit (text-2xl) -->
-  <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8 mt-2">
-    Simulation de prix de l'Offre Tempo
-  </h1>
-
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-
-    <!-- Colonne gauche -->
-    <div class="card-common">
-      <div class="header-common header-left">
-        <div class="flex items-center gap-3 mb-4">
-          <svg class="w-8 h-8 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
-          </svg>
-          <h2 class="font-bold" style="font-size: 20px;">Vos informations</h2>
-        </div>
-        <p class="text-white/90 text-sm">Renseignez vos informations pour calculer votre facture estimée</p>
-      </div>
-      
-      <div class="content-area">
-        <!-- Consommation -->
-        <div class="input-section space-y-3">
-          <label class="block text-lg font-semibold text-gray-700">Consommation annuelle</label>
-          <div class="space-y-2">
-            <input type="range" id="consumption" min="1000" max="25000" value="5000" step="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 16.66%;">
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-500">1000 kWh</span>
-              <span class="text-sm text-gray-500" id="consumptionValue">5000 kWh</span>
-              <span class="text-sm text-gray-500">25000 kWh</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Option tarifaire -->
-        <div class="input-section space-y-3">
-          <div class="flex items-center gap-2">
-            <label class="block text-lg font-semibold text-gray-700">Option tarifaire</label>
-            <div id="hphcInfoIcon" class="relative group flex items-center hidden">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-help transition-colors">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-              </svg>
-              <!-- Tooltip -->
-              <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-800 text-white text-xs text-center radius-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none shadow-lg">
-                Le calcul simule une répartition de 2/3 de votre consommation en Heures Pleines et 1/3 en Heures Creuses.
-                <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="flex gap-3">
-            <button class="option-button active flex-1" data-option="Base">Base</button>
-            <button class="option-button flex-1" data-option="HPHC">Heures Pleines/Creuses</button>
-          </div>
-        </div>
-
-        <!-- Puissance -->
-        <div class="input-section space-y-3">
-          <label class="block text-lg font-semibold text-gray-700">Puissance du compteur</label>
-          <div class="space-y-2">
-            <input type="range" id="power" min="0" max="6" value="1" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="--range-progress: 16.66%;">
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-500">3 kVA</span>
-              <span class="text-sm text-gray-500" id="powerValue">6 kVA</span>
-              <span class="text-sm text-gray-500">36 kVA</span>
-            </div>
-          </div>
-        </div>
+  <div id="q-initial" class="question-block active">
+    <div class="question-header">
+      <div class="question-text">Connaissez-vous la Longueur du Branchement (LB) et la Longueur d'Extension nécessaire (LE) ?</div>
+      <div class="help-icon" onclick="toggleTooltip(this); trackTool('click_help_tooltip')">?
+        <div class="tooltip">La LB est la longueur du câble entre le réseau public et votre compteur. La LE est la longueur de réseau à créer pour atteindre votre terrain.</div>
       </div>
     </div>
+    <div class="definition">
+      <strong>LB (Longueur de Branchement) :</strong> Distance entre le réseau public et votre installation.<br>
+      <strong>LE (Longueur d'Extension) :</strong> Longueur de réseau à créer pour desservir votre terrain.
+    </div>
+    <div class="note-box">⚠️ Si vous ne connaissez pas ces informations, l'estimation sera moins précise et fiable.</div>
+    <div class="options">
+      <button type="button" class="option-btn" onclick="startPath('A')">Non, je ne connais pas ces longueurs</button>
+      <button type="button" class="option-btn" onclick="startPath('B')">Oui, je connais ces longueurs</button>
+    </div>
+  </div>
 
-    <!-- Colonne droite -->
-    <div class="card-common">
-      <div class="header-common header-right">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 flex items-center justify-center flex-shrink-0">
-            <span class="text-3xl font-bold leading-none" style="transform: translateY(-2px);">€</span>
-          </div>
-          <h2 class="font-bold" style="font-size: 20px;">Résultat</h2>
-        </div>
-        <p class="text-white/90 text-sm">Votre estimation Offre Tempo !</p>
-      </div>
+  <div id="qa1" class="question-block">
+    <div class="question-header"><div class="question-text">Quelle est votre puissance nécessaire ?</div></div>
+    <div class="options">
+      <button type="button" class="option-btn" onclick="answerA1('low')">Inférieure ou égale à 36 kVA</button>
+      <button type="button" class="option-btn" onclick="answerA1('high')">Supérieure à 36 kVA</button>
+    </div>
+  </div>
 
-      <div class="content-area">
-        <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="w-20 mb-6 mx-auto">
-        
-        <!-- Bloc Montant -->
-        <div class="radius-5 p-6 text-center shadow-sm border flex flex-col justify-center items-center relative" style="background-color: #F0FDFA; border-color: #99F6E4; min-height: 140px;">
-          
-          <!-- Contenu normal -->
-          <div id="resultContent" class="w-full">
-            <div class="result-amount mb-2" style="color: #11766E;" id="monthlyBill">0,00 € par mois</div>
-            <p class="text-base mb-2" style="color: #11766E;" id="annualBill">soit 0,00 € par an TTC</p>
-            
-            <div id="savingsDisplay" class="hidden items-center gap-1.5 bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-sm font-bold mt-1 animate-pop border border-green-200 mx-auto w-fit">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-              <span id="savingsAmount">0 €</span> d'économies par an
-            </div>
-          </div>
-
-          <!-- Message Indisponible -->
-          <div id="unavailableMessage" class="hidden absolute inset-0 flex flex-col justify-center items-center bg-gray-100/90 rounded-md p-4">
-            <svg class="w-8 h-8 text-gray-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <p class="text-gray-700 font-bold text-sm" id="unavailableTitle">Offre indisponible</p>
-            <p class="text-gray-600 text-xs mt-1 text-center" id="unavailableSubtitle">Cette formule n'existe pas pour la puissance sélectionnée.</p>
-          </div>
-
-        </div>
-
-        <!-- Wrapper CTA -->
-        <div class="w-full flex flex-col gap-[15px]">
-          <a href="https://www.papernest.com/demarches-energie/estimer-votre-consommation/" target="_blank" class="w-full flex justify-center items-center gap-2 bg-[#14B8A6] text-white font-semibold py-3 px-6 radius-5 hover:bg-[#0C9488] transition-all duration-300 shadow-md hover:shadow-lg text-center no-underline">
-            Réduire ma facture
-          </a>
-
-          <div class="w-full mb-6" style="position: relative; overflow: visible;">
-            <button id="toggleDetails" aria-expanded="false" class="w-full flex justify-center items-center gap-2 bg-white border border-[#1F40AF] text-[#1F40AF] font-semibold py-3 px-6 radius-5 hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg z-10 relative">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-              Afficher les détails
-            </button>
-            
-            <div id="detailsPopover" role="region" aria-hidden="true">
-              <div class="detail-row">
-                <span class="detail-label">Prix du kWh :</span>
-                <span class="detail-value" id="kwhDetail">0,1316 €</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">Abonnement :</span>
-                <span class="detail-value" id="abonnementDetail">Ajusté à votre puissance.</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">Comparatif :</span>
-                <span class="detail-value">Calculé vs TRV (Tarif Bleu réglementé).</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+  <div id="qa2" class="question-block">
+    <div class="question-header">
+      <div class="question-text">Votre terrain est-il viabilisé ?</div>
+      <div class="help-icon" onclick="toggleTooltip(this); trackTool('click_help_tooltip')">?
+        <div class="tooltip">Un terrain viabilisé dispose déjà des réseaux d'eau, d'électricité et d'assainissement à proximité immédiate.</div>
       </div>
     </div>
+    <div class="options">
+      <button type="button" class="option-btn" onclick="answerA2('yes')">Oui</button>
+      <button type="button" class="option-btn" onclick="answerA2('no')">Non</button>
+    </div>
+  </div>
+
+  <div id="qa3" class="question-block">
+    <div class="question-header"><div class="question-text">Votre rue est-elle desservie par le réseau électrique ?</div></div>
+    <div class="options">
+      <button type="button" class="option-btn" onclick="answerA3('full')">Ma rue est totalement desservie en électricité</button>
+      <button type="button" class="option-btn" onclick="answerA3('partial')">Ma rue est partiellement desservie en électricité</button>
+      <button type="button" class="option-btn" onclick="answerA3('none')">Ma rue n'est pas desservie en électricité</button>
+    </div>
+  </div>
+
+  <div id="qb1" class="question-block">
+    <div class="question-header"><div class="question-text">Quelle est votre puissance nécessaire ?</div></div>
+    <div class="options">
+      <button type="button" class="option-btn" onclick="answerB1('low')">Inférieure ou égale à 36 kVA</button>
+      <button type="button" class="option-btn" onclick="answerB1('medium')">Entre 36 kVA et 250 kVA</button>
+      <button type="button" class="option-btn" onclick="answerB1('high')">Supérieure à 250 kVA</button>
+    </div>
+  </div>
+
+  <div id="qb2" class="question-block">
+    <div class="question-header">
+      <div class="question-text">Quelle est votre zone de facturation ?</div>
+      <div class="help-icon" onclick="toggleTooltip(this); trackTool('click_help_tooltip')">?
+        <div class="tooltip">ZFA correspond aux zones urbaines denses. ZFB correspond aux zones rurales ou moins densément peuplées.</div>
+      </div>
+    </div>
+    <div class="options">
+      <button type="button" class="option-btn" onclick="answerB2('ZFA')">ZFA (Zone urbaine)</button>
+      <button type="button" class="option-btn" onclick="answerB2('ZFB')">ZFB (Zone rurale)</button>
+    </div>
+  </div>
+
+  <div id="qb3" class="question-block">
+    <div class="question-header"><div class="question-text">Quelle est la longueur d'extension nécessaire (en mètres) ?</div></div>
+    <div class="input-wrap">
+      <input type="number" id="extensionLength" placeholder="0" min="0" onchange="handleExtensionInput()">
+      <span class="input-suffix">mètres</span>
+    </div>
+  </div>
+
+  <div id="qb4" class="question-block">
+    <div class="question-header"><div class="question-text">Quelle est la longueur du branchement (en mètres) ?</div></div>
+    <div class="input-wrap">
+      <input type="number" id="branchementLength" placeholder="0" min="0" onchange="calculateResultB()">
+      <span class="input-suffix">mètres</span>
+    </div>
+  </div>
+
+  <div id="result" class="result-box">
+    <div class="result-title"><span class="check">✓</span>Estimation du coût de raccordement</div>
+    <div id="resultContent"></div>
+    <button type="button" class="reset-btn" onclick="handleReset()">Nouvelle estimation</button>
   </div>
 </div>
 
 <script>
-// Constantes de données globales
-const TEMPO_DATA = [
-  { puissance: 3, abonnement: 140.74, kwh: "indisponible", kwh_hp: "indisponible", kwh_hc: "indisponible" },
-  { puissance: 6, abonnement: 174.47, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
-  { puissance: 9, abonnement: 237.77, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
-  { puissance: 12, abonnement: 285.06, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
-  { puissance: 15, abonnement: 329.92, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
-  { puissance: 18, abonnement: 376.06, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
-  { puissance: 24, abonnement: 473.66, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
-  { puissance: 30, abonnement: 564.22, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 },
-  { puissance: 36, abonnement: 654.78, kwh: 0.1485, kwh_hp: 0.1635, kwh_hc: 0.1296 }
-];
+var userData = { path: null, powerA: null, viabilise: null, street: null, powerB: null, zone: null, extensionLength: 0, branchementLength: 0 };
 
-const TRV_DATA = [
-  { puissance: 3, abonnement: 140.74, kwh: 0.1952, kwh_hp: "indisponible", kwh_hc: "indisponible" },
-  { puissance: 6, abonnement: 374.47, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
-  { puissance: 9, abonnement: 237.77, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
-  { puissance: 12, abonnement: 285.06, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
-  { puissance: 15, abonnement: 329.92, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
-  { puissance: 18, abonnement: 376.06, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
-  { puissance: 24, abonnement: 473.66, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
-  { puissance: 30, abonnement: 564.22, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 },
-  { puissance: 36, abonnement: 654.78, kwh: 0.1952, kwh_hp: 0.1635, kwh_hc: 0.2081 }
-];
+function goTo(id, pct) {
+  var blocks = document.querySelectorAll('.question-block');
+  for (var i = 0; i < blocks.length; i++) { blocks[i].classList.remove('active'); }
+  document.getElementById('result').classList.remove('show');
+  var target = document.getElementById(id);
+  if (id === 'result') { target.classList.add('show'); } else { target.classList.add('active'); }
+  if (typeof pct === 'number') { document.getElementById('progressFill').style.width = pct + '%'; }
+  sendHeight();
+}
 
-const powerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
+function sendHeight() {
+  setTimeout(function () {
+    var height = document.body.scrollHeight + 24;
+    window.parent.postMessage({ type: 'resize', height: height }, '*');
+  }, 100);
+}
 
-// Initialisation sécurisée une fois le DOM chargé
-document.addEventListener('DOMContentLoaded', () => {
-  const consumptionInput = document.getElementById('consumption');
-  const powerInput = document.getElementById('power');
-  const consumptionValueDisplay = document.getElementById('consumptionValue');
-  const powerValueDisplay = document.getElementById('powerValue');
-  const monthlyBillDisplay = document.getElementById('monthlyBill');
-  const annualBillDisplay = document.getElementById('annualBill');
-  const toggleBtn = document.getElementById('toggleDetails');
-  const detailsPopover = document.getElementById('detailsPopover');
-  const kwhDetail = document.getElementById('kwhDetail');
-  const abonnementDetail = document.getElementById('abonnementDetail');
-  const hphcInfoIcon = document.getElementById('hphcInfoIcon');
-  const savingsDisplay = document.getElementById('savingsDisplay');
-  const resultContent = document.getElementById('resultContent');
-  const unavailableMessage = document.getElementById('unavailableMessage');
-  const unavailableTitle = document.getElementById('unavailableTitle');
-  const unavailableSubtitle = document.getElementById('unavailableSubtitle');
-  const optionButtons = document.querySelectorAll('.option-button[data-option]');
+function toggleTooltip(el) { el.classList.toggle('tooltip-open'); }
 
-  let selectedOption = 'Base';
+function startPath(path) {
+  userData.path = path;
+  var actionName = (path === 'A') ? 'select_path_unknown_lengths' : 'select_path_known_lengths';
+  trackTool(actionName, { event_type: 'interaction' });
+  if (path === 'A') { goTo('qa1', 25); } else { goTo('qb1', 20); }
+}
 
-  // Configuration initiale
-  powerInput.max = 8; // Index 8 = 36kVA
-  
-  function updateRangeDisplay(input, display, unit) {
-    const val = parseInt(input.value);
-    const min = parseInt(input.min);
-    const max = parseInt(input.max);
-    const percent = ((val - min) / (max - min)) * 100;
-    input.style.setProperty('--range-progress', `${percent}%`);
-    
-    if (input.id === 'power') {
-      const actualValue = powerValues[val];
-      display.textContent = `${actualValue} ${unit}`;
+function answerA1(power) {
+  userData.powerA = power;
+  var actionName = (power === 'low') ? 'select_power_low' : 'select_power_high';
+  trackTool(actionName);
+  if (power === 'high') { showResultA('devis'); } else { goTo('qa2', 50); }
+}
+
+function answerA2(viabilise) {
+  userData.viabilise = viabilise;
+  var actionName = (viabilise === 'yes') ? 'select_viabilisation_yes' : 'select_viabilisation_no';
+  trackTool(actionName);
+  if (viabilise === 'yes') { showResultA('430'); } else { goTo('qa3', 75); }
+}
+
+function answerA3(street) {
+  userData.street = street;
+  var actionName = 'select_street_coverage_' + street;
+  trackTool(actionName);
+  if (street === 'full') { showResultA('1690'); } else { showResultA('1690+'); }
+}
+
+function showResultA(type) {
+  trackTool('view_result_path_A');
+  var content = '';
+  if (type === 'devis') {
+    content = '<div class="price">Prix sur devis auprès d\'Enedis</div><p>Pour une puissance supérieure à 36 kVA, le coût du raccordement est établi sur devis personnalisé par Enedis.</p>';
+  } else if (type === '430') {
+    content = '<div class="price">430 € TTC</div><p>Votre terrain étant déjà viabilisé, le coût du raccordement est forfaitaire.</p>';
+  } else if (type === '1690') {
+    content = '<div class="price">1 690 € TTC</div><p>Coût du raccordement pour un terrain non viabilisé avec une rue totalement desservie.</p>';
+  } else if (type === '1690+') {
+    content = '<div class="price">1 690 € TTC + part variable</div><p>Le coût inclut une base de 1 690 € TTC plus une part variable qui dépend de la longueur de l\'extension nécessaire pour desservir votre terrain.</p>';
+  }
+  content += '<div class="info-box"><strong>Information importante</strong><br>Ces prix sont estimés à partir des grilles tarifaires d\'Enedis. Il est recommandé de faire un devis personnalisé auprès d\'Enedis pour connaître le prix exact de votre raccordement.</div>';
+  content += '<div class="info-box"><strong>Précision importante</strong><br>Ces estimations sont issues du simulateur officiel d\'Enedis. Le montant réel du raccordement peut varier en fonction de la longueur du branchement, de la zone tarifaire (ZFA/ZFB) et de l\'extension éventuellement nécessaire. Une étude et un devis Enedis sont indispensables pour déterminer le coût exact de votre raccordement.</div>';
+  document.getElementById('resultContent').innerHTML = content;
+  goTo('result', 100);
+}
+
+function answerB1(power) {
+  userData.powerB = power;
+  var actionName = 'select_power_low';
+  if (power === 'medium') actionName = 'select_power_medium';
+  if (power === 'high') actionName = 'select_power_high';
+  trackTool(actionName);
+  if (power === 'high') { showResultB('devis'); } else { goTo('qb2', 40); }
+}
+
+function answerB2(zone) {
+  userData.zone = zone;
+  var actionName = (zone === 'ZFA') ? 'select_zone_ZFA' : 'select_zone_ZFB';
+  trackTool(actionName);
+  goTo('qb3', 60);
+}
+
+function handleExtensionInput() {
+  userData.extensionLength = parseFloat(document.getElementById('extensionLength').value) || 0;
+  trackTool('input_length_extension');
+  if (userData.powerB === 'medium') { goTo('qb4', 80); } else { calculateResultB(); }
+}
+
+function calculateResultB() {
+  if (userData.powerB === 'medium') {
+    userData.branchementLength = parseFloat(document.getElementById('branchementLength').value) || 0;
+    trackTool('input_length_branchement');
+  }
+  trackTool('view_result_path_B');
+  if (userData.powerB === 'devis') { showResultB('devis'); return; }
+
+  var HT = 0, HT_branchement = 0, HT_extension = 0;
+  var LE = userData.extensionLength || 0;
+  var LB = userData.branchementLength || 0;
+
+  if (userData.powerB === 'low') {
+    HT_branchement = 2340.00;
+    if (LE === 0) {
+      HT_extension = 0;
+      HT = HT_branchement;
     } else {
-      display.textContent = `${val.toLocaleString('fr-FR')} ${unit}`;
+      if (userData.zone === 'ZFA') { HT_extension = 2549.00 + (LE * 105.00); } else { HT_extension = 3296.20 + (LE * 138.60); }
+      HT = HT_branchement + HT_extension;
+    }
+  } else if (userData.powerB === 'medium') {
+    if (LE === 0) {
+      HT_branchement = 4255.00;
+      HT_extension = 0;
+      HT = 4255.00;
+    } else {
+      HT_branchement = 4255.00 + (LB * 151.00);
+      if (userData.zone === 'ZFA') { HT_extension = 2587.00 + (LE * 129.00); } else { HT_extension = 4039.20 + (LE * 198.00); }
+      HT = HT_branchement + HT_extension;
     }
   }
 
-  function calculateBill() {
-    const consumption = parseInt(consumptionInput.value);
-    const powerIndex = parseInt(powerInput.value);
-    const power = powerValues[powerIndex];
+  var HT_refaction = HT * 0.60;
+  var TTC_client = HT_refaction * 1.20;
+  var fmt = function (n) { return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
 
-    // 1. Récupération des données
-    const tempoLine = TEMPO_DATA.find(r => r.puissance === power);
-    const trvLine = TRV_DATA.find(r => r.puissance === power);
+  var content = '<div class="price">' + fmt(HT) + ' € HT</div>' +
+    '<div class="price-refaction">Après réfaction 40% : ' + fmt(HT_refaction) + ' € HT</div>' +
+    '<div class="price-ttc">Montant TTC à payer : ' + fmt(TTC_client) + ' € TTC</div>' +
+    '<div class="info-box"><strong>Détail des coûts (HT) :</strong><br>• Part branchement : ' + fmt(HT_branchement) + ' € HT<br>• Part extension : ' + fmt(HT_extension) + ' € HT</div>' +
+    '<div class="info-box"><strong>Information importante</strong><br>Ces estimations sont issues du barème Enedis 2025 (version 7.2). Il est nécessaire de demander un devis personnalisé à Enedis pour connaître le montant exact de la prestation.</div>';
 
-    // 2. Vérification DISPONIBILITÉ TEMPO (Offre)
-    let isTempoAvailable = true;
-    
-    // Règle spécifique : 3kVA toujours indisponible pour Tempo (que ce soit Base ou HPHC)
-    if (!tempoLine || power === 3) {
-        isTempoAvailable = false;
-    }
-    
-    // Pour les autres puissances (6kVA+), Base et HPHC sont disponibles (simulés ou réels)
-    // sauf si la donnée est manquante explicitement
-    if (isTempoAvailable) {
-        if (selectedOption === 'Base' && tempoLine.kwh === "indisponible") isTempoAvailable = false;
-        else if (selectedOption === 'HPHC' && (tempoLine.kwh_hp === "indisponible" || tempoLine.kwh_hc === "indisponible")) isTempoAvailable = false;
-    }
+  document.getElementById('resultContent').innerHTML = content;
+  goTo('result', 100);
+}
 
-    // 3. Gestion affichage Indisponible
-    if (!isTempoAvailable) {
-      resultContent.classList.add('invisible');
-      unavailableMessage.classList.remove('hidden');
-      unavailableMessage.classList.add('flex');
-      unavailableTitle.textContent = "Offre Tempo Indisponible";
-      unavailableSubtitle.textContent = "L'offre Tempo commence à partir de 6 kVA.";
-      kwhDetail.textContent = "-";
-      abonnementDetail.textContent = "-";
-      return;
+function showResultB(type) {
+  trackTool('view_result_path_B');
+  var content = '';
+  if (type === 'devis') {
+    content = '<div class="price">Prix sur devis auprès d\'Enedis</div><p>Pour une puissance supérieure à 250 kVA, le raccordement s\'effectue en Haute Tension et nécessite un devis personnalisé d\'Enedis.</p><div class="info-box"><strong>Information importante</strong><br>Ces estimations sont issues du barème Enedis 2025. Il est nécessaire de demander un devis personnalisé à Enedis pour connaître le montant exact de la prestation.</div>';
+  }
+  document.getElementById('resultContent').innerHTML = content;
+  goTo('result', 100);
+}
+
+function handleReset() {
+  trackTool('click_reset_simulator', { is_cta: true });
+  userData = { path: null, powerA: null, viabilise: null, street: null, powerB: null, zone: null, extensionLength: 0, branchementLength: 0 };
+  document.getElementById('extensionLength').value = '';
+  document.getElementById('branchementLength').value = '';
+  document.getElementById('resultContent').innerHTML = '';
+  goTo('q-initial', 8);
+}
+
+function trackTool(actionName, customParams) {
+  customParams = customParams || {};
+  var nom_du_tool = "tool-raccordement";
+  var gtmEvent = "form";
+  if (actionName === "tool_visible") { gtmEvent = "impression"; }
+  else if (customParams.is_contact || actionName.indexOf("contact") > -1 || actionName.indexOf("telephone") > -1) { gtmEvent = "click_cta"; }
+  else if (actionName.indexOf("reset") > -1) { gtmEvent = "click"; }
+  var eventCategory = "engagement";
+  var eventType = customParams.event_type || 'interaction';
+  if (actionName === "tool_visible" || actionName.indexOf("view_result") > -1) { eventType = "impression"; }
+  var payload = { event: gtmEvent, event_system: 'papernest_tool', event_component: nom_du_tool, event_category: eventCategory, event_type: eventType, event_position: 'content' };
+  if (actionName !== "tool_visible") { payload.event_step = actionName; }
+  if (gtmEvent === "form") {
+    if (actionName.indexOf("view_result") > -1 || actionName.indexOf("tooltip") > -1 || actionName.indexOf("help") > -1) {
+    } else if (actionName.indexOf("input_") === 0) {
+      payload.event_form_type = "text";
     } else {
-      resultContent.classList.remove('invisible');
-      unavailableMessage.classList.add('hidden');
-      unavailableMessage.classList.remove('flex');
-    }
-
-    // 4. Calcul Facture TEMPO
-    let tempoAnnualCost = 0;
-    let tempoAbonnement = tempoLine.abonnement;
-    
-    if (selectedOption === 'Base') {
-      // Utilisation du prix "Base" simulé pour Tempo
-      tempoAnnualCost = tempoAbonnement + (consumption * tempoLine.kwh);
-      kwhDetail.textContent = `${tempoLine.kwh.toFixed(4).replace('.', ',')} € (Moy. simulée)`;
-    } else {
-      // Répartition 2/3 HP, 1/3 HC
-      tempoAnnualCost = tempoAbonnement + (consumption * 0.66 * tempoLine.kwh_hp) + (consumption * 0.34 * tempoLine.kwh_hc);
-      kwhDetail.textContent = `HP : ${tempoLine.kwh_hp.toFixed(4).replace('.', ',')} € | HC : ${tempoLine.kwh_hc.toFixed(4).replace('.', ',')} €`;
-    }
-
-    // 5. Calcul Facture TRV (Référence)
-    let trvAnnualCost = 0;
-    let trvDataExists = true;
-
-    if (!trvLine) {
-      trvDataExists = false;
-    } else if (selectedOption === 'Base') {
-      if (trvLine.kwh === "indisponible") trvDataExists = false;
-      else trvAnnualCost = trvLine.abonnement + (consumption * trvLine.kwh);
-    } else {
-      // Pour HPHC
-      if (trvLine.kwh_hp === "indisponible" || trvLine.kwh_hc === "indisponible") {
-        trvDataExists = false; 
-      } else {
-        trvAnnualCost = trvLine.abonnement + (consumption * 0.66 * trvLine.kwh_hp) + (consumption * 0.34 * trvLine.kwh_hc);
-      }
-    }
-
-    // 6. Affichage Résultats
-    const totalMonthly = tempoAnnualCost / 12;
-    monthlyBillDisplay.textContent = `${totalMonthly.toFixed(2).replace('.', ',')} € par mois`;
-    annualBillDisplay.textContent = `soit ${tempoAnnualCost.toFixed(2).replace('.', ',')} € par an TTC`;
-    abonnementDetail.textContent = `${tempoAbonnement.toFixed(2).replace('.', ',')} € par an`;
-
-    // 7. Affichage Économies
-    if (trvDataExists) {
-      const savings = trvAnnualCost - tempoAnnualCost;
-      savingsDisplay.classList.remove('hidden');
-      savingsDisplay.classList.add('flex');
-
-      if (savings > 0) {
-        savingsDisplay.className = "flex items-center gap-1.5 bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-sm font-bold mt-1 animate-pop border border-green-200 mx-auto w-fit";
-        savingsDisplay.innerHTML = `
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-          <span>${savings.toFixed(0)} €</span> d'économies par an (vs TRV)
-        `;
-      } else {
-        savingsDisplay.className = "flex items-center gap-1.5 bg-orange-100 text-orange-700 px-3 py-1.5 rounded-full text-sm font-bold mt-1 animate-pop border border-orange-200 mx-auto w-fit";
-        savingsDisplay.innerHTML = `
-          <span>+ ${Math.abs(savings).toFixed(0)} €</span> vs TRV
-        `;
-      }
-    } else {
-      // Cas où le TRV n'est pas dispo pour comparer (ex: 3kVA HPHC)
-      savingsDisplay.classList.add('hidden');
-      savingsDisplay.classList.remove('flex');
+      payload.event_form_type = "select";
     }
   }
+  window.parent.postMessage(payload, '*');
+}
 
-  // Écouteurs d'événements
-  optionButtons.forEach(btn => {
-    btn.addEventListener('click', e => {
-      if(e.currentTarget.classList.contains('disabled')) return;
-      
-      optionButtons.forEach(b => b.classList.remove('active'));
-      e.currentTarget.classList.add('active');
-      selectedOption = e.currentTarget.dataset.option;
-      
-      if (selectedOption === 'HPHC') {
-        hphcInfoIcon.classList.remove('hidden');
-      } else {
-        hphcInfoIcon.classList.add('hidden');
+window.addEventListener('load', sendHeight);
+window.addEventListener('resize', sendHeight);
+
+document.addEventListener('DOMContentLoaded', function () {
+  var toolContainer = document.querySelector('.container');
+  if (toolContainer && window.IntersectionObserver) {
+    var observer = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) {
+          trackTool('tool_visible', { event_type: 'interaction' });
+          observer.unobserve(entries[i].target);
+        }
       }
-
-      calculateBill();
-    });
-  });
-
-  toggleBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isShown = detailsPopover.classList.toggle('show');
-    toggleBtn.setAttribute('aria-expanded', String(isShown));
-    
-    if(isShown) {
-        toggleBtn.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"/></svg> Masquer les détails`;
-    } else {
-        toggleBtn.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg> Afficher les détails`;
-    }
-  });
-
-  consumptionInput.addEventListener('input', () => { 
-    updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh'); 
-    calculateBill(); 
-  });
-
-  powerInput.addEventListener('input', () => { 
-    updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
-    calculateBill(); 
-  });
-
-  // Appel initial
-  updateRangeDisplay(consumptionInput, consumptionValueDisplay, 'kWh');
-  updateRangeDisplay(powerInput, powerValueDisplay, 'kVA');
-  calculateBill();
+    }, { threshold: 0.5 });
+    observer.observe(toolContainer);
+  }
 });
 </script>
 </body>
