@@ -1,358 +1,409 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulateur de raccordement électrique</title>
-<link rel="preconnect" href="https://fonts.cdnfonts.com">
-<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/avenir">
+
+
+Conversations
+ 
+Program Policies
+Powered by Google
+Last account activity: 0 minutes ago
+Open in 1 other location · Details
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: auto; min-height: 0; }
-body { font-family: 'Avenir', 'Segoe UI', Arial, sans-serif; background: #F1F0FF; padding: 16px; line-height: 1.6; color: #1A1A2E; }
-.container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 20px; padding: 32px 36px 36px; box-shadow: 0 12px 40px rgba(90,82,255,0.12); }
-.progress-track { width: 100%; height: 5px; background: #F1F0FF; border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
-.progress-fill { height: 100%; width: 8%; background: #5A52FF; border-radius: 10px; transition: width 0.4s ease; }
-h1 { color: #5A52FF; margin-bottom: 24px; font-size: 24px; text-align: center; font-weight: 800; letter-spacing: -0.3px; }
-.question-block { display: none; animation: fadeIn 0.4s ease; }
-.question-block.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-.question-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
-.question-text { font-size: 19px; color: #1A1A2E; font-weight: 700; line-height: 1.35; }
-.help-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-top: 2px; background: #5A52FF; color: white; border-radius: 50%; font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0; transition: background 0.2s ease; }
-.help-icon:hover { background: #4842CC; }
-.help-icon:hover .tooltip, .help-icon.tooltip-open .tooltip { display: block; }
-.tooltip { display: none; position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); background: #5A52FF; color: white; padding: 12px 16px; border-radius: 10px; font-size: 13px; width: 240px; z-index: 1000; line-height: 1.5; font-weight: 400; box-shadow: 0 8px 20px rgba(90,82,255,0.3); }
-.tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 7px solid transparent; border-top-color: #5A52FF; }
-.note-box { background: #F6F5FF; padding: 14px 16px; border-radius: 12px; margin: 14px 0; font-size: 13.5px; border: 1px solid #E5E3FF; display: flex; gap: 8px; align-items: flex-start; }
-.definition { background: #FAFAFF; border-radius: 12px; padding: 14px 16px; color: #555; font-size: 13.5px; margin: 14px 0; }
-.definition strong { color: #1A1A2E; }
-.options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
-.option-btn { position: relative; background: #ffffff; border: 2px solid #E5E3FF; padding: 16px 18px 16px 46px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; font-size: 15px; font-weight: 600; text-align: left; color: #1A1A2E; min-height: 54px; font-family: inherit; width: 100%; }
-.option-btn::before { content: ''; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; border-radius: 50%; border: 2px solid #ACA8FF; background: #fff; transition: all 0.2s ease; }
-.option-btn:hover { border-color: #ACA8FF; background: #F9F9FF; }
-.option-btn:hover::before { border-color: #5A52FF; }
-.input-wrap { position: relative; margin-top: 14px; }
-input[type="number"] { width: 100%; padding: 16px 50px 16px 18px; border: 2px solid #E5E3FF; border-radius: 12px; font-size: 16px; font-family: inherit; color: #1A1A2E; -moz-appearance: textfield; }
-input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-input[type="number"]:focus { outline: none; border-color: #5A52FF; box-shadow: 0 0 0 4px rgba(90,82,255,0.12); }
-.input-suffix { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: #9B97FF; font-size: 14px; font-weight: 600; pointer-events: none; }
-.result-box { display: none; background: #ffffff; padding: 26px 24px; border-radius: 16px; margin-top: 8px; border: 2px solid #5A52FF; }
-.result-box.show { display: block; animation: fadeIn 0.4s ease; }
-.result-title { display: flex; align-items: center; gap: 8px; color: #5A52FF; font-size: 18px; font-weight: 800; margin-bottom: 18px; }
-.result-title .check { width: 24px; height: 24px; border-radius: 50%; background: #5A52FF; color: #fff; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-.price { font-size: 30px; color: #5A52FF; font-weight: 800; margin: 6px 0 10px; letter-spacing: -0.5px; display: block; }
-.price-refaction { font-size: 24px; color: #4842CC; font-weight: 800; margin: 8px 0; display: block; }
-.price-ttc { font-size: 16px; color: #4842CC; font-weight: 700; margin: 6px 0 4px; display: block; }
-.result-box p { font-size: 14px; color: #1A1A2E; }
-.info-box { background: #F6F5FF; padding: 14px 16px; border-radius: 12px; margin-top: 14px; font-size: 13.5px; border-left: 4px solid #5A52FF; color: #1A1A2E; line-height: 1.55; }
-.reset-btn { background: #5A52FF; color: white; border: none; padding: 15px 28px; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 700; margin-top: 20px; width: 100%; transition: all 0.2s ease; font-family: inherit; }
-.reset-btn:hover { background: #4842CC; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(90,82,255,0.25); }
-@media (max-width: 768px) {
-  body { padding: 10px; }
-  .container { padding: 20px 18px 24px; border-radius: 16px; }
-  h1 { font-size: 20px; margin-bottom: 18px; }
-  .question-text { font-size: 17px; }
-  .option-btn { padding: 14px 16px 14px 42px; font-size: 14px; }
-  .price { font-size: 25px; }
-  .price-refaction { font-size: 20px; }
+.tpo-wrap,.tpo-wrap *{box-sizing:border-box;}
+.tpo-wrap{font-family:'Inter','Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#ffffff;max-width:1152px;margin:0 auto;padding:20px;color:#0F172A;}
+.tpo-title{font-size:22px;font-weight:700;text-align:center;color:#1f2937;margin:2px 0 14px 0;}
+.tpo-grid{display:grid !important;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+.tpo-card{background:#ffffff;border-radius:10px !important;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:flex !important;flex-direction:column;overflow:visible;height:100%;}
+.tpo-card-header{padding:0.85rem 1rem;border-top-left-radius:10px !important;border-top-right-radius:10px !important;min-height:auto;display:flex !important;flex-direction:column;justify-content:center;}
+.tpo-header--left{background:linear-gradient(135deg,#5145E5 0%,#9134E9 100%);color:#ffffff !important;}
+.tpo-header--right{background:linear-gradient(135deg,#16B7A5 0%,#0C9488 100%);color:#ffffff !important;}
+.tpo-header-row{display:flex !important;align-items:center;gap:8px;margin-bottom:6px;}
+.tpo-header-icon{width:24px !important;height:24px !important;flex-shrink:0;}
+.tpo-header-title{font-weight:700 !important;font-size:16px;color:#ffffff !important;margin:0;}
+.tpo-header-sub{color:rgba(255,255,255,0.9) !important;font-size:12px;margin:0;}
+.tpo-content{padding:1.1rem;flex:1;display:flex !important;flex-direction:column;gap:14px;}
+.tpo-field{padding:4px 0;}
+.tpo-field-label{display:block;font-size:14px;font-weight:600;color:#374151 !important;margin-bottom:8px;}
+.tpo-label-row{display:flex !important;align-items:center;gap:8px;margin-bottom:8px;}
+.tpo-label-row .tpo-field-label{margin-bottom:0;}
+.tpo-wrap input[type="range"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100%;height:6px;background:transparent;cursor:pointer;margin:0 0 6px 0;}
+.tpo-wrap input[type="range"]::-webkit-slider-runnable-track{height:6px;cursor:pointer;background:linear-gradient(to right,#2B2B2B var(--tpo-progress,12.5%),#e5e7eb var(--tpo-progress,12.5%));border-radius:5px !important;}
+.tpo-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;border:1px solid #2B2B2B;height:16px !important;width:16px !important;border-radius:50% !important;background:#e5e7eb;cursor:pointer;margin-top:-5px;box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.tpo-wrap input[type="range"]::-moz-range-track{height:6px;cursor:pointer;background:#e5e7eb;border-radius:5px !important;}
+.tpo-wrap input[type="range"]::-moz-range-progress{height:6px;background:#2B2B2B;border-radius:5px !important;}
+.tpo-wrap input[type="range"]::-moz-range-thumb{border:1px solid #2B2B2B;height:16px !important;width:16px !important;border-radius:50% !important;background:#e5e7eb;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.tpo-wrap input[type="range"]:focus{outline:none !important;box-shadow:none !important;}
+.tpo-slider-labels{display:flex !important;justify-content:space-between;align-items:center;}
+.tpo-slider-labels span{font-size:11px;color:#6b7280 !important;}
+.tpo-info-wrap{position:relative;display:none;align-items:center;}
+.tpo-info-wrap.tpo-visible{display:inline-flex !important;}
+.tpo-info-icon{width:18px !important;height:18px !important;color:#9ca3af;cursor:pointer;transition:color .2s;}
+.tpo-info-wrap:hover .tpo-info-icon,.tpo-info-wrap.tpo-tooltip-open .tpo-info-icon{color:#4b5563;}
+.tpo-tooltip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%) translateY(-8px);width:220px;padding:10px;background:#1f2937;color:#ffffff !important;font-size:11px;text-align:center;border-radius:5px !important;opacity:0;visibility:hidden;pointer-events:none;transition:all .2s ease;z-index:50;box-shadow:0 10px 25px rgba(0,0,0,.2);}
+.tpo-tooltip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#1f2937;}
+.tpo-info-wrap:hover .tpo-tooltip,.tpo-info-wrap.tpo-tooltip-open .tpo-tooltip{opacity:1 !important;visibility:visible !important;pointer-events:auto !important;}
+.tpo-options-row{display:flex !important;gap:8px;}
+.tpo-option-btn{flex:1;border:1px solid #d1d5db;color:#374151 !important;background:#ffffff !important;cursor:pointer;padding:0.55rem 0.5rem;border-radius:5px !important;font-weight:500;text-align:center;font-family:inherit;font-size:12px;transition:all .2s;}
+.tpo-option-btn:hover{background:rgba(102,126,234,0.1) !important;border-color:#667eea;color:#667eea !important;}
+.tpo-option-btn.tpo-active{background:#667eea !important;border-color:#667eea;color:#ffffff !important;box-shadow:none !important;}
+.tpo-logo{display:block !important;width:60px !important;max-width:60px !important;height:auto;margin:0 auto 12px auto !important;}
+.tpo-result-box{border-radius:5px !important;padding:14px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.05);border:1px solid #99F6E4;background:#F0FDFA;display:flex !important;flex-direction:column;justify-content:center;align-items:center;position:relative;min-height:90px;}
+.tpo-result-content-wrap{display:block;width:100%;}
+.tpo-result-content-wrap.tpo-hidden{display:none !important;}
+.tpo-result-amount{font-size:22px;font-weight:800;line-height:1.15;color:#11766E !important;margin:0 0 6px 0;font-variant-numeric:tabular-nums;}
+.tpo-result-sub{font-size:12px;margin:0 0 6px 0;color:#11766E !important;}
+.tpo-unavailable{display:none;flex-direction:column;justify-content:center;align-items:center;background:rgba(243,244,246,0.95);border-radius:6px !important;padding:12px;width:100%;}
+.tpo-unavailable.tpo-visible{display:flex !important;}
+.tpo-unavailable-icon{width:26px !important;height:26px !important;color:#6b7280;margin-bottom:6px;}
+.tpo-unavailable-title{font-weight:700;font-size:13px;color:#374151 !important;margin:0;}
+.tpo-unavailable-sub{font-size:11px;color:#4b5563 !important;margin:4px 0 0 0;text-align:center;}
+.tpo-cta-group{width:100%;display:flex !important;flex-direction:column;gap:8px;}
+.tpo-btn-cta{width:100%;display:flex !important;justify-content:center;align-items:center;gap:8px;background:#14B8A6 !important;color:#ffffff !important;font-weight:600;padding:10px 16px;border-radius:5px !important;transition:all .3s;box-shadow:0 4px 6px rgba(0,0,0,.07);text-align:center;text-decoration:none !important;font-size:13px;}
+.tpo-btn-cta:hover{background:#0C9488 !important;box-shadow:0 10px 15px rgba(0,0,0,.1);color:#ffffff !important;}
+.tpo-details-wrap{width:100%;margin-bottom:0;position:relative;overflow:visible;}
+.tpo-btn-details{width:100%;display:flex !important;justify-content:center;align-items:center;gap:8px;background:#ffffff !important;border:1px solid #1F40AF;color:#1F40AF !important;font-weight:600;padding:10px 16px;border-radius:5px !important;transition:all .3s;box-shadow:0 4px 6px rgba(0,0,0,.07);cursor:pointer;position:relative;z-index:10;font-family:inherit;font-size:13px;}
+.tpo-btn-details:hover{background:#f9fafb !important;box-shadow:0 10px 15px rgba(0,0,0,.1);}
+.tpo-btn-icon{width:18px !important;height:18px !important;}
+.tpo-details-panel{position:relative;width:100%;margin-top:10px;background:#F0F6FF;color:#1F40AF !important;border-left:8px solid #C0DBFE;border-radius:5px !important;box-shadow:none;max-height:0;opacity:0;overflow:hidden;padding:0 16px;visibility:hidden;transition:all .3s ease-in-out;}
+.tpo-details-panel.tpo-show{max-height:500px !important;opacity:1 !important;visibility:visible !important;padding:14px 16px !important;margin-bottom:0 !important;}
+.tpo-detail-row{display:flex !important;flex-direction:row;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.tpo-detail-row:last-child{margin-bottom:0;}
+.tpo-detail-label{font-weight:700;font-size:13px;white-space:nowrap;}
+.tpo-detail-value{font-weight:400;font-size:13px;}
+@media (max-width:1024px){.tpo-card-header{padding:0.75rem 0.9rem !important;}.tpo-content{padding:1rem !important;}}
+@media (max-width:600px){
+  .tpo-wrap{padding:0.5rem !important;}
+  .tpo-title{font-size:0.85rem !important;margin:0.15rem 0 0.5rem 0 !important;}
+  .tpo-grid{gap:0.35rem !important;}
+  .tpo-card{border-radius:8px !important;}
+  .tpo-card-header{padding:0.35rem 0.45rem !important;}
+  .tpo-header-row{gap:0.3rem !important;margin-bottom:0.15rem !important;}
+  .tpo-header-icon{width:16px !important;height:16px !important;}
+  .tpo-header-title{font-size:0.68rem !important;}
+  .tpo-header-sub{font-size:0.52rem !important;line-height:1.2 !important;}
+  .tpo-content{padding:0.4rem !important;gap:0.5rem !important;}
+  .tpo-field{padding:0.1rem 0 !important;}
+  .tpo-field-label{font-size:0.58rem !important;margin-bottom:0.25rem !important;}
+  .tpo-label-row{margin-bottom:0.25rem !important;}
+  .tpo-slider-labels span{font-size:0.5rem !important;}
+  .tpo-info-icon{width:12px !important;height:12px !important;}
+  .tpo-options-row{gap:0.25rem !important;}
+  .tpo-option-btn{font-size:0.5rem !important;padding:0.35rem 0.2rem !important;min-height:44px !important;}
+  .tpo-logo{width:36px !important;max-width:36px !important;margin:0 auto 0.35rem auto !important;}
+  .tpo-result-box{padding:0.5rem !important;min-height:44px !important;}
+  .tpo-result-amount{font-size:0.98rem !important;margin-bottom:0.2rem !important;}
+  .tpo-result-sub{font-size:0.52rem !important;margin-bottom:0.2rem !important;}
+  .tpo-cta-group{gap:0.3rem !important;}
+  .tpo-btn-cta,.tpo-btn-details{font-size:0.58rem !important;padding:0.4rem 0.4rem !important;gap:0.25rem !important;min-height:44px !important;}
+  .tpo-btn-icon{width:13px !important;height:13px !important;}
+  .tpo-details-panel{border-left-width:5px !important;}
+  .tpo-details-panel.tpo-show{padding:0.5rem !important;}
+  .tpo-detail-row{gap:0.25rem !important;margin-bottom:0.35rem !important;}
+  .tpo-detail-label,.tpo-detail-value{font-size:0.52rem !important;}
+  .tpo-tooltip{width:150px !important;font-size:0.5rem !important;padding:0.3rem !important;}
+  .tpo-unavailable-icon{width:18px !important;height:18px !important;margin-bottom:0.2rem !important;}
+  .tpo-unavailable-title{font-size:0.5rem !important;}
+  .tpo-unavailable-sub{font-size:0.44rem !important;}
 }
 </style>
-</head>
-<body>
-<div class="container">
-  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-  <h1>Estimez le coût de votre raccordement électrique</h1>
+<div class="tpo-wrap">
+  <div class="tpo-title">Simulation de prix du Tarif Bleu EDF</div>
+  <div class="tpo-grid">
 
-  <div id="q-initial" class="question-block active">
-    <div class="question-header">
-      <div class="question-text">Connaissez-vous la Longueur du Branchement (LB) et la Longueur d'Extension nécessaire (LE) ?</div>
-      <div class="help-icon" onclick="toggleTooltip(this); trackTool('click_help_tooltip')">?
-        <div class="tooltip">La LB est la longueur du câble entre le réseau public et votre compteur. La LE est la longueur de réseau à créer pour atteindre votre terrain.</div>
+    <div class="tpo-card">
+      <div class="tpo-card-header tpo-header--left">
+        <div class="tpo-header-row">
+          <svg class="tpo-header-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
+          <div class="tpo-header-title">Vos informations</div>
+        </div>
+        <p class="tpo-header-sub">Renseignez vos informations pour calculer votre facture estimée</p>
+      </div>
+
+      <div class="tpo-content">
+        <div class="tpo-field">
+          <label class="tpo-field-label" for="tpo-consumption">Consommation annuelle</label>
+          <input type="range" id="tpo-consumption" min="1000" max="25000" value="5000" step="100" style="--tpo-progress:16.67%;">
+          <div class="tpo-slider-labels">
+            <span>1000 kWh</span>
+            <span id="tpo-consumption-value">5000 kWh</span>
+            <span>25000 kWh</span>
+          </div>
+        </div>
+
+        <div class="tpo-field">
+          <div class="tpo-label-row">
+            <label class="tpo-field-label" style="margin-bottom:0;">Option tarifaire</label>
+            <div id="tpo-hphc-icon" class="tpo-info-wrap">
+              <svg class="tpo-info-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"></path></svg>
+              <div class="tpo-tooltip">Le calcul simule une répartition de 2/3 de votre consommation en Heures Pleines et 1/3 en Heures Creuses.</div>
+            </div>
+          </div>
+          <div class="tpo-options-row">
+            <button type="button" class="tpo-option-btn tpo-active" data-option="Base">Base</button>
+            <button type="button" class="tpo-option-btn" data-option="HPHC">Heures Pleines/Creuses</button>
+          </div>
+        </div>
+
+        <div class="tpo-field">
+          <label class="tpo-field-label" for="tpo-power">Puissance du compteur</label>
+          <input type="range" id="tpo-power" min="0" max="8" value="1" step="1" style="--tpo-progress:12.5%;">
+          <div class="tpo-slider-labels">
+            <span>3 kVA</span>
+            <span id="tpo-power-value">6 kVA</span>
+            <span>36 kVA</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="definition">
-      <strong>LB (Longueur de Branchement) :</strong> Distance entre le réseau public et votre installation.<br>
-      <strong>LE (Longueur d'Extension) :</strong> Longueur de réseau à créer pour desservir votre terrain.
-    </div>
-    <div class="note-box">⚠️ Si vous ne connaissez pas ces informations, l'estimation sera moins précise et fiable.</div>
-    <div class="options">
-      <button type="button" class="option-btn" onclick="startPath('A')">Non, je ne connais pas ces longueurs</button>
-      <button type="button" class="option-btn" onclick="startPath('B')">Oui, je connais ces longueurs</button>
-    </div>
-  </div>
 
-  <div id="qa1" class="question-block">
-    <div class="question-header"><div class="question-text">Quelle est votre puissance nécessaire ?</div></div>
-    <div class="options">
-      <button type="button" class="option-btn" onclick="answerA1('low')">Inférieure ou égale à 36 kVA</button>
-      <button type="button" class="option-btn" onclick="answerA1('high')">Supérieure à 36 kVA</button>
-    </div>
-  </div>
+    <div class="tpo-card">
+      <div class="tpo-card-header tpo-header--right">
+        <div class="tpo-header-row">
+          <span style="font-size:26px;font-weight:700;line-height:1;color:#ffffff;">€</span>
+          <div class="tpo-header-title">Résultat</div>
+        </div>
+        <p class="tpo-header-sub">Votre estimation Tarif Bleu EDF !</p>
+      </div>
 
-  <div id="qa2" class="question-block">
-    <div class="question-header">
-      <div class="question-text">Votre terrain est-il viabilisé ?</div>
-      <div class="help-icon" onclick="toggleTooltip(this); trackTool('click_help_tooltip')">?
-        <div class="tooltip">Un terrain viabilisé dispose déjà des réseaux d'eau, d'électricité et d'assainissement à proximité immédiate.</div>
+      <div class="tpo-content">
+        <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="tpo-logo">
+
+        <div class="tpo-result-box">
+          <div id="tpo-result-content" class="tpo-result-content-wrap">
+            <div class="tpo-result-amount" id="tpo-monthly-bill">0,00 € par mois</div>
+            <p class="tpo-result-sub" id="tpo-annual-bill">soit 0,00 € par an TTC</p>
+          </div>
+
+          <div id="tpo-unavailable" class="tpo-unavailable">
+            <svg class="tpo-unavailable-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <p class="tpo-unavailable-title" id="tpo-unavailable-title">Option indisponible</p>
+            <p class="tpo-unavailable-sub" id="tpo-unavailable-subtitle">L'option Heures Pleines/Creuses n'est pas disponible en 3 kVA.</p>
+          </div>
+        </div>
+
+        <div class="tpo-cta-group">
+          <a href="https://www.papernest.com/demarches-energie/estimer-votre-consommation/" target="_blank" rel="noopener" class="tpo-btn-cta">Réduire ma facture</a>
+
+          <div class="tpo-details-wrap">
+            <button type="button" id="tpo-toggle-details" aria-expanded="false" class="tpo-btn-details">
+              <svg class="tpo-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+              Afficher les détails
+            </button>
+            <div id="tpo-details-panel" class="tpo-details-panel" role="region" aria-hidden="true">
+              <div class="tpo-detail-row">
+                <span class="tpo-detail-label">Prix du kWh :</span>
+                <span class="tpo-detail-value" id="tpo-trv-kwh-detail">-</span>
+              </div>
+              <div class="tpo-detail-row">
+                <span class="tpo-detail-label">Abonnement :</span>
+                <span class="tpo-detail-value" id="tpo-trv-abo-detail">-</span>
+              </div>
+              <div class="tpo-detail-row">
+                <span class="tpo-detail-label">Offre :</span>
+                <span class="tpo-detail-value">Tarif Bleu Réglementé EDF</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="options">
-      <button type="button" class="option-btn" onclick="answerA2('yes')">Oui</button>
-      <button type="button" class="option-btn" onclick="answerA2('no')">Non</button>
-    </div>
-  </div>
 
-  <div id="qa3" class="question-block">
-    <div class="question-header"><div class="question-text">Votre rue est-elle desservie par le réseau électrique ?</div></div>
-    <div class="options">
-      <button type="button" class="option-btn" onclick="answerA3('full')">Ma rue est totalement desservie en électricité</button>
-      <button type="button" class="option-btn" onclick="answerA3('partial')">Ma rue est partiellement desservie en électricité</button>
-      <button type="button" class="option-btn" onclick="answerA3('none')">Ma rue n'est pas desservie en électricité</button>
-    </div>
-  </div>
-
-  <div id="qb1" class="question-block">
-    <div class="question-header"><div class="question-text">Quelle est votre puissance nécessaire ?</div></div>
-    <div class="options">
-      <button type="button" class="option-btn" onclick="answerB1('low')">Inférieure ou égale à 36 kVA</button>
-      <button type="button" class="option-btn" onclick="answerB1('medium')">Entre 36 kVA et 250 kVA</button>
-      <button type="button" class="option-btn" onclick="answerB1('high')">Supérieure à 250 kVA</button>
-    </div>
-  </div>
-
-  <div id="qb2" class="question-block">
-    <div class="question-header">
-      <div class="question-text">Quelle est votre zone de facturation ?</div>
-      <div class="help-icon" onclick="toggleTooltip(this); trackTool('click_help_tooltip')">?
-        <div class="tooltip">ZFA correspond aux zones urbaines denses. ZFB correspond aux zones rurales ou moins densément peuplées.</div>
-      </div>
-    </div>
-    <div class="options">
-      <button type="button" class="option-btn" onclick="answerB2('ZFA')">ZFA (Zone urbaine)</button>
-      <button type="button" class="option-btn" onclick="answerB2('ZFB')">ZFB (Zone rurale)</button>
-    </div>
-  </div>
-
-  <div id="qb3" class="question-block">
-    <div class="question-header"><div class="question-text">Quelle est la longueur d'extension nécessaire (en mètres) ?</div></div>
-    <div class="input-wrap">
-      <input type="number" id="extensionLength" placeholder="0" min="0" onchange="handleExtensionInput()">
-      <span class="input-suffix">mètres</span>
-    </div>
-  </div>
-
-  <div id="qb4" class="question-block">
-    <div class="question-header"><div class="question-text">Quelle est la longueur du branchement (en mètres) ?</div></div>
-    <div class="input-wrap">
-      <input type="number" id="branchementLength" placeholder="0" min="0" onchange="calculateResultB()">
-      <span class="input-suffix">mètres</span>
-    </div>
-  </div>
-
-  <div id="result" class="result-box">
-    <div class="result-title"><span class="check">✓</span>Estimation du coût de raccordement</div>
-    <div id="resultContent"></div>
-    <button type="button" class="reset-btn" onclick="handleReset()">Nouvelle estimation</button>
   </div>
 </div>
-
 <script>
-var userData = { path: null, powerA: null, viabilise: null, street: null, powerB: null, zone: null, extensionLength: 0, branchementLength: 0 };
+(function(){
+  /* =========================================================
+     CONSTANTES ET VARIABLES WORDPRESS - PARTICULIERS (TRV)
+     ========================================================= */
+  var WP_TRV_BASE_ABO = "$FR_NRJ_EDF_offre_elec_1_base_abo_6kVA$";
+  var WP_TRV_BASE_KWH = "$FR_NRJ_EDF_offre_elec_1_base_kWh_6kVA$";
+  var WP_TRV_HPHC_ABO = "$FR_NRJ_EDF_offre_elec_1_hphc_abo_6kVA$";
+  var WP_TRV_HP_KWH   = "$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$";
+  var WP_TRV_HC_KWH   = "$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$";
 
-function goTo(id, pct) {
-  var blocks = document.querySelectorAll('.question-block');
-  for (var i = 0; i < blocks.length; i++) { blocks[i].classList.remove('active'); }
-  document.getElementById('result').classList.remove('show');
-  var target = document.getElementById(id);
-  if (id === 'result') { target.classList.add('show'); } else { target.classList.add('active'); }
-  if (typeof pct === 'number') { document.getElementById('progressFill').style.width = pct + '%'; }
-  sendHeight();
-}
-
-function sendHeight() {
-  setTimeout(function () {
-    var height = document.body.scrollHeight + 24;
-    window.parent.postMessage({ type: 'resize', height: height }, '*');
-  }, 100);
-}
-
-function toggleTooltip(el) { el.classList.toggle('tooltip-open'); }
-
-function startPath(path) {
-  userData.path = path;
-  var actionName = (path === 'A') ? 'select_path_unknown_lengths' : 'select_path_known_lengths';
-  trackTool(actionName, { event_type: 'interaction' });
-  if (path === 'A') { goTo('qa1', 25); } else { goTo('qb1', 20); }
-}
-
-function answerA1(power) {
-  userData.powerA = power;
-  var actionName = (power === 'low') ? 'select_power_low' : 'select_power_high';
-  trackTool(actionName);
-  if (power === 'high') { showResultA('devis'); } else { goTo('qa2', 50); }
-}
-
-function answerA2(viabilise) {
-  userData.viabilise = viabilise;
-  var actionName = (viabilise === 'yes') ? 'select_viabilisation_yes' : 'select_viabilisation_no';
-  trackTool(actionName);
-  if (viabilise === 'yes') { showResultA('430'); } else { goTo('qa3', 75); }
-}
-
-function answerA3(street) {
-  userData.street = street;
-  var actionName = 'select_street_coverage_' + street;
-  trackTool(actionName);
-  if (street === 'full') { showResultA('1690'); } else { showResultA('1690+'); }
-}
-
-function showResultA(type) {
-  trackTool('view_result_path_A');
-  var content = '';
-  if (type === 'devis') {
-    content = '<div class="price">Prix sur devis auprès d\'Enedis</div><p>Pour une puissance supérieure à 36 kVA, le coût du raccordement est établi sur devis personnalisé par Enedis.</p>';
-  } else if (type === '430') {
-    content = '<div class="price">430 € TTC</div><p>Votre terrain étant déjà viabilisé, le coût du raccordement est forfaitaire.</p>';
-  } else if (type === '1690') {
-    content = '<div class="price">1 690 € TTC</div><p>Coût du raccordement pour un terrain non viabilisé avec une rue totalement desservie.</p>';
-  } else if (type === '1690+') {
-    content = '<div class="price">1 690 € TTC + part variable</div><p>Le coût inclut une base de 1 690 € TTC plus une part variable qui dépend de la longueur de l\'extension nécessaire pour desservir votre terrain.</p>';
+  function parseVal(val, defaultVal) {
+    if (typeof val === 'number') return val;
+    if (!val || String(val).indexOf('$') !== -1) return defaultVal;
+    var parsed = parseFloat(String(val).replace(/[^0-9.,]/g, '').replace(',', '.'));
+    return isNaN(parsed) ? defaultVal : parsed;
   }
-  content += '<div class="info-box"><strong>Information importante</strong><br>Ces prix sont estimés à partir des grilles tarifaires d\'Enedis. Il est recommandé de faire un devis personnalisé auprès d\'Enedis pour connaître le prix exact de votre raccordement.</div>';
-  content += '<div class="info-box"><strong>Précision importante</strong><br>Ces estimations sont issues du simulateur officiel d\'Enedis. Le montant réel du raccordement peut varier en fonction de la longueur du branchement, de la zone tarifaire (ZFA/ZFB) et de l\'extension éventuellement nécessaire. Une étude et un devis Enedis sont indispensables pour déterminer le coût exact de votre raccordement.</div>';
-  document.getElementById('resultContent').innerHTML = content;
-  goTo('result', 100);
-}
 
-function answerB1(power) {
-  userData.powerB = power;
-  var actionName = 'select_power_low';
-  if (power === 'medium') actionName = 'select_power_medium';
-  if (power === 'high') actionName = 'select_power_high';
-  trackTool(actionName);
-  if (power === 'high') { showResultB('devis'); } else { goTo('qb2', 40); }
-}
+  var trvBaseAbo6kVA = parseVal(WP_TRV_BASE_ABO, 187.82);
+  var trvBaseKwh6kVA = parseVal(WP_TRV_BASE_KWH, 0.1952);
+  var trvHphcAbo6kVA = parseVal(WP_TRV_HPHC_ABO, 190.36);
+  var trvHpHkwh6kVA  = parseVal(WP_TRV_HP_KWH, 0.2142);
+  var trvHcHkwh6kVA  = parseVal(WP_TRV_HC_KWH, 0.1589);
 
-function answerB2(zone) {
-  userData.zone = zone;
-  var actionName = (zone === 'ZFA') ? 'select_zone_ZFA' : 'select_zone_ZFB';
-  trackTool(actionName);
-  goTo('qb3', 60);
-}
+  window.tpoOpt = 'Base';
+  window.tpoPowerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
 
-function handleExtensionInput() {
-  userData.extensionLength = parseFloat(document.getElementById('extensionLength').value) || 0;
-  trackTool('input_length_extension');
-  if (userData.powerB === 'medium') { goTo('qb4', 80); } else { calculateResultB(); }
-}
+  window.tpoTrvData = [
+    {puissance:3,  abo_base:144.35,         abo_hphc:144.35,         kwh:0.1940,        kwh_hp:"indisponible", kwh_hc:"indisponible"},
+    {puissance:6,  abo_base:trvBaseAbo6kVA, abo_hphc:trvHphcAbo6kVA, kwh:trvBaseKwh6kVA, kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
+    {puissance:9,  abo_base:234.72,         abo_hphc:238.61,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
+    {puissance:12, abo_base:279.84,         abo_hphc:285.12,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
+    {puissance:15, abo_base:322.08,         abo_hphc:328.76,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
+    {puissance:18, abo_base:368.23,         abo_hphc:373.70,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
+    {puissance:24, abo_base:469.63,         abo_hphc:469.63,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
+    {puissance:30, abo_base:557.64,         abo_hphc:557.64,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
+    {puissance:36, abo_base:646.51,         abo_hphc:646.51,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA}
+  ];
 
-function calculateResultB() {
-  if (userData.powerB === 'medium') {
-    userData.branchementLength = parseFloat(document.getElementById('branchementLength').value) || 0;
-    trackTool('input_length_branchement');
+  function tpoFindLine(arr, p){
+    for(var i=0; i<arr.length; i++){ if(arr[i].puissance === p) return arr[i]; }
+    return null;
   }
-  trackTool('view_result_path_B');
-  if (userData.powerB === 'devis') { showResultB('devis'); return; }
 
-  var HT = 0, HT_branchement = 0, HT_extension = 0;
-  var LE = userData.extensionLength || 0;
-  var LB = userData.branchementLength || 0;
+  function tpoCalculateBill(){
+    var consumptionInput = document.getElementById('tpo-consumption');
+    var powerInput = document.getElementById('tpo-power');
+    if(!consumptionInput || !powerInput) return;
 
-  if (userData.powerB === 'low') {
-    HT_branchement = 2340.00;
-    if (LE === 0) {
-      HT_extension = 0;
-      HT = HT_branchement;
-    } else {
-      if (userData.zone === 'ZFA') { HT_extension = 2549.00 + (LE * 105.00); } else { HT_extension = 3296.20 + (LE * 138.60); }
-      HT = HT_branchement + HT_extension;
+    var consumption = parseInt(consumptionInput.value) || 5000;
+    var powerIndex = parseInt(powerInput.value) || 1;
+    var power = window.tpoPowerValues[powerIndex] || 6;
+
+    var trvLine = tpoFindLine(window.tpoTrvData, power);
+
+    var isAvailable = true;
+    if(!trvLine){ isAvailable = false; }
+    if(isAvailable){
+      if(window.tpoOpt === 'Base' && trvLine.kwh === "indisponible"){ isAvailable = false; }
+      else if(window.tpoOpt === 'HPHC' && (trvLine.kwh_hp === "indisponible" || trvLine.kwh_hc === "indisponible")){ isAvailable = false; }
     }
-  } else if (userData.powerB === 'medium') {
-    if (LE === 0) {
-      HT_branchement = 4255.00;
-      HT_extension = 0;
-      HT = 4255.00;
+
+    var resultContent = document.getElementById('tpo-result-content');
+    var unavailableMessage = document.getElementById('tpo-unavailable');
+    var unavailableTitle = document.getElementById('tpo-unavailable-title');
+    var unavailableSubtitle = document.getElementById('tpo-unavailable-subtitle');
+
+    var trvKwhDetail = document.getElementById('tpo-trv-kwh-detail');
+    var trvAboDetail = document.getElementById('tpo-trv-abo-detail');
+
+    if(!isAvailable){
+      if(resultContent) resultContent.classList.add('tpo-hidden');
+      if(unavailableMessage) unavailableMessage.classList.add('tpo-visible');
+      if(unavailableTitle) unavailableTitle.textContent = "Option indisponible";
+      if(unavailableSubtitle) unavailableSubtitle.textContent = "L'option Heures Pleines/Creuses n'est pas disponible en 3 kVA.";
+      if(trvKwhDetail) trvKwhDetail.textContent = '-';
+      if(trvAboDetail) trvAboDetail.textContent = '-';
+      return;
     } else {
-      HT_branchement = 4255.00 + (LB * 151.00);
-      if (userData.zone === 'ZFA') { HT_extension = 2587.00 + (LE * 129.00); } else { HT_extension = 4039.20 + (LE * 198.00); }
-      HT = HT_branchement + HT_extension;
+      if(resultContent) resultContent.classList.remove('tpo-hidden');
+      if(unavailableMessage) unavailableMessage.classList.remove('tpo-visible');
     }
-  }
 
-  var HT_refaction = HT * 0.60;
-  var TTC_client = HT_refaction * 1.20;
-  var fmt = function (n) { return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+    var trvAnnualCost = 0;
 
-  var content = '<div class="price">' + fmt(HT) + ' € HT</div>' +
-    '<div class="price-refaction">Après réfaction 40% : ' + fmt(HT_refaction) + ' € HT</div>' +
-    '<div class="price-ttc">Montant TTC à payer : ' + fmt(TTC_client) + ' € TTC</div>' +
-    '<div class="info-box"><strong>Détail des coûts (HT) :</strong><br>• Part branchement : ' + fmt(HT_branchement) + ' € HT<br>• Part extension : ' + fmt(HT_extension) + ' € HT</div>' +
-    '<div class="info-box"><strong>Information importante</strong><br>Ces estimations sont issues du barème Enedis 2025 (version 7.2). Il est nécessaire de demander un devis personnalisé à Enedis pour connaître le montant exact de la prestation.</div>';
-
-  document.getElementById('resultContent').innerHTML = content;
-  goTo('result', 100);
-}
-
-function showResultB(type) {
-  trackTool('view_result_path_B');
-  var content = '';
-  if (type === 'devis') {
-    content = '<div class="price">Prix sur devis auprès d\'Enedis</div><p>Pour une puissance supérieure à 250 kVA, le raccordement s\'effectue en Haute Tension et nécessite un devis personnalisé d\'Enedis.</p><div class="info-box"><strong>Information importante</strong><br>Ces estimations sont issues du barème Enedis 2025. Il est nécessaire de demander un devis personnalisé à Enedis pour connaître le montant exact de la prestation.</div>';
-  }
-  document.getElementById('resultContent').innerHTML = content;
-  goTo('result', 100);
-}
-
-function handleReset() {
-  trackTool('click_reset_simulator', { is_cta: true });
-  userData = { path: null, powerA: null, viabilise: null, street: null, powerB: null, zone: null, extensionLength: 0, branchementLength: 0 };
-  document.getElementById('extensionLength').value = '';
-  document.getElementById('branchementLength').value = '';
-  document.getElementById('resultContent').innerHTML = '';
-  goTo('q-initial', 8);
-}
-
-function trackTool(actionName, customParams) {
-  customParams = customParams || {};
-  var nom_du_tool = "tool-raccordement";
-  var gtmEvent = "form";
-  if (actionName === "tool_visible") { gtmEvent = "impression"; }
-  else if (customParams.is_contact || actionName.indexOf("contact") > -1 || actionName.indexOf("telephone") > -1) { gtmEvent = "click_cta"; }
-  else if (actionName.indexOf("reset") > -1) { gtmEvent = "click"; }
-  var eventCategory = "engagement";
-  var eventType = customParams.event_type || 'interaction';
-  if (actionName === "tool_visible" || actionName.indexOf("view_result") > -1) { eventType = "impression"; }
-  var payload = { event: gtmEvent, event_system: 'papernest_tool', event_component: nom_du_tool, event_category: eventCategory, event_type: eventType, event_position: 'content' };
-  if (actionName !== "tool_visible") { payload.event_step = actionName; }
-  if (gtmEvent === "form") {
-    if (actionName.indexOf("view_result") > -1 || actionName.indexOf("tooltip") > -1 || actionName.indexOf("help") > -1) {
-    } else if (actionName.indexOf("input_") === 0) {
-      payload.event_form_type = "text";
+    if(window.tpoOpt === 'Base'){
+      var trvAboBaseVal = trvLine.abo_base || trvLine.abonnement || 0;
+      trvAnnualCost = trvAboBaseVal + (consumption * trvLine.kwh);
+      if(trvKwhDetail) trvKwhDetail.textContent = trvLine.kwh.toFixed(4).replace('.',',') + ' €';
+      if(trvAboDetail) trvAboDetail.textContent = trvAboBaseVal.toFixed(2).replace('.',',') + ' € par an';
     } else {
-      payload.event_form_type = "select";
+      var trvAboHphcVal = trvLine.abo_hphc || trvLine.abonnement || 0;
+      trvAnnualCost = trvAboHphcVal + (consumption * 0.66 * trvLine.kwh_hp) + (consumption * 0.34 * trvLine.kwh_hc);
+      if(trvKwhDetail) trvKwhDetail.textContent = 'HP : ' + trvLine.kwh_hp.toFixed(4).replace('.',',') + ' € | HC : ' + trvLine.kwh_hc.toFixed(4).replace('.',',') + ' €';
+      if(trvAboDetail) trvAboDetail.textContent = trvAboHphcVal.toFixed(2).replace('.',',') + ' € par an';
     }
+
+    var totalMonthly = trvAnnualCost / 12;
+    var mbill = document.getElementById('tpo-monthly-bill');
+    var abill = document.getElementById('tpo-annual-bill');
+
+    if(mbill) mbill.textContent = totalMonthly.toFixed(2).replace('.',',') + ' € par mois';
+    if(abill) abill.textContent = 'soit ' + trvAnnualCost.toFixed(2).replace('.',',') + ' € par an TTC';
   }
-  window.parent.postMessage(payload, '*');
-}
 
-window.addEventListener('load', sendHeight);
-window.addEventListener('resize', sendHeight);
+  function initSimulator(){
+    var cInput = document.getElementById('tpo-consumption');
+    var pInput = document.getElementById('tpo-power');
+    var toggleBtn = document.getElementById('tpo-toggle-details');
+    var optionBtns = document.querySelectorAll('.tpo-option-btn');
+    var infoWrap = document.getElementById('tpo-hphc-icon');
 
-document.addEventListener('DOMContentLoaded', function () {
-  var toolContainer = document.querySelector('.container');
-  if (toolContainer && window.IntersectionObserver) {
-    var observer = new IntersectionObserver(function (entries) {
-      for (var i = 0; i < entries.length; i++) {
-        if (entries[i].isIntersecting) {
-          trackTool('tool_visible', { event_type: 'interaction' });
-          observer.unobserve(entries[i].target);
+    if(!cInput || !pInput) return;
+
+    function updateConsumption(){
+      var v = cInput.value;
+      var min = parseInt(cInput.min) || 1000;
+      var max = parseInt(cInput.max) || 25000;
+      var pct = ((v - min) / (max - min)) * 100;
+      cInput.style.setProperty('--tpo-progress', pct + '%');
+      var lbl = document.getElementById('tpo-consumption-value');
+      if(lbl) lbl.textContent = parseInt(v).toLocaleString('fr-FR') + ' kWh';
+      tpoCalculateBill();
+    }
+
+    function updatePower(){
+      var v = pInput.value;
+      var min = parseInt(pInput.min) || 0;
+      var max = parseInt(pInput.max) || 8;
+      var pct = ((v - min) / (max - min)) * 100;
+      pInput.style.setProperty('--tpo-progress', pct + '%');
+      var actual = window.tpoPowerValues[v] || 6;
+      var lbl = document.getElementById('tpo-power-value');
+      if(lbl) lbl.textContent = actual + ' kVA';
+      tpoCalculateBill();
+    }
+
+    cInput.addEventListener('input', updateConsumption);
+    cInput.addEventListener('change', updateConsumption);
+
+    pInput.addEventListener('input', updatePower);
+    pInput.addEventListener('change', updatePower);
+
+    for(var i=0; i<optionBtns.length; i++){
+      (function(btn){
+        btn.addEventListener('click', function(e){
+          e.preventDefault();
+          for(var j=0; j<optionBtns.length; j++){ optionBtns[j].classList.remove('tpo-active'); }
+          btn.classList.add('tpo-active');
+          window.tpoOpt = btn.getAttribute('data-option') || 'Base';
+          if(infoWrap){
+            if(window.tpoOpt === 'HPHC'){ infoWrap.classList.add('tpo-visible'); }
+            else { infoWrap.classList.remove('tpo-visible'); }
+          }
+          tpoCalculateBill();
+        });
+      })(optionBtns[i]);
+    }
+
+    if(toggleBtn){
+      toggleBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        var panel = document.getElementById('tpo-details-panel');
+        if(!panel) return;
+        var shown = panel.classList.toggle('tpo-show');
+        toggleBtn.setAttribute('aria-expanded', String(shown));
+        panel.setAttribute('aria-hidden', String(!shown));
+        if(shown){
+          toggleBtn.innerHTML = '<svg class="tpo-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>Masquer les détails';
+        } else {
+          toggleBtn.innerHTML = '<svg class="tpo-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>Afficher les détails';
         }
-      }
-    }, { threshold: 0.5 });
-    observer.observe(toolContainer);
+      });
+    }
+
+    if(infoWrap){
+      infoWrap.addEventListener('click', function(e){
+        e.stopPropagation();
+        infoWrap.classList.toggle('tpo-tooltip-open');
+      });
+      document.addEventListener('click', function(){
+        infoWrap.classList.remove('tpo-tooltip-open');
+      });
+    }
+
+    updateConsumption();
+    updatePower();
+    tpoCalculateBill();
   }
-});
+
+  if(document.readyState !== 'loading'){
+    initSimulator();
+  } else {
+    document.addEventListener('DOMContentLoaded', initSimulator);
+  }
+  window.addEventListener('load', initSimulator);
+})();
 </script>
-</body>
-</html>
