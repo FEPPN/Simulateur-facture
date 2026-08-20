@@ -1,0 +1,358 @@
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.tpp-wrap,.tpp-wrap *{box-sizing:border-box;}
+.tpp-wrap{font-family:'Inter','Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#ffffff;max-width:1152px;margin:0 auto;padding:20px;color:#0F172A;}
+.tpp-title{font-size:22px;font-weight:700;text-align:center;color:#1f2937;margin:2px 0 14px 0;}
+.tpp-grid{display:grid !important;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+.tpp-card{background:#ffffff;border-radius:10px !important;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:flex !important;flex-direction:column;overflow:visible;height:100%;}
+.tpp-card-header{padding:0.85rem 1rem;border-top-left-radius:10px !important;border-top-right-radius:10px !important;min-height:auto;display:flex !important;flex-direction:column;justify-content:center;}
+.tpp-header--left{background:linear-gradient(135deg,#5145E5 0%,#9134E9 100%);color:#ffffff !important;}
+.tpp-header--right{background:linear-gradient(135deg,#16B7A5 0%,#0C9488 100%);color:#ffffff !important;}
+.tpp-header-row{display:flex !important;align-items:center;gap:8px;margin-bottom:6px;}
+.tpp-header-icon{width:24px !important;height:24px !important;flex-shrink:0;}
+.tpp-header-title{font-weight:700 !important;font-size:16px;color:#ffffff !important;margin:0;}
+.tpp-header-sub{color:rgba(255,255,255,0.9) !important;font-size:12px;margin:0;}
+.tpp-content{padding:1.1rem;flex:1;display:flex !important;flex-direction:column;gap:14px;}
+.tpp-field{padding:4px 0;}
+.tpp-field-label{display:block;font-size:14px;font-weight:600;color:#374151 !important;margin-bottom:8px;}
+.tpp-label-row{display:flex !important;align-items:center;gap:8px;margin-bottom:8px;}
+.tpp-label-row .tpp-field-label{margin-bottom:0;}
+.tpp-wrap input[type="range"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100%;height:6px;background:transparent;cursor:pointer;margin:0 0 6px 0;}
+.tpp-wrap input[type="range"]::-webkit-slider-runnable-track{height:6px;cursor:pointer;background:linear-gradient(to right,#2B2B2B var(--tpp-progress,12.5%),#e5e7eb var(--tpp-progress,12.5%));border-radius:5px !important;}
+.tpp-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;border:1px solid #2B2B2B;height:16px !important;width:16px !important;border-radius:50% !important;background:#e5e7eb;cursor:pointer;margin-top:-5px;box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.tpp-wrap input[type="range"]::-moz-range-track{height:6px;cursor:pointer;background:#e5e7eb;border-radius:5px !important;}
+.tpp-wrap input[type="range"]::-moz-range-progress{height:6px;background:#2B2B2B;border-radius:5px !important;}
+.tpp-wrap input[type="range"]::-moz-range-thumb{border:1px solid #2B2B2B;height:16px !important;width:16px !important;border-radius:50% !important;background:#e5e7eb;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.tpp-wrap input[type="range"]:focus{outline:none !important;box-shadow:none !important;}
+.tpp-slider-labels{display:flex !important;justify-content:space-between;align-items:center;}
+.tpp-slider-labels span{font-size:11px;color:#6b7280 !important;}
+.tpp-info-wrap{position:relative;display:none;align-items:center;}
+.tpp-info-wrap.tpp-visible{display:inline-flex !important;}
+.tpp-info-icon{width:18px !important;height:18px !important;color:#9ca3af;cursor:pointer;transition:color .2s;}
+.tpp-info-wrap:hover .tpp-info-icon,.tpp-info-wrap.tpp-tooltip-open .tpp-info-icon{color:#4b5563;}
+.tpp-tooltip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%) translateY(-8px);width:220px;padding:10px;background:#1f2937;color:#ffffff !important;font-size:11px;text-align:center;border-radius:5px !important;opacity:0;visibility:hidden;pointer-events:none;transition:all .2s ease;z-index:50;box-shadow:0 10px 25px rgba(0,0,0,.2);}
+.tpp-tooltip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#1f2937;}
+.tpp-info-wrap:hover .tpp-tooltip,.tpp-info-wrap.tpp-tooltip-open .tpp-tooltip{opacity:1 !important;visibility:visible !important;pointer-events:auto !important;}
+.tpp-options-row{display:flex !important;gap:8px;}
+.tpp-option-btn{flex:1;border:1px solid #d1d5db;color:#374151 !important;background:#ffffff !important;cursor:pointer;padding:0.55rem 0.5rem;border-radius:5px !important;font-weight:500;text-align:center;font-family:inherit;font-size:12px;transition:all .2s;}
+.tpp-option-btn:hover{background:rgba(102,126,234,0.1) !important;border-color:#667eea;color:#667eea !important;}
+.tpp-option-btn.tpp-active{background:#667eea !important;border-color:#667eea;color:#ffffff !important;box-shadow:none !important;}
+.tpp-logo{display:block !important;width:60px !important;max-width:60px !important;height:auto;margin:0 auto 12px auto !important;}
+.tpp-result-box{border-radius:5px !important;padding:14px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.05);border:1px solid #99F6E4;background:#F0FDFA;display:flex !important;flex-direction:column;justify-content:center;align-items:center;position:relative;min-height:90px;}
+.tpp-result-content-wrap{display:block;width:100%;}
+.tpp-result-content-wrap.tpp-hidden{display:none !important;}
+.tpp-result-amount{font-size:22px;font-weight:800;line-height:1.15;color:#11766E !important;margin:0 0 6px 0;font-variant-numeric:tabular-nums;}
+.tpp-result-sub{font-size:12px;margin:0 0 6px 0;color:#11766E !important;}
+.tpp-unavailable{display:none;flex-direction:column;justify-content:center;align-items:center;background:rgba(243,244,246,0.95);border-radius:6px !important;padding:12px;width:100%;}
+.tpp-unavailable.tpp-visible{display:flex !important;}
+.tpp-unavailable-icon{width:26px !important;height:26px !important;color:#6b7280;margin-bottom:6px;}
+.tpp-unavailable-title{font-weight:700;font-size:13px;color:#374151 !important;margin:0;}
+.tpp-unavailable-sub{font-size:11px;color:#4b5563 !important;margin:4px 0 0 0;text-align:center;}
+.tpp-cta-group{width:100%;display:flex !important;flex-direction:column;gap:8px;}
+.tpp-btn-cta{width:100%;display:flex !important;justify-content:center;align-items:center;gap:8px;background:#14B8A6 !important;color:#ffffff !important;font-weight:600;padding:10px 16px;border-radius:5px !important;transition:all .3s;box-shadow:0 4px 6px rgba(0,0,0,.07);text-align:center;text-decoration:none !important;font-size:13px;}
+.tpp-btn-cta:hover{background:#0C9488 !important;box-shadow:0 10px 15px rgba(0,0,0,.1);color:#ffffff !important;}
+.tpp-details-wrap{width:100%;margin-bottom:0;position:relative;overflow:visible;}
+.tpp-btn-details{width:100%;display:flex !important;justify-content:center;align-items:center;gap:8px;background:#ffffff !important;border:1px solid #1F40AF;color:#1F40AF !important;font-weight:600;padding:10px 16px;border-radius:5px !important;transition:all .3s;box-shadow:0 4px 6px rgba(0,0,0,.07);cursor:pointer;position:relative;z-index:10;font-family:inherit;font-size:13px;}
+.tpp-btn-details:hover{background:#f9fafb !important;box-shadow:0 10px 15px rgba(0,0,0,.1);}
+.tpp-btn-icon{width:18px !important;height:18px !important;}
+.tpp-details-panel{position:relative;width:100%;margin-top:10px;background:#F0F6FF;color:#1F40AF !important;border-left:8px solid #C0DBFE;border-radius:5px !important;box-shadow:none;max-height:0;opacity:0;overflow:hidden;padding:0 16px;visibility:hidden;transition:all .3s ease-in-out;}
+.tpp-details-panel.tpp-show{max-height:500px !important;opacity:1 !important;visibility:visible !important;padding:14px 16px !important;margin-bottom:0 !important;}
+.tpp-detail-row{display:flex !important;flex-direction:row;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.tpp-detail-row:last-child{margin-bottom:0;}
+.tpp-detail-label{font-weight:700;font-size:13px;white-space:nowrap;}
+.tpp-detail-value{font-weight:400;font-size:13px;}
+@media (max-width:1024px){.tpp-card-header{padding:0.75rem 0.9rem !important;}.tpp-content{padding:1rem !important;}}
+@media (max-width:600px){
+  .tpp-wrap{padding:0.5rem !important;}
+  .tpp-title{font-size:0.85rem !important;margin:0.15rem 0 0.5rem 0 !important;}
+  .tpp-grid{gap:0.35rem !important;}
+  .tpp-card{border-radius:8px !important;}
+  .tpp-card-header{padding:0.35rem 0.45rem !important;}
+  .tpp-header-row{gap:0.3rem !important;margin-bottom:0.15rem !important;}
+  .tpp-header-icon{width:16px !important;height:16px !important;}
+  .tpp-header-title{font-size:0.68rem !important;}
+  .tpp-header-sub{font-size:0.52rem !important;line-height:1.2 !important;}
+  .tpp-content{padding:0.4rem !important;gap:0.5rem !important;}
+  .tpp-field{padding:0.1rem 0 !important;}
+  .tpp-field-label{font-size:0.58rem !important;margin-bottom:0.25rem !important;}
+  .tpp-label-row{margin-bottom:0.25rem !important;}
+  .tpp-slider-labels span{font-size:0.5rem !important;}
+  .tpp-info-icon{width:12px !important;height:12px !important;}
+  .tpp-options-row{gap:0.25rem !important;}
+  .tpp-option-btn{font-size:0.5rem !important;padding:0.35rem 0.2rem !important;min-height:44px !important;}
+  .tpp-logo{width:36px !important;max-width:36px !important;margin:0 auto 0.35rem auto !important;}
+  .tpp-result-box{padding:0.5rem !important;min-height:44px !important;}
+  .tpp-result-amount{font-size:0.98rem !important;margin-bottom:0.2rem !important;}
+  .tpp-result-sub{font-size:0.52rem !important;margin-bottom:0.2rem !important;}
+  .tpp-cta-group{gap:0.3rem !important;}
+  .tpp-btn-cta,.tpp-btn-details{font-size:0.58rem !important;padding:0.4rem 0.4rem !important;gap:0.25rem !important;min-height:44px !important;}
+  .tpp-btn-icon{width:13px !important;height:13px !important;}
+  .tpp-details-panel{border-left-width:5px !important;}
+  .tpp-details-panel.tpp-show{padding:0.5rem !important;}
+  .tpp-detail-row{gap:0.25rem !important;margin-bottom:0.35rem !important;}
+  .tpp-detail-label,.tpp-detail-value{font-size:0.52rem !important;}
+  .tpp-tooltip{width:150px !important;font-size:0.5rem !important;padding:0.3rem !important;}
+  .tpp-unavailable-icon{width:18px !important;height:18px !important;margin-bottom:0.2rem !important;}
+  .tpp-unavailable-title{font-size:0.5rem !important;}
+  .tpp-unavailable-sub{font-size:0.44rem !important;}
+}
+</style>
+<div class="tpp-wrap">
+  <div class="tpp-title">Simulation de prix du Tarif Bleu Pro EDF</div>
+  <div class="tpp-grid">
+
+    <div class="tpp-card">
+      <div class="tpp-card-header tpp-header--left">
+        <div class="tpp-header-row">
+          <svg class="tpp-header-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
+          <div class="tpp-header-title">Vos informations</div>
+        </div>
+        <p class="tpp-header-sub">Renseignez vos informations pour calculer votre facture estimée</p>
+      </div>
+
+      <div class="tpp-content">
+        <div class="tpp-field">
+          <label class="tpp-field-label" for="tpp-consumption">Consommation annuelle</label>
+          <input type="range" id="tpp-consumption" min="1000" max="50000" value="10000" step="500" style="--tpp-progress:18.37%;" oninput="tppOnConsumption(this.value)">
+          <div class="tpp-slider-labels">
+            <span>1000 kWh</span>
+            <span id="tpp-consumption-value">10000 kWh</span>
+            <span>50000 kWh</span>
+          </div>
+        </div>
+
+        <div class="tpp-field">
+          <div class="tpp-label-row">
+            <label class="tpp-field-label" style="margin-bottom:0;">Option tarifaire</label>
+            <div id="tpp-hphc-icon" class="tpp-info-wrap" onclick="tppToggleInfoTooltip()">
+              <svg class="tpp-info-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"></path></svg>
+              <div class="tpp-tooltip">Le calcul simule une répartition de 2/3 de votre consommation en Heures Pleines et 1/3 en Heures Creuses.</div>
+            </div>
+          </div>
+          <div class="tpp-options-row">
+            <button type="button" class="tpp-option-btn tpp-active" data-option="Base" onclick="tppSetOption(this,'Base')">Base</button>
+            <button type="button" class="tpp-option-btn" data-option="HPHC" onclick="tppSetOption(this,'HPHC')">Heures Pleines/Creuses</button>
+          </div>
+        </div>
+
+        <div class="tpp-field">
+          <label class="tpp-field-label" for="tpp-power">Puissance du compteur</label>
+          <input type="range" id="tpp-power" min="0" max="8" value="8" step="1" style="--tpp-progress:100%;" oninput="tppOnPower(this.value)">
+          <div class="tpp-slider-labels">
+            <span>3 kVA</span>
+            <span id="tpp-power-value">36 kVA</span>
+            <span>36 kVA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tpp-card">
+      <div class="tpp-card-header tpp-header--right">
+        <div class="tpp-header-row">
+          <span style="font-size:26px;font-weight:700;line-height:1;color:#ffffff;">€</span>
+          <div class="tpp-header-title">Résultat</div>
+        </div>
+        <p class="tpp-header-sub">Votre estimation Tarif Bleu Pro EDF !</p>
+      </div>
+
+      <div class="tpp-content">
+        <img src="https://d11o8pt3cttu38.cloudfront.net/wp-content/uploads/sites/12/2025/10/edf-2-logo-png-transparent.png" alt="EDF" class="tpp-logo">
+
+        <div class="tpp-result-box">
+          <div id="tpp-result-content" class="tpp-result-content-wrap">
+            <div class="tpp-result-amount" id="tpp-monthly-bill">0,00 € par mois</div>
+            <p class="tpp-result-sub" id="tpp-annual-bill">soit 0,00 € par an TTC</p>
+          </div>
+
+          <div id="tpp-unavailable" class="tpp-unavailable">
+            <svg class="tpp-unavailable-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <p class="tpp-unavailable-title" id="tpp-unavailable-title">Option indisponible</p>
+            <p class="tpp-unavailable-sub" id="tpp-unavailable-subtitle">L'option Heures Pleines/Creuses n'est pas disponible en 3 kVA.</p>
+          </div>
+        </div>
+
+        <div class="tpp-cta-group">
+          <a href="https://www.papernest.com/demarches-energie/estimer-votre-consommation/" target="_blank" rel="noopener" class="tpp-btn-cta">Réduire ma facture</a>
+
+          <div class="tpp-details-wrap">
+            <button type="button" id="tpp-toggle-details" aria-expanded="false" class="tpp-btn-details" onclick="tppToggleDetails()">
+              <svg class="tpp-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+              Afficher les détails
+            </button>
+            <div id="tpp-details-panel" class="tpp-details-panel" role="region" aria-hidden="true">
+              <div class="tpp-detail-row">
+                <span class="tpp-detail-label">Prix du kWh :</span>
+                <span class="tpp-detail-value" id="tpp-trv-kwh-detail">-</span>
+              </div>
+              <div class="tpp-detail-row">
+                <span class="tpp-detail-label">Abonnement :</span>
+                <span class="tpp-detail-value" id="tpp-trv-abo-detail">-</span>
+              </div>
+              <div class="tpp-detail-row">
+                <span class="tpp-detail-label">Offre :</span>
+                <span class="tpp-detail-value">Tarif Bleu Réglementé Pro EDF</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+(function(){
+  var WP_TRV_PRO_BASE_ABO = "$FR_NRJ_EDF_offre_elec_14_base_abo_36kVA$";
+  var WP_TRV_PRO_BASE_KWH = "$FR_NRJ_EDF_offre_elec_14_base_kWh_36kVA$";
+
+  function parseVal(val, defaultVal) {
+    if (typeof val === 'number') return val;
+    if (!val || String(val).indexOf('$') !== -1) return defaultVal;
+    var parsed = parseFloat(String(val).replace(/[^0-9.,]/g, '').replace(',', '.'));
+    return isNaN(parsed) ? defaultVal : parsed;
+  }
+
+  var trvProBaseAbo36kVA = parseVal(WP_TRV_PRO_BASE_ABO, 646.51);
+  var trvProBaseKwh36kVA = parseVal(WP_TRV_PRO_BASE_KWH, 0.2142);
+
+  window.tppOpt = 'Base';
+  window.tppPowerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
+
+  window.tppTrvData = [
+    {puissance:3,  abo_base:144.35,              abo_hphc:144.35,             kwh:0.1940, kwh_hp:"indisponible", kwh_hc:"indisponible"},
+    {puissance:6,  abo_base:190.36,              abo_hphc:190.36,             kwh:0.1940, kwh_hp:0.2142, kwh_hc:0.1589},
+    {puissance:9,  abo_base:238.61,              abo_hphc:238.61,             kwh:0.1927, kwh_hp:0.2142, kwh_hc:0.1589},
+    {puissance:12, abo_base:285.12,              abo_hphc:285.12,             kwh:0.1927, kwh_hp:0.2142, kwh_hc:0.1589},
+    {puissance:15, abo_base:328.76,              abo_hphc:328.76,             kwh:0.1927, kwh_hp:0.2142, kwh_hc:0.1589},
+    {puissance:18, abo_base:373.70,              abo_hphc:373.70,             kwh:0.1927, kwh_hp:0.2142, kwh_hc:0.1589},
+    {puissance:24, abo_base:469.63,              abo_hphc:469.63,             kwh:0.1927, kwh_hp:0.2142, kwh_hc:0.1589},
+    {puissance:30, abo_base:557.64,              abo_hphc:557.64,             kwh:0.1927, kwh_hp:0.2142, kwh_hc:0.1589},
+    {puissance:36, abo_base:trvProBaseAbo36kVA, abo_hphc:trvProBaseAbo36kVA, kwh:trvProBaseKwh36kVA, kwh_hp:0.2142, kwh_hc:0.1589}
+  ];
+
+  function tppFindLine(arr, p){
+    for(var i=0; i<arr.length; i++){ if(arr[i].puissance === p) return arr[i]; }
+    return null;
+  }
+
+  function tppCalculateBill(){
+    var consumptionInput = document.getElementById('tpp-consumption');
+    var powerInput = document.getElementById('tpp-power');
+    if(!consumptionInput || !powerInput) return;
+
+    var consumption = parseInt(consumptionInput.value) || 10000;
+    var powerIndex = parseInt(powerInput.value) || 8;
+    var power = window.tppPowerValues[powerIndex] || 36;
+
+    var trvLine = tppFindLine(window.tppTrvData, power);
+
+    var isAvailable = true;
+    if(!trvLine){ isAvailable = false; }
+    if(isAvailable){
+      if(window.tppOpt === 'Base'){
+        if(trvLine.kwh === "indisponible"){ isAvailable = false; }
+      } else if(window.tppOpt === 'HPHC'){
+        if(trvLine.kwh_hp === "indisponible" || trvLine.kwh_hc === "indisponible"){ isAvailable = false; }
+      }
+    }
+
+    var resultContent = document.getElementById('tpp-result-content');
+    var unavailableMessage = document.getElementById('tpp-unavailable');
+    var unavailableTitle = document.getElementById('tpp-unavailable-title');
+    var unavailableSubtitle = document.getElementById('tpp-unavailable-subtitle');
+
+    var trvKwhDetail = document.getElementById('tpp-trv-kwh-detail');
+    var trvAboDetail = document.getElementById('tpp-trv-abo-detail');
+
+    if(!isAvailable){
+      if(resultContent) resultContent.classList.add('tpp-hidden');
+      if(unavailableMessage) unavailableMessage.classList.add('tpp-visible');
+      if(unavailableTitle) unavailableTitle.textContent = "Option indisponible";
+      if(unavailableSubtitle) unavailableSubtitle.textContent = "L'option Heures Pleines/Creuses n'est pas disponible en 3 kVA.";
+      if(trvKwhDetail) trvKwhDetail.textContent = '-';
+      if(trvAboDetail) trvAboDetail.textContent = '-';
+      return;
+    } else {
+      if(resultContent) resultContent.classList.remove('tpp-hidden');
+      if(unavailableMessage) unavailableMessage.classList.remove('tpp-visible');
+    }
+
+    var trvAnnualCost = 0;
+
+    if(window.tppOpt === 'Base'){
+      var trvAboBaseVal = trvLine.abo_base || trvLine.abonnement || 0;
+      trvAnnualCost = trvAboBaseVal + (consumption * trvLine.kwh);
+      if(trvKwhDetail) trvKwhDetail.textContent = trvLine.kwh.toFixed(4).replace('.',',') + ' €';
+      if(trvAboDetail) trvAboDetail.textContent = trvAboBaseVal.toFixed(2).replace('.',',') + ' € par an';
+    } else {
+      var trvAboHphcVal = trvLine.abo_hphc || trvLine.abonnement || 0;
+      trvAnnualCost = trvAboHphcVal + (consumption * 0.66 * trvLine.kwh_hp) + (consumption * 0.34 * trvLine.kwh_hc);
+      if(trvKwhDetail) trvKwhDetail.textContent = 'HP : ' + trvLine.kwh_hp.toFixed(4).replace('.',',') + ' € | HC : ' + trvLine.kwh_hc.toFixed(4).replace('.',',') + ' €';
+      if(trvAboDetail) trvAboDetail.textContent = trvAboHphcVal.toFixed(2).replace('.',',') + ' € par an';
+    }
+
+    var totalMonthly = trvAnnualCost / 12;
+    var mbill = document.getElementById('tpp-monthly-bill');
+    var abill = document.getElementById('tpp-annual-bill');
+
+    if(mbill) mbill.textContent = totalMonthly.toFixed(2).replace('.',',') + ' € par mois';
+    if(abill) abill.textContent = 'soit ' + trvAnnualCost.toFixed(2).replace('.',',') + ' € par an TTC';
+  }
+
+  window.tppOnConsumption = function(v){
+    var el = document.getElementById('tpp-consumption');
+    var min = parseInt(el.min), max = parseInt(el.max), val = parseInt(v);
+    var pct = ((val - min) / (max - min)) * 100;
+    el.style.setProperty('--tpp-progress', pct + '%');
+    var lbl = document.getElementById('tpp-consumption-value');
+    if(lbl) lbl.textContent = val.toLocaleString('fr-FR') + ' kWh';
+    tppCalculateBill();
+  };
+
+  window.tppOnPower = function(v){
+    var el = document.getElementById('tpp-power');
+    var min = parseInt(el.min), max = parseInt(el.max), val = parseInt(v);
+    var pct = ((val - min) / (max - min)) * 100;
+    el.style.setProperty('--tpp-progress', pct + '%');
+    var actual = window.tppPowerValues[val] || 36;
+    var lbl = document.getElementById('tpp-power-value');
+    if(lbl) lbl.textContent = actual + ' kVA';
+    tppCalculateBill();
+  };
+
+  window.tppSetOption = function(btn, opt){
+    var btns = document.querySelectorAll('.tpp-option-btn');
+    for(var i=0; i<btns.length; i++){ btns[i].classList.remove('tpp-active'); }
+    btn.classList.add('tpp-active');
+    window.tppOpt = opt;
+    var infoWrap = document.getElementById('tpp-hphc-icon');
+    if(infoWrap){
+      if(opt === 'HPHC'){ infoWrap.classList.add('tpp-visible'); }
+      else { infoWrap.classList.remove('tpp-visible'); }
+    }
+    tppCalculateBill();
+  };
+
+  window.tppToggleDetails = function(){
+    var panel = document.getElementById('tpp-details-panel');
+    var btn = document.getElementById('tpp-toggle-details');
+    if(!panel || !btn) return;
+    var shown = panel.classList.toggle('tpp-show');
+    btn.setAttribute('aria-expanded', String(shown));
+    panel.setAttribute('aria-hidden', String(!shown));
+    if(shown){
+      btn.innerHTML = '<svg class="tpp-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>Masquer les détails';
+    } else {
+      btn.innerHTML = '<svg class="tpp-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>Afficher les détails';
+    }
+  };
+
+  window.tppToggleInfoTooltip = function(){
+    var infoWrap = document.getElementById('tpp-hphc-icon');
+    if(infoWrap) infoWrap.classList.toggle('tpp-tooltip-open');
+  };
+
+  tppCalculateBill();
+})();
+</script>
