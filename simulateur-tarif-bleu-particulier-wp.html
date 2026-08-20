@@ -113,7 +113,7 @@
       <div class="tpo-content">
         <div class="tpo-field">
           <label class="tpo-field-label" for="tpo-consumption">Consommation annuelle</label>
-          <input type="range" id="tpo-consumption" min="1000" max="25000" value="5000" step="100" style="--tpo-progress:16.67%;" oninput="tpoOnConsumption(this.value)">
+          <input type="range" id="tpo-consumption" min="1000" max="25000" value="5000" step="100" style="--tpo-progress:16.67%;">
           <div class="tpo-slider-labels">
             <span>1000 kWh</span>
             <span id="tpo-consumption-value">5000 kWh</span>
@@ -124,20 +124,20 @@
         <div class="tpo-field">
           <div class="tpo-label-row">
             <label class="tpo-field-label" style="margin-bottom:0;">Option tarifaire</label>
-            <div id="tpo-hphc-icon" class="tpo-info-wrap" onclick="tpoToggleInfoTooltip()">
+            <div id="tpo-hphc-icon" class="tpo-info-wrap">
               <svg class="tpo-info-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"></path></svg>
               <div class="tpo-tooltip">Le calcul simule une répartition de 2/3 de votre consommation en Heures Pleines et 1/3 en Heures Creuses.</div>
             </div>
           </div>
           <div class="tpo-options-row">
-            <button type="button" class="tpo-option-btn tpo-active" data-option="Base" onclick="tpoSetOption(this,'Base')">Base</button>
-            <button type="button" class="tpo-option-btn" data-option="HPHC" onclick="tpoSetOption(this,'HPHC')">Heures Pleines/Creuses</button>
+            <button type="button" class="tpo-option-btn tpo-active" data-option="Base">Base</button>
+            <button type="button" class="tpo-option-btn" data-option="HPHC">Heures Pleines/Creuses</button>
           </div>
         </div>
 
         <div class="tpo-field">
           <label class="tpo-field-label" for="tpo-power">Puissance du compteur</label>
-          <input type="range" id="tpo-power" min="0" max="8" value="1" step="1" style="--tpo-progress:12.5%;" oninput="tpoOnPower(this.value)">
+          <input type="range" id="tpo-power" min="0" max="8" value="1" step="1" style="--tpo-progress:12.5%;">
           <div class="tpo-slider-labels">
             <span>3 kVA</span>
             <span id="tpo-power-value">6 kVA</span>
@@ -168,7 +168,7 @@
           <div id="tpo-unavailable" class="tpo-unavailable">
             <svg class="tpo-unavailable-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             <p class="tpo-unavailable-title" id="tpo-unavailable-title">Option indisponible</p>
-            <p class="tpo-unavailable-sub" id="tpo-unavailable-subtitle">L'option Heures Pleines/Creuses n'est pas disponible en 3 kVA.</p>
+            <p class="tpo-unavailable-sub" id="tpo-unavailable-subtitle">Cette option n'est pas disponible pour cette puissance.</p>
           </div>
         </div>
 
@@ -176,9 +176,9 @@
           <a href="https://www.papernest.com/demarches-energie/estimer-votre-consommation/" target="_blank" rel="noopener" class="tpo-btn-cta">Réduire ma facture</a>
 
           <div class="tpo-details-wrap">
-            <button type="button" id="tpo-toggle-details" aria-expanded="false" class="tpo-btn-details" onclick="tpoToggleDetails()">
+            <button type="button" id="tpo-toggle-details" aria-expanded="false" class="tpo-btn-details">
               <svg class="tpo-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-              Afficher les détails
+              <span id="tpo-toggle-text">Afficher les détails</span>
             </button>
             <div id="tpo-details-panel" class="tpo-details-panel" role="region" aria-hidden="true">
               <div class="tpo-detail-row">
@@ -201,177 +201,4 @@
 
   </div>
 </div>
-<script>
-(function(){
-  var WP_TRV_BASE_ABO = "$FR_NRJ_EDF_offre_elec_1_base_abo_6kVA$";
-  var WP_TRV_BASE_KWH = "$FR_NRJ_EDF_offre_elec_1_base_kWh_6kVA$";
-  var WP_TRV_HPHC_ABO = "$FR_NRJ_EDF_offre_elec_1_hphc_abo_6kVA$";
-  var WP_TRV_HP_KWH   = "$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$";
-  var WP_TRV_HC_KWH   = "$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$";
-
-  function parseVal(val, defaultVal) {
-    if (typeof val === 'number') return val;
-    if (!val || String(val).indexOf('$') !== -1) return defaultVal;
-    var parsed = parseFloat(String(val).replace(/[^0-9.,]/g, '').replace(',', '.'));
-    return isNaN(parsed) ? defaultVal : parsed;
-  }
-
-  var trvBaseAbo6kVA = parseVal(WP_TRV_BASE_ABO, 187.82);
-  var trvBaseKwh6kVA = parseVal(WP_TRV_BASE_KWH, 0.1952);
-  var trvHphcAbo6kVA = parseVal(WP_TRV_HPHC_ABO, 190.36);
-  var trvHpHkwh6kVA  = parseVal(WP_TRV_HP_KWH, 0.2142);
-  var trvHcHkwh6kVA  = parseVal(WP_TRV_HC_KWH, 0.1589);
-
-  window.tpoOpt = 'Base';
-  window.tpoPowerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
-
-  window.tpoTrvData = [
-    {puissance:3,  abo_base:144.35,         abo_hphc:144.35,         kwh:0.1940,        kwh_hp:"indisponible", kwh_hc:"indisponible"},
-    {puissance:6,  abo_base:trvBaseAbo6kVA, abo_hphc:trvHphcAbo6kVA, kwh:trvBaseKwh6kVA, kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
-    {puissance:9,  abo_base:234.72,         abo_hphc:238.61,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
-    {puissance:12, abo_base:279.84,         abo_hphc:285.12,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
-    {puissance:15, abo_base:322.08,         abo_hphc:328.76,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
-    {puissance:18, abo_base:368.23,         abo_hphc:373.70,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
-    {puissance:24, abo_base:469.63,         abo_hphc:469.63,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
-    {puissance:30, abo_base:557.64,         abo_hphc:557.64,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA},
-    {puissance:36, abo_base:646.51,         abo_hphc:646.51,         kwh:0.1927,        kwh_hp:trvHpHkwh6kVA,  kwh_hc:trvHcHkwh6kVA}
-  ];
-
-  function tpoFindLine(arr, p){
-    for(var i=0; i<arr.length; i++){ if(arr[i].puissance === p) return arr[i]; }
-    return null;
-  }
-
-  function tpoCalculateBill(){
-    var consumptionInput = document.getElementById('tpo-consumption');
-    var powerInput = document.getElementById('tpo-power');
-    if(!consumptionInput || !powerInput) return;
-
-    var consumption = parseInt(consumptionInput.value) || 5000;
-    var powerIndex = parseInt(powerInput.value) || 1;
-    var power = window.tpoPowerValues[powerIndex] || 6;
-
-    var trvLine = tpoFindLine(window.tpoTrvData, power);
-
-    var isAvailable = true;
-    if(!trvLine){ isAvailable = false; }
-    if(isAvailable){
-      if(window.tpoOpt === 'Base'){
-        if(trvLine.kwh === "indisponible"){ isAvailable = false; }
-      } else if(window.tpoOpt === 'HPHC'){
-        if(trvLine.kwh_hp === "indisponible" || trvLine.kwh_hc === "indisponible"){ isAvailable = false; }
-      }
-    }
-
-    var resultContent = document.getElementById('tpo-result-content');
-    var unavailableMessage = document.getElementById('tpo-unavailable');
-    var unavailableTitle = document.getElementById('tpo-unavailable-title');
-    var unavailableSubtitle = document.getElementById('tpo-unavailable-subtitle');
-
-    var trvKwhDetail = document.getElementById('tpo-trv-kwh-detail');
-    var trvAboDetail = document.getElementById('tpo-trv-abo-detail');
-
-    if(!isAvailable){
-      if(resultContent) resultContent.classList.add('tpo-hidden');
-      if(unavailableMessage) unavailableMessage.classList.add('tpo-visible');
-      if(unavailableTitle) unavailableTitle.textContent = "Option indisponible";
-      if(unavailableSubtitle) unavailableSubtitle.textContent = "L'option Heures Pleines/Creuses n'est pas disponible en 3 kVA.";
-      if(trvKwhDetail) trvKwhDetail.textContent = '-';
-      if(trvAboDetail) trvAboDetail.textContent = '-';
-      return;
-    } else {
-      if(resultContent) resultContent.classList.remove('tpo-hidden');
-      if(unavailableMessage) unavailableMessage.classList.remove('tpo-visible');
-    }
-
-    var trvAnnualCost = 0;
-
-    if(window.tpoOpt === 'Base'){
-      var trvAboBaseVal = trvLine.abo_base || trvLine.abonnement || 0;
-      trvAnnualCost = trvAboBaseVal + (consumption * trvLine.kwh);
-      if(trvKwhDetail) trvKwhDetail.textContent = trvLine.kwh.toFixed(4).replace('.',',') + ' €';
-      if(trvAboDetail) trvAboDetail.textContent = trvAboBaseVal.toFixed(2).replace('.',',') + ' € par an';
-    } else {
-      var trvAboHphcVal = trvLine.abo_hphc || trvLine.abonnement || 0;
-      trvAnnualCost = trvAboHphcVal + (consumption * 0.66 * trvLine.kwh_hp) + (consumption * 0.34 * trvLine.kwh_hc);
-      if(trvKwhDetail) trvKwhDetail.textContent = 'HP : ' + trvLine.kwh_hp.toFixed(4).replace('.',',') + ' € | HC : ' + trvLine.kwh_hc.toFixed(4).replace('.',',') + ' €';
-      if(trvAboDetail) trvAboDetail.textContent = trvAboHphcVal.toFixed(2).replace('.',',') + ' € par an';
-    }
-
-    var totalMonthly = trvAnnualCost / 12;
-    var mbill = document.getElementById('tpo-monthly-bill');
-    var abill = document.getElementById('tpo-annual-bill');
-
-    if(mbill) mbill.textContent = totalMonthly.toFixed(2).replace('.',',') + ' € par mois';
-    if(abill) abill.textContent = 'soit ' + trvAnnualCost.toFixed(2).replace('.',',') + ' € par an TTC';
-  }
-
-  window.tpoOnConsumption = function(v){
-    var el = document.getElementById('tpo-consumption');
-    var min = parseInt(el.min), max = parseInt(el.max), val = parseInt(v);
-    var pct = ((val - min) / (max - min)) * 100;
-    el.style.setProperty('--tpo-progress', pct + '%');
-    var lbl = document.getElementById('tpo-consumption-value');
-    if(lbl) lbl.textContent = val.toLocaleString('fr-FR') + ' kWh';
-    tpoCalculateBill();
-  };
-
-  window.tpoOnPower = function(v){
-    var el = document.getElementById('tpo-power');
-    var min = parseInt(el.min), max = parseInt(el.max), val = parseInt(v);
-    var pct = ((val - min) / (max - min)) * 100;
-    el.style.setProperty('--tpo-progress', pct + '%');
-    var actual = window.tpoPowerValues[val] || 6;
-    var lbl = document.getElementById('tpo-power-value');
-    if(lbl) lbl.textContent = actual + ' kVA';
-    tpoCalculateBill();
-  };
-
-  window.tpoSetOption = function(btn, opt){
-    var btns = document.querySelectorAll('.tpo-option-btn');
-    for(var i=0; i<btns.length; i++){ btns[i].classList.remove('tpo-active'); }
-    btn.classList.add('tpo-active');
-    window.tpoOpt = opt;
-    var infoWrap = document.getElementById('tpo-hphc-icon');
-    if(infoWrap){
-      if(opt === 'HPHC'){ infoWrap.classList.add('tpo-visible'); }
-      else { infoWrap.classList.remove('tpo-visible'); }
-    }
-    tpoCalculateBill();
-  };
-
-    window.tpoToggleDetails = function(){
-    var panel = document.getElementById('tpo-details-panel');
-    var btn = document.getElementById('tpo-toggle-details');
-    if(!panel || !btn) return;
-    var shown = panel.classList.toggle('tpo-show');
-    btn.setAttribute('aria-expanded', String(shown));
-    panel.setAttribute('aria-hidden', String(!shown));
-    if(shown){
-      btn.innerHTML = '<svg class="tpo-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>Masquer les détails';
-    } else {
-      btn.innerHTML = '<svg class="tpo-btn-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>Afficher les détails';
-    }
-    tpoSendHeight();
-    setTimeout(tpoSendHeight, 320);
-  };
-
-  window.tpoToggleInfoTooltip = function(){
-    var infoWrap = document.getElementById('tpo-hphc-icon');
-    if(infoWrap) infoWrap.classList.toggle('tpo-tooltip-open');
-  };
-
-  var tpoWrapEl = document.querySelector('.tpo-wrap');
-  function tpoSendHeight(){
-    if(tpoWrapEl) window.parent.postMessage({height: tpoWrapEl.scrollHeight}, '*');
-  }
-  if(window.ResizeObserver && tpoWrapEl){
-    new ResizeObserver(tpoSendHeight).observe(tpoWrapEl);
-  }
-  window.addEventListener('load', tpoSendHeight);
-
-  tpoCalculateBill();
-  tpoSendHeight();
-})();
-</script>
-
+<script>document.addEventListener("DOMContentLoaded",function(){function parseVal(v){if(!v||String(v).indexOf('$')!==-1)return"indisponible";var p=parseFloat(String(v).replace(/[^0-9.,]/g,'').replace(',','.'));return isNaN(p)?"indisponible":p;}var d=[{p:3,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_3kVA$"),aH:"indisponible",kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_3kVA$"),kHP:"indisponible",kHC:"indisponible"},{p:6,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_6kVA$"),aH:parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_6kVA$"),kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_6kVA$"),kHP:parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$"),kHC:parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$")},{p:9,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_9kVA$"),aH:parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_9kVA$"),kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_9kVA$"),kHP:parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$"),kHC:parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$")},{p:12,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_12kVA$"),aH:parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_12kVA$"),kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_12kVA$"),kHP:parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$"),kHC:parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$")},{p:15,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_15kVA$"),aH:parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_15kVA$"),kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_15kVA$"),kHP:parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$"),kHC:parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$")},{p:18,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_18kVA$"),aH:parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_18kVA$"),kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_18kVA$"),kHP:parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$"),kHC:parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$")},{p:24,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_24kVA$"),aH:parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_24kVA$"),kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_24kVA$"),kHP:parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$"),kHC:parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$")},{p:30,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_30kVA$"),aH:parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_30kVA$"),kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_30kVA$"),kHP:parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$"),kHC:parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$")},{p:36,aB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_36kVA$"),aH:parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_36kVA$"),kB:parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_36kVA$"),kHP:parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$"),kHC:parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$")}];var opt='Base';var pVals=[3,6,9,12,15,18,24,30,36];var cIn=document.getElementById('tpo-consumption'),pIn=document.getElementById('tpo-power');var oBtns=document.querySelectorAll('.tpo-option-btn'),tBtn=document.getElementById('tpo-toggle-details');var iWrap=document.getElementById('tpo-hphc-icon');function calc(){var c=parseInt(cIn.value)||5000,pIdx=parseInt(pIn.value)||1,p=pVals[pIdx]||6;var line=null;for(var i=0;i<d.length;i++){if(d[i].p===p)line=d[i];}var ok=!!line;if(ok){if(opt==='Base'&&(line.kB==="indisponible"||line.aB==="indisponible"))ok=false;else if(opt==='HPHC'&&(line.kHP==="indisponible"||line.kHC==="indisponible"||line.aH==="indisponible"))ok=false;}var rC=document.getElementById('tpo-result-content'),uM=document.getElementById('tpo-unavailable');var tK=document.getElementById('tpo-trv-kwh-detail'),tA=document.getElementById('tpo-trv-abo-detail');if(!ok){rC.classList.add('tpo-hidden');uM.classList.add('tpo-visible');if(tK)tK.textContent='-';if(tA)tA.textContent='-';return;}else{rC.classList.remove('tpo-hidden');uM.classList.remove('tpo-visible');}var tCost=0;if(opt==='Base'){tCost=line.aB+(c*line.kB);if(tK)tK.textContent=line.kB.toFixed(4).replace('.',',')+' €';if(tA)tA.textContent=line.aB.toFixed(2).replace('.',',')+' € par an';}else{tCost=line.aH+(c*0.66*line.kHP)+(c*0.34*line.kHC);if(tK)tK.textContent='HP : '+line.kHP.toFixed(4).replace('.',',')+' € | HC : '+line.kHC.toFixed(4).replace('.',',')+' €';if(tA)tA.textContent=line.aH.toFixed(2).replace('.',',')+' € par an';}document.getElementById('tpo-monthly-bill').textContent=(tCost/12).toFixed(2).replace('.',',')+' € par mois';document.getElementById('tpo-annual-bill').textContent='soit '+tCost.toFixed(2).replace('.',',')+' € par an TTC';}if(cIn){cIn.addEventListener('input',function(){var pct=((cIn.value-cIn.min)/(cIn.max-cIn.min))*100;cIn.style.setProperty('--tpo-progress',pct+'%');document.getElementById('tpo-consumption-value').textContent=parseInt(cIn.value).toLocaleString('fr-FR')+' kWh';calc();});}if(pIn){pIn.addEventListener('input',function(){var pct=((pIn.value-pIn.min)/(pIn.max-pIn.min))*100;pIn.style.setProperty('--tpo-progress',pct+'%');document.getElementById('tpo-power-value').textContent=(pVals[pIn.value]||6)+' kVA';calc();});}for(var i=0;i<oBtns.length;i++){oBtns[i].addEventListener('click',function(e){e.preventDefault();for(var j=0;j<oBtns.length;j++){oBtns[j].classList.remove('tpo-active');}this.classList.add('tpo-active');opt=this.getAttribute('data-option')||'Base';if(opt==='HPHC')iWrap.classList.add('tpo-visible');else iWrap.classList.remove('tpo-visible');calc();});}if(tBtn){tBtn.addEventListener('click',function(e){e.preventDefault();var panel=document.getElementById('tpo-details-panel');var txt=document.getElementById('tpo-toggle-text');var shown=panel.classList.toggle('tpo-show');tBtn.setAttribute('aria-expanded',String(shown));panel.setAttribute('aria-hidden',String(!shown));if(txt)txt.textContent=shown?'Masquer les détails':'Afficher les détails';});}if(iWrap){iWrap.addEventListener('click',function(e){e.stopPropagation();iWrap.classList.toggle('tpo-tooltip-open');});document.addEventListener('click',function(){iWrap.classList.remove('tpo-tooltip-open');});}calc();});</script>
