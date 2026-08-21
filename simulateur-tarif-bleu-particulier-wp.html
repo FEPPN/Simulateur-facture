@@ -228,6 +228,7 @@
   var tpoBaseKwh30kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_30kVA$");
   var tpoBaseKwh36kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_36kVA$");
 
+  var tpoHphcAbo3kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_3kVA$");
   var tpoHphcAbo6kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_6kVA$");
   var tpoHphcAbo9kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_9kVA$");
   var tpoHphcAbo12kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_12kVA$");
@@ -244,7 +245,7 @@
   window.tpoPowerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
 
   window.tpoTrvData = [
-    {puissance:3,  abo_base:tpoBaseAbo3kVA,  abo_hphc:tpoBaseAbo3kVA,  kwh:tpoBaseKwh3kVA,  kwh_hp:"indisponible", kwh_hc:"indisponible"},
+    {puissance:3,  abo_base:tpoBaseAbo3kVA,  abo_hphc:tpoHphcAbo3kVA,  kwh:tpoBaseKwh3kVA,  kwh_hp:"indisponible", kwh_hc:"indisponible"},
     {puissance:6,  abo_base:tpoBaseAbo6kVA,  abo_hphc:tpoHphcAbo6kVA,  kwh:tpoBaseKwh6kVA,  kwh_hp:tpoHpKwh6kVA, kwh_hc:tpoHcKwh6kVA},
     {puissance:9,  abo_base:tpoBaseAbo9kVA,  abo_hphc:tpoHphcAbo9kVA,  kwh:tpoBaseKwh9kVA,  kwh_hp:tpoHpKwh6kVA, kwh_hc:tpoHcKwh6kVA},
     {puissance:12, abo_base:tpoBaseAbo12kVA, abo_hphc:tpoHphcAbo12kVA, kwh:tpoBaseKwh12kVA, kwh_hp:tpoHpKwh6kVA, kwh_hc:tpoHcKwh6kVA},
