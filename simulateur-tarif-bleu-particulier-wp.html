@@ -204,6 +204,7 @@
 <script>
 (function(){
   function parseVal(val) {
+    if (!val || String(val).indexOf('$') !== -1) return NaN;
     return parseFloat(String(val).replace(/[^0-9.,]/g, '').replace(',', '.'));
   }
 
