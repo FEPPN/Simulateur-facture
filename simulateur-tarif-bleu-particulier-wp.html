@@ -294,9 +294,10 @@
       if(resultContent) resultContent.classList.add('tpo-hidden');
       if(unavailableMessage) unavailableMessage.classList.add('tpo-visible');
       if(unavailableTitle) unavailableTitle.textContent = "Option indisponible";
-      if(unavailableSubtitle) unavailableSubtitle.textContent = (window.tpoOpt === 'Base')
-        ? "Cette puissance n'est pas encore disponible pour l'offre Base."
-        : "L'option Heures Pleines/Creuses n'est pas disponible pour cette puissance.";
+      var tpoDebugMsg = window.tpoLiveDataReceived ? "[DEBUG: données live reçues, mais cette puissance/option est vide]" : "[DEBUG: aucune donnée live reçue du parent]";
+      if(unavailableSubtitle) unavailableSubtitle.textContent = ((window.tpoOpt === 'Base')
+        ? "Cette puissance n'est pas encore disponible pour l'offre Base. "
+        : "L'option Heures Pleines/Creuses n'est pas disponible pour cette puissance. ") + tpoDebugMsg;
       if(trvKwhDetail) trvKwhDetail.textContent = '-';
       if(trvAboDetail) trvAboDetail.textContent = '-';
       return;
@@ -391,8 +392,10 @@
   }
   window.addEventListener('load', tpoSendHeight);
 
+  window.tpoLiveDataReceived = false;
   window.addEventListener('message', function(e){
     if(!e.data || !e.data.tpoLiveData) return;
+    window.tpoLiveDataReceived = true;
     var live = e.data.tpoLiveData;
     window.tpoTrvData.forEach(function(row){
       var kva = String(row.puissance);
