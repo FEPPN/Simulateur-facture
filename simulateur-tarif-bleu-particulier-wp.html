@@ -391,6 +391,25 @@
   }
   window.addEventListener('load', tpoSendHeight);
 
+  window.addEventListener('message', function(e){
+    if(!e.data || !e.data.tpoLiveData) return;
+    var live = e.data.tpoLiveData;
+    window.tpoTrvData.forEach(function(row){
+      var kva = String(row.puissance);
+      if(live.base && live.base[kva]){
+        row.abo_base = live.base[kva].abo;
+        row.kwh = live.base[kva].kwh;
+      }
+      if(live.hphc && live.hphc[kva]){
+        if(!isNaN(live.hphc[kva].abo)) row.abo_hphc = live.hphc[kva].abo;
+        row.kwh_hp = isNaN(live.hphc[kva].hp) ? "indisponible" : live.hphc[kva].hp;
+        row.kwh_hc = isNaN(live.hphc[kva].hc) ? "indisponible" : live.hphc[kva].hc;
+      }
+    });
+    tpoCalculateBill();
+    tpoSendHeight();
+  });
+
   tpoCalculateBill();
   tpoSendHeight();
 })();
