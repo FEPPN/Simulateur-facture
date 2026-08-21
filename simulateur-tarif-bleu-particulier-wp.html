@@ -265,7 +265,8 @@
     if(!consumptionInput || !powerInput) return;
 
     var consumption = parseInt(consumptionInput.value) || 5000;
-    var powerIndex = parseInt(powerInput.value) || 1;
+    var powerIndex = parseInt(powerInput.value);
+    if (isNaN(powerIndex)) powerIndex = 1;
     var power = window.tpoPowerValues[powerIndex] || 6;
 
     var trvLine = tpoFindLine(window.tpoTrvData, power);
@@ -274,9 +275,9 @@
     if(!trvLine){ isAvailable = false; }
     if(isAvailable){
       if(window.tpoOpt === 'Base'){
-        if(trvLine.kwh === "indisponible"){ isAvailable = false; }
+        if(isNaN(trvLine.kwh) || isNaN(trvLine.abo_base)){ isAvailable = false; }
       } else if(window.tpoOpt === 'HPHC'){
-        if(trvLine.kwh_hp === "indisponible" || trvLine.kwh_hc === "indisponible"){ isAvailable = false; }
+        if(isNaN(trvLine.kwh_hp) || isNaN(trvLine.kwh_hc) || isNaN(trvLine.abo_hphc)){ isAvailable = false; }
       }
     }
 
@@ -292,7 +293,9 @@
       if(resultContent) resultContent.classList.add('tpo-hidden');
       if(unavailableMessage) unavailableMessage.classList.add('tpo-visible');
       if(unavailableTitle) unavailableTitle.textContent = "Option indisponible";
-      if(unavailableSubtitle) unavailableSubtitle.textContent = "L'option Heures Pleines/Creuses n'est pas disponible en 3 kVA.";
+      if(unavailableSubtitle) unavailableSubtitle.textContent = (window.tpoOpt === 'Base')
+        ? "Cette puissance n'est pas encore disponible pour l'offre Base."
+        : "L'option Heures Pleines/Creuses n'est pas disponible pour cette puissance.";
       if(trvKwhDetail) trvKwhDetail.textContent = '-';
       if(trvAboDetail) trvAboDetail.textContent = '-';
       return;
