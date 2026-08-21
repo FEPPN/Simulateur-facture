@@ -282,9 +282,10 @@
       if(resultContent) resultContent.classList.add('tpp-hidden');
       if(unavailableMessage) unavailableMessage.classList.add('tpp-visible');
       if(unavailableTitle) unavailableTitle.textContent = "Option indisponible";
-      if(unavailableSubtitle) unavailableSubtitle.textContent = (window.tppOpt === 'Base')
-        ? "Cette puissance n'est pas encore disponible pour l'offre Base."
-        : "L'option Heures Pleines/Creuses n'est pas disponible pour cette offre.";
+      var tppDebugMsg = window.tppLiveDataReceived ? "[DEBUG: données live reçues, mais cette puissance/option est vide]" : "[DEBUG: aucune donnée live reçue du parent]";
+      if(unavailableSubtitle) unavailableSubtitle.textContent = ((window.tppOpt === 'Base')
+        ? "Cette puissance n'est pas encore disponible pour l'offre Base. "
+        : "L'option Heures Pleines/Creuses n'est pas disponible pour cette offre. ") + tppDebugMsg;
       if(trvKwhDetail) trvKwhDetail.textContent = '-';
       if(trvAboDetail) trvAboDetail.textContent = '-';
       return;
@@ -378,6 +379,27 @@
     new ResizeObserver(tppSendHeight).observe(tppWrapEl);
   }
   window.addEventListener('load', tppSendHeight);
+
+  window.tppLiveDataReceived = false;
+  window.addEventListener('message', function(e){
+    if(!e.data || !e.data.tppLiveData) return;
+    window.tppLiveDataReceived = true;
+    var live = e.data.tppLiveData;
+    window.tppTrvData.forEach(function(row){
+      var kva = String(row.puissance);
+      if(live.base && live.base[kva]){
+        row.abo_base = live.base[kva].abo;
+        row.kwh = live.base[kva].kwh;
+      }
+      if(live.hphc && live.hphc[kva]){
+        if(!isNaN(live.hphc[kva].abo)) row.abo_hphc = live.hphc[kva].abo;
+        row.kwh_hp = isNaN(live.hphc[kva].hp) ? "indisponible" : live.hphc[kva].hp;
+        row.kwh_hc = isNaN(live.hphc[kva].hc) ? "indisponible" : live.hphc[kva].hc;
+      }
+    });
+    tppCalculateBill();
+    tppSendHeight();
+  });
 
   tppCalculateBill();
   tppSendHeight();
