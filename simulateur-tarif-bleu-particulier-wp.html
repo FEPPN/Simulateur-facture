@@ -203,44 +203,41 @@
 </div>
 <script>
 (function(){
-  function parseVal(val, defaultVal) {
-    if (typeof val === 'number') return val;
-    if (!val || String(val).indexOf('$') !== -1) return defaultVal;
-    var parsed = parseFloat(String(val).replace(/[^0-9.,]/g, '').replace(',', '.'));
-    return isNaN(parsed) ? defaultVal : parsed;
+  function parseVal(val) {
+    return parseFloat(String(val).replace(/[^0-9.,]/g, '').replace(',', '.'));
   }
 
-  var tpoBaseAbo3kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_3kVA$", 145.56);
-  var tpoBaseAbo6kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_6kVA$", 190.36);
-  var tpoBaseAbo9kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_9kVA$", 234.72);
-  var tpoBaseAbo12kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_12kVA$", 279.84);
-  var tpoBaseAbo15kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_15kVA$", 322.08);
-  var tpoBaseAbo18kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_18kVA$", 368.23);
-  var tpoBaseAbo24kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_24kVA$", 469.63);
-  var tpoBaseAbo30kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_30kVA$", 557.64);
-  var tpoBaseAbo36kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_36kVA$", 646.51);
+  var tpoBaseAbo3kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_3kVA$");
+  var tpoBaseAbo6kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_6kVA$");
+  var tpoBaseAbo9kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_9kVA$");
+  var tpoBaseAbo12kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_12kVA$");
+  var tpoBaseAbo15kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_15kVA$");
+  var tpoBaseAbo18kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_18kVA$");
+  var tpoBaseAbo24kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_24kVA$");
+  var tpoBaseAbo30kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_30kVA$");
+  var tpoBaseAbo36kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_abo_36kVA$");
 
-  var tpoBaseKwh3kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_3kVA$", 0.2001);
-  var tpoBaseKwh6kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_6kVA$", 0.2001);
-  var tpoBaseKwh9kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_9kVA$", 0.1927);
-  var tpoBaseKwh12kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_12kVA$", 0.1927);
-  var tpoBaseKwh15kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_15kVA$", 0.1927);
-  var tpoBaseKwh18kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_18kVA$", 0.1927);
-  var tpoBaseKwh24kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_24kVA$", 0.1927);
-  var tpoBaseKwh30kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_30kVA$", 0.1927);
-  var tpoBaseKwh36kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_36kVA$", 0.1927);
+  var tpoBaseKwh3kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_3kVA$");
+  var tpoBaseKwh6kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_6kVA$");
+  var tpoBaseKwh9kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_9kVA$");
+  var tpoBaseKwh12kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_12kVA$");
+  var tpoBaseKwh15kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_15kVA$");
+  var tpoBaseKwh18kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_18kVA$");
+  var tpoBaseKwh24kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_24kVA$");
+  var tpoBaseKwh30kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_30kVA$");
+  var tpoBaseKwh36kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_base_kWh_36kVA$");
 
-  var tpoHphcAbo6kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_6kVA$", 190.36);
-  var tpoHphcAbo9kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_9kVA$", 238.61);
-  var tpoHphcAbo12kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_12kVA$", 285.12);
-  var tpoHphcAbo15kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_15kVA$", 328.76);
-  var tpoHphcAbo18kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_18kVA$", 373.70);
-  var tpoHphcAbo24kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_24kVA$", 469.63);
-  var tpoHphcAbo30kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_30kVA$", 557.64);
-  var tpoHphcAbo36kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_36kVA$", 646.51);
+  var tpoHphcAbo6kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_6kVA$");
+  var tpoHphcAbo9kVA  = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_9kVA$");
+  var tpoHphcAbo12kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_12kVA$");
+  var tpoHphcAbo15kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_15kVA$");
+  var tpoHphcAbo18kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_18kVA$");
+  var tpoHphcAbo24kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_24kVA$");
+  var tpoHphcAbo30kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_30kVA$");
+  var tpoHphcAbo36kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hphc_abo_36kVA$");
 
-  var tpoHpKwh6kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$", 0.2142);
-  var tpoHcKwh6kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$", 0.1589);
+  var tpoHpKwh6kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hp_kWh_6kVA$");
+  var tpoHcKwh6kVA = parseVal("$FR_NRJ_EDF_offre_elec_1_hc_kWh_6kVA$");
 
   window.tpoOpt = 'Base';
   window.tpoPowerValues = [3, 6, 9, 12, 15, 18, 24, 30, 36];
